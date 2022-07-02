@@ -38,7 +38,17 @@ class ProjectService
             $data['created_at_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['created_at_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
-        $data['unexpired'] = true;
+        if (!empty($data['order_created'])){
+            $explodeDate = explode("-", $data['order_created']);
+            $data['order_created_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
+            $data['order_created_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
+        }
+        if (!empty($data['finish_day'])){
+            $explodeDate = explode("-", $data['finish_day']);
+            $data['finish_day_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
+            $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
+        }
+//        $data['unexpired'] = true;
         return $this->projectRepository->getList(array_merge($data, []));
     }
 

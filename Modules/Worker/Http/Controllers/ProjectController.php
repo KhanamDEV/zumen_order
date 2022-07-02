@@ -3,6 +3,7 @@
 namespace Modules\Worker\Http\Controllers;
 
 use App\Services\Worker\ProjectService;
+use App\Services\Worker\WorkerService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -12,10 +13,11 @@ class ProjectController extends Controller
 {
 
     private $projectService;
-
-    public function __construct(ProjectService $projectService)
+    private $workerService;
+    public function __construct(ProjectService $projectService, WorkerService $workerService)
     {
         $this->projectService = $projectService;
+        $this->workerService = $workerService;
     }
 
     public function index(Request $request)
@@ -23,6 +25,7 @@ class ProjectController extends Controller
         try {
             $data['users'] = DB::table('users')->get();
             $data['projects'] = $this->projectService->getList($request->all());
+            $data['workers'] = $this->workerService->getList();
             return view('worker::project.index', compact('data'));
         } catch (\Exception $e){
             abort(500);

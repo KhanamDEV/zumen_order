@@ -157,8 +157,11 @@
                                 <tbody>
                                 @foreach($data['projects'] as $key => $project)
                                     <tr
+                                        class="@if(!empty($project->importunate)) has-importunate @endif"
                                         @if(!empty($project->importunate)) style="background-color: #2ecc71" @else style="background-color: {{config('project.color_status')[$project->order->status]}}" @endif
-                                    >                                        <td class="index"><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{$key +  1}}</a></td>
+                                    >
+                                        <td class="index" >
+                                            <a href="{{route('admin.project.show', ['id' => $project->id])}}">{{$key +  1}}</a></td>
                                         <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{@$project->owner}}</a></td>
                                         <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
                                         <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{config('project.status')[$project->order->status]}}</a></td>
@@ -212,6 +215,7 @@
     <style>
         #table-project tbody tr td a{color: black}
         tr td a{color: white !important;}
+        tr.has-importunate td a{color: black !important;}
         tbody tr:hover{background-color: #0000ff1f}
         tr.cancel{background-color: #80808085 !important;}
         tr.success{background-color: red !important; }

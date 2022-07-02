@@ -23,11 +23,23 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <label class="form-label">営業者</label>
+                                    <select name="user_id" class="form-control" id="">
+                                        <option value=""></option>
+                                        @foreach($data['users'] as $user)
+                                            <option @if(request()->has('user_id') && request()->get('user_id') == $user->id ) selected @endif value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <label>図面種類</label>
                                     <select class="form-control select2bs4" name="type" style="width: 100%;">
                                         <option selected="selected"></option>
                                         @foreach(config('project.type') as $key => $value)
-                                        <option value="{{$key}}" @if(request()->has('type') && request()->get('type') == $key) selected @endif>{{$value}}</option>
+                                            <option value="{{$key}}" @if(request()->has('type') && request()->get('type') == $key) selected @endif>{{$value}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -38,21 +50,22 @@
                                     <select class="form-control select2bs4" name="status" style="width: 100%;">
                                         <option selected="selected"></option>
                                         @foreach(config('project.status') as $key => $value)
-                                            <option value="{{$key}}" @if(request()->has('status') && request()->get('status') == $key) selected @endif>{{$value}}</option>
+                                            <option  value="{{$key}}" @if(request()->has('status') && request()->get('status') == $key) selected @endif>{{$value}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-label">営業者</label>
-                                    <select name="user_id" class="form-control" id="">
+                                    <label class="form-label">作業者</label>
+                                    <select name="worker_id" class="form-control" id="">
                                         <option value=""></option>
-                                        @foreach($data['users'] as $user)
-                                            <option @if(request()->has('user_id') && request()->get('user_id') == $user->id) selected @endif value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
+                                        @foreach($data['workers'] as $user)
+                                            <option @if(request()->has('worker_id') && request()->get('worker_id') == $user->id ) selected @endif value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -63,14 +76,13 @@
                                           <i class="far fa-calendar-alt"></i>
                                         </span>
                                         </div>
-                                        <input name="delivery_date_range" placeholder="{{request()->has('delivery_date_range') ? request()->get('delivery_date_range') : ''}}"  autocomplete="off" type="text"  class="form-control date-picker float-right" >
+                                        <input name="delivery_date_range" placeholder="{{request()->has('delivery_date_range') ? request()->get('delivery_date_range') : ''}}"   autocomplete="off" type="text"  class="form-control date-picker float-right" >
                                     </div>
                                 </div>
-                                <!-- /.input group -->
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>納品日</label>
+                                    <label>発注日</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                         <span class="input-group-text">
@@ -81,10 +93,35 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>受付日</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                          <i class="far fa-calendar-alt"></i>
+                                        </span>
+                                        </div>
+                                        <input name="order_created"  placeholder="{{request()->has('order_created') ? request()->get('order_created') : ''}}" autocomplete="off" type="text"  class="form-control date-picker float-right" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>完成日</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                          <i class="far fa-calendar-alt"></i>
+                                        </span>
+                                        </div>
+                                        <input name="finish_day" placeholder="{{request()->has('finish_day') ? request()->get('finish_day') : ''}}" autocomplete="off" type="text"  class="form-control date-picker float-right" >
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 mt-2">
                                 <button type="submit" class="btn btn-primary">フィルター</button>
-                                <a href="{{route('worker.project.index')}}" class="btn btn-danger"><i class="fas fa-times"></i> キャンセル</a>
+                                <a href="{{route('admin.project.index')}}" class="btn btn-danger"><i class="fas fa-times"></i> キャンセル</a>
                             </div>
                         </form>
                     </div>
@@ -112,11 +149,13 @@
                                     <th>納品日</th>
                                     <th>発注日</th>
                                     <th data-orderable="false" class="no-sort" >営業者</th>
+                                    <th data-orderable="false" class="no-sort"  >作業者</th>
+
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($data['projects'] as $key => $project)
-                                    <tr @if(!empty($project->importunate)) style="background-color: #2ecc71" @else style="background-color: {{config('project.color_status')[$project->order->status]}}" @endif>
+                                    <tr class=" @if(!empty($project->importunate)) has-importunate @endif " @if(!empty($project->importunate)) style="background-color: #2ecc71" @else style="background-color: {{config('project.color_status')[$project->order->status]}}" @endif>
                                         <td class="index"><a href="{{route('worker.project.show', ['id' => $project->id])}}">{{$key + 1}}</a></td>
                                         <td><a href="{{route('worker.project.show', ['id' => $project->id])}}">{{@$project->owner}}</a></td>
                                         <td><a href="{{route('worker.project.show', ['id' => $project->id])}}">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
@@ -124,6 +163,7 @@
                                         <td><a href="{{route('worker.project.show', ['id' => $project->id])}}">{{ !empty($project->importunate) ? '3日以内' :  @$project->delivery_date}}</a></td>
                                         <td><a href="{{route('worker.project.show', ['id' => $project->id])}}">{{date('Y-m-d', strtotime($project->created_at))}}</a></td>
                                         <td><a href="{{route('worker.project.show', ['id' => $project->id])}}">{{@$project->user->first_name}} {{@$project->user->last_name}}</a></td>
+                                        <td><a href="{{route('worker.project.show', ['id' => $project->id])}}">{{@$project->order->worker->first_name}} {{@$project->order->worker->last_name}}</a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -171,6 +211,7 @@
     <style>
         #table-project tbody tr td a{color: black}
         tr td a{color: white !important;}
+        tr.has-importunate td a{color: black !important;}
         tbody tr:hover{background-color: #0000ff1f}
         tr.cancel{background-color: #80808085 !important;}
         tr.success{background-color: red !important; }

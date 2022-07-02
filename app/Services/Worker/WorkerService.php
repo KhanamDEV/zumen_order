@@ -25,6 +25,10 @@ class WorkerService
         $this->uploadService = $uploadService;
     }
 
+    public function getList($data = []){
+        return $this->workerRepository->getList($data);
+    }
+
     public function update($data){
         $dataUpdate = [
             'first_name' => $data['first_name'] ?? '',

@@ -26,6 +26,7 @@ class ProjectController extends Controller
         try {
             $data['workers'] = DB::table('workers')->get();
             $data['projects'] = $this->projectService->getList($request->all());
+            $data['users'] = DB::table('users')->get();
             return view('user::project.index', compact('data'));
         } catch (\Exception $e){
             abort(500);
