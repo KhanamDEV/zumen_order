@@ -1,0 +1,6 @@
+{
+    "Admin": true,
+    "Manager": true,
+    "User": true,
+    "Worker": true
+}
