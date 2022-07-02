@@ -39,7 +39,7 @@ class ProjectService
             $data['created_at_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
         $data['unexpired'] = true;
-        return $this->projectRepository->getList(array_merge($data, ['status' => 1]));
+        return $this->projectRepository->getList(array_merge($data, []));
     }
 
     public function findById($id){
