@@ -34,7 +34,7 @@ class MailContinueProject extends Mailable
     {
         $subject = '【続き】' . $this->order->project->user->first_name . $this->order->project->user->last_name . '様 ' .
             config('project.type')[$this->order->project->type] . '図面 ' .date('Y-m-d', strtotime($this->order->updated_at));
-        return $this->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+        return $this->from(env('MAIL_FROM_ADDRESS', 'no-reply@fuchiso.jp'), env('MAIL_FROM_NAME', 'Fuchiso'))
             ->subject($subject)
             ->view('mail.continue_project')
             ->with([

@@ -34,7 +34,7 @@ class MailCompleteProject extends Mailable
     {
         $subject = '【完了】' . $this->order->project->user->first_name . $this->order->project->user->last_name . '様 ' .
             config('project.type')[$this->order->project->type] . '図面 ' .$this->order->finish_day;
-        return $this->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+        return $this->from(env('MAIL_FROM_ADDRESS', 'no-reply@fuchiso.jp'), env('MAIL_FROM_NAME', 'Fuchiso'))
             ->subject($subject)
             ->view('mail.new_project')
             ->with([
