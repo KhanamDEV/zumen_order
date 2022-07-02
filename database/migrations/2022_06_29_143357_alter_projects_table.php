@@ -16,8 +16,8 @@ class AlterProjectsTable extends Migration
         Schema::table('projects', function (Blueprint $table) {
             $table->string('postal_code')->nullable();
             $table->longText('additional')->nullable();
-            $table->json('url_additional')->default(json_encode([]))->nullable();
-            $table->json('documents_additional')->default(json_encode([]))->nullable();
+            $table->json('url_additional')->nullable();
+            $table->json('documents_additional')->nullable();
         });
     }
 
