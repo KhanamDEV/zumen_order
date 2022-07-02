@@ -132,38 +132,14 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="owner">補充</label>
-                                    @if(auth('users')->id() == $project->user_id)
-
-                                        <textarea name="additional" class="form-control" rows="5">{{@$project->additional}}</textarea>
-                                    @else
                                         <p>{{@$project->additional}}</p>
-                                    @endif
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 @php $urls = !empty($project->url_additional) ? json_decode($project->url_additional) : []; @endphp
-                                @if(auth('users')->id() == $project->user_id)
 
-                                    <div class="form-group">
-                                        <label for="">URL</label>
-                                    </div>
-                                    <div class="group-add-url">
-                                        @foreach($urls as $key => $url)
-                                            <div class="item-url mb-3">
-                                                <input type="text" name="url_additional[]" class="form-control" value="{{$url}}">
-                                                <button class="btn add-url btn-success ml-1" type="button">追加</button>
-                                                <button class="btn delete-url btn-danger ml-1" type="button">削除</button>
-                                            </div>
-                                        @endforeach
-                                        <div class="item-url mb-3">
-                                            <input type="text" name="url_additional[]" class="form-control">
-                                            <button class="btn add-url btn-success ml-1" type="button">追加</button>
-                                            <button class="btn delete-url btn-danger ml-1" type="button">削除</button>
-                                        </div>
-                                    </div>
-                                @else
                                     <p class="info"><span>URL</span>:
                                     <ul>
                                         @foreach($urls as $url)
@@ -171,39 +147,26 @@
                                         @endforeach
                                     </ul>
                                     </p>
-                                @endif
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Documents</label>
                                 </div>
                                 <div class="group-add-documents">
-                                    @if(auth('users')->id() == $project->user_id)
-                                        <input type="hidden" id="listDocument" name="documents_additional" value="{{empty($project->documents_additional) ? json_encode([]) : $project->documents_additional}}">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="uploadDocument">
-                                            <label class="custom-file-label" for="customFile">ファイルを選択</label>
-                                        </div>
-                                    @endif
+
                                     <div class="list-documents">
                                         @php $documents = !empty($project->documents_additional) ? json_decode($project->documents_additional) : []; @endphp
                                         @foreach($documents as $key => $document)
                                             <div class="item-document mt-2">
                                                 <span><a target="_blank" href="{{asset($document->path)}}">{{$document->name}}</a></span>
-                                                @if(auth('users')->id() == $project->user_id)
-                                                    <img class="remove-document" data-path="{{$document->path}}" src="{{asset('static/images/x.png')}}" alt="">
-                                                @endif
+
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @if(auth('users')->id() == $project->user_id)
-                            <div style="width: 100%; display: flex; justify-content: end; ">
-                                <button class="btn-success btn" style="margin-bottom: 20px">保存</button>
-                            </div>
-                        @endif
+
                     </div>
 
                 </form>
@@ -217,6 +180,11 @@
         p.info span {
             font-weight: bold
         }
+        .group-add-url .item-url{display: flex; align-items: center}
+        .group-add-url .item-url input{max-width: 400px}
+        .group-add-url .item-url:last-child button.delete-url{display: none}
+        .group-add-url .item-url:not(:last-child) button.add-url{display: none}
+        .item-document{display: flex; justify-content: space-between; align-items: center}
     </style>
 @endsection
 

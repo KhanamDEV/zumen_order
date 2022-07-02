@@ -211,7 +211,7 @@
 @section('extra-css')
     <style>
         #table-project tbody tr td a{color: black}
-        tr.important td a{color: red !important;}
+        tr td a{color: white !important;}
         tbody tr:hover{background-color: #0000ff1f}
         tr.cancel{background-color: #80808085 !important;}
         tr.success{background-color: red !important; }

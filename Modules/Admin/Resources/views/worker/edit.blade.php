@@ -85,7 +85,7 @@
                                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> 保存</button>
                                 </div>
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <a href="{{route('admin.worker.delete', ['id' => $data['worker']->id])}}"  class="btn btn-danger"> 消去</a>
+                                    <a href="{{route('admin.worker.delete', ['id' => $data['worker']->id])}}"  class="btn btn-danger"> 削除</a>
                                 </div>
                             </div>
                         </form>
