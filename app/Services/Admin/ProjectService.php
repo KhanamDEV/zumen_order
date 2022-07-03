@@ -83,7 +83,7 @@ class ProjectService
             'owner' => $data['owner'] ?? '',
             'type' => $data['type'] ?? '',
             'delivery_date' => $data['delivery_date'] ?? '',
-            'importunate' => !empty('importunate'),
+            'importunate' => empty($data['importunate']) ? 0 : 1,
             'note' => $data['note'] ?? '',
             'other_information' => json_encode($data['other_information'] ?? []),
             'url' => json_encode($data['url'] ?? []),
