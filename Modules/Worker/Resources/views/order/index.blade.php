@@ -145,7 +145,7 @@
                                 </thead>
                                 <tbody>
                                 @foreach($data['orders'] as $key => $order)
-                                    <tr class=" @if(!empty($order->project->importunate)) has-importunate @endif " @if(!empty($order->project->importunate)) style="background-color: #2ecc71" @else style="background-color: {{config('project.color_status')[$order->status]}}" @endif>
+                                    <tr class=" @if(!empty($order->project->importunate)) has-importunate @endif "  style="background-color: {{config('project.color_status')[$order->status]}}" >
                                         <td class="index"><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{$key + 1}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->project->owner}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{!empty($order->project->type) ? config('project.type')[$order->project->type] : ''}}</a></td>

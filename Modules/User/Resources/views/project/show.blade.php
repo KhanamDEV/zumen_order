@@ -112,7 +112,7 @@
                     </p>
                 @endif
             </div>
-            @if(empty($project->order->worker_id) && auth('users')->id() == $project->user_id)
+            @if(empty($project->order->worker_id) && $project->order->worker_id == 1 && auth('users')->id() == $project->user_id)
             <div class="text-center pb-3">
                 <a href="{{route('user.project.delete', ['id'=> $project->id])}}" class="btn btn-danger">削除</a>
             </div>
@@ -120,6 +120,10 @@
         </div>
         @if(!empty($project->order->worker_id))
         <div class="card">
+            @php
+            $subDate = \Carbon\Carbon::parse($project->delivery_date)->subDays(2)->format('Y-m-d');
+                $isEditAdditional =  auth('users')->id() == $project->user_id && strtotime($subDate) >= strtotime(date('Y-m-d'));
+            @endphp
             <form action="{{route('user.project.update_additional', ['id' => request()->route('id')])}}" method="POST" id="form-update">
                 @csrf
                 <div class="card-body">
@@ -127,7 +131,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="owner">補充</label>
-                                @if(auth('users')->id() == $project->user_id)
+                                @if($isEditAdditional)
 
                                 <textarea name="additional" class="form-control" rows="5">{{@$project->additional}}</textarea>
                                 @else
@@ -139,7 +143,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             @php $urls = !empty($project->url_additional) ? json_decode($project->url_additional) : []; @endphp
-                            @if(auth('users')->id() == $project->user_id)
+                            @if($isEditAdditional)
 
                             <div class="form-group">
                                 <label for="">URL</label>
@@ -173,7 +177,7 @@
                                 <label for="">Documents</label>
                             </div>
                             <div class="group-add-documents">
-                                @if(auth('users')->id() == $project->user_id)
+                                @if($isEditAdditional)
                                 <input type="hidden" id="listDocument" name="documents_additional" value="{{empty($project->documents_additional) ? json_encode([]) : $project->documents_additional}}">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="uploadDocument">
@@ -194,7 +198,7 @@
                             </div>
                         </div>
                     </div>
-                    @if(auth('users')->id() == $project->user_id)
+                    @if($isEditAdditional)
                     <div style="width: 100%; display: flex; justify-content: end; ">
                         <button class="btn-success btn" style="margin-bottom: 20px">保存</button>
                     </div>

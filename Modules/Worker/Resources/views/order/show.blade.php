@@ -185,7 +185,7 @@
                             </div>
                             <div class="group-add-documents">
 
-                                <div class="list-documents">
+                                <div class="">
                                     @php $documents = !empty($order->project->documents_additional) ? json_decode($order->project->documents_additional) : []; @endphp
                                     @foreach($documents as $key => $document)
                                         <div class="item-document mt-2">

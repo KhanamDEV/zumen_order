@@ -160,13 +160,14 @@
                                     <th>発注日</th>
                                     <th>受付日</th>
                                     <th>完成日</th>
+                                    <th data-orderable="false" class="no-sort"  >営業者</th>
                                     <th data-orderable="false" class="no-sort">作業者</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($data['projects'] as $key => $project)
                                     <tr  class=" @if(!empty($project->importunate)) has-importunate @endif "
-                                       @if(!empty($project->importunate)) style="background-color: #2ecc71" @else style="background-color: {{config('project.color_status')[$project->order->status]}}" @endif
+                                        style="background-color: {{config('project.color_status')[$project->order->status]}}"
                                     >
                                         <td class="index"><a href="{{route('user.project.show', ['id' => $project->id])}}">{{$key + 1}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->owner}}</a></td>
@@ -176,6 +177,7 @@
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{date('Y-m-d', strtotime($project->created_at))}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{ !empty($project->order->worker_id) ? date('Y-m-d', strtotime($project->order->created_at)) : ''}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->order->finish_day}}</a></td>
+                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{@$project->user->first_name}} {{@$project->user->last_name}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->order->worker->first_name}} {{@$project->order->worker->last_name}}</a></td>
                                     </tr>
                                 @endforeach

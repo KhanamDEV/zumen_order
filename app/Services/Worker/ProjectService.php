@@ -53,7 +53,7 @@ class ProjectService
     }
 
     public function findById($id){
-        return $this->projectRepository->findById($id, ['status' => 1]);
+        return $this->projectRepository->findById($id, []);
     }
 
     public function doProject($id){

@@ -69,6 +69,16 @@
                     </ul>
                     </p>
                 @endif
+                @php $documents = json_decode($project->order->documents) @endphp
+                @if(!empty($documents))
+                    <p class="info"><span>Documents of Worker</span>:
+                    <ul>
+                        @foreach($documents as $document)
+                            <li><a target="_blank" href="{{asset($document->path)}}">{{$document->name}}</a></li>
+                        @endforeach
+                    </ul>
+                    </p>
+                @endif
                 @if($project->order->status == 1)
                 <div class="w-100 text-center">
                     <a href="{{route('worker.project.do_project', ['id' => $project->id])}}" class="btn btn-success">受付</a>
@@ -76,6 +86,56 @@
                     @endif
             </div>
         </div>
+        @if(!empty($project->order->worker_id))
+            <div class="card">
+                <form action="{{route('user.project.update_additional', ['id' => request()->route('id')])}}" method="POST" id="form-update">
+                    @csrf
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="owner">補充</label>
+                                    <p>{{@$project->additional}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @php $urls = !empty($project->url_additional) ? json_decode($project->url_additional) : []; @endphp
+
+                                <p class="info"><span>URL</span>:
+                                <ul>
+                                    @foreach($urls as $url)
+                                        <li><a href="{{$url}}">{{$url}}</a></li>
+                                    @endforeach
+                                </ul>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Documents</label>
+                                </div>
+                                <div class="group-add-documents">
+
+                                    <div class="list-documents">
+                                        @php $documents = !empty($project->documents_additional) ? json_decode($project->documents_additional) : []; @endphp
+                                        @foreach($documents as $key => $document)
+                                            <div class="item-document mt-2">
+                                                <span><a target="_blank" href="{{asset($document->path)}}">{{$document->name}}</a></span>
+
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+        @endif
     </section>
 @endsection
 @section('extra-css')
