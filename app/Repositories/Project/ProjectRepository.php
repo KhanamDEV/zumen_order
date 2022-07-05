@@ -33,9 +33,15 @@ class ProjectRepository implements ProjectRepositoryInterface
         if (!empty($data['user_id'])) $query = $query->where('user_id', $data['user_id']);
         if (!empty($data['name'])) $query = $query->where('name', 'like', '%' . $data['name'] . '%');
         if (!empty($data['type'])) $query = $query->where('type', $data['type']);
-        if (!empty($data['status'])) $query = $query->whereHas('order', function ($query) use ($data) {
-             $query->where('status', $data['status']);
-        });
+        if (!empty($data['status'])){
+            if ($data['status'] == 4){
+                $query = $query->where('importunate', 1);
+            } else{
+                $query = $query->whereHas('order', function ($query) use ($data) {
+                    $query->where('status', $data['status']);
+                });
+            }
+        }
         if (!empty($data['worker_id'])) $query = $query->whereHas('order', function ($query) use ($data) {
              $query->where('worker_id', $data['worker_id']);
         });

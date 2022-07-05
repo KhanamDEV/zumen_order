@@ -51,7 +51,15 @@ class OrderRepository implements OrderRepositoryInterface
         if (!empty($data['type'])) $query->whereHas('project', function ($query) use ($data){
             $query->where('type', $data['type']);
         });
-        if (!empty($data['status'])) $query->where('status', $data['status']);
+        if (!empty($data['status'])){
+            if ($data['status'] == 4){
+                $query->whereHas('project', function ($query) use ($data){
+                    $query->where('importunate', 1);
+                });
+            } else{
+                $query->where('status', $data['status']);
+            }
+        }
         if (!empty($data['start_date'])) $query->whereHas('project', function ($query) use ($data){
             $query->whereDate('delivery_date', '>=', $data['start_date']);
         });
