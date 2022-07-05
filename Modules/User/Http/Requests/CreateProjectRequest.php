@@ -18,7 +18,7 @@ class CreateProjectRequest extends FormRequest
             'owner' => 'required',
             'type' => 'required',
             'delivery_date' => 'required',
-            'postal_code' => 'required|digits:6|numeric'
+            'postal_code' => 'required|digits:7|numeric'
 
         ];
     }
