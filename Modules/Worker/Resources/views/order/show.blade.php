@@ -59,7 +59,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <p class="info"><span>郵便番号</span>: {{ @$order->project->postal_code}}</p>
+                        <p class="info"><span>郵便番号</span>: {{ !empty($order->project->postal_code) ? substr($order->project->postal_code, 0, 3).'-'.substr($order->project->postal_code, 3, 6) : ''}}</p>
                     </div>
                 </div>
                 <p class="info"><span>備考</span>: {{@$order->project->note}}</p>

@@ -18,8 +18,9 @@ class UpdateProjectRequest extends FormRequest
             'owner' => 'required',
             'type' => 'required',
             'delivery_date' => 'required',
-            'postal_code' => 'required|digits:6|numeric'
-        ];
+            'postal_code_head' => 'required|digits:3|numeric',
+            'postal_code_end' => 'required|digits:4|numeric',
+            ];
     }
 
     /**
@@ -40,7 +41,8 @@ class UpdateProjectRequest extends FormRequest
             'type' => '',
             'delivery_date' => '',
             'importunate' => '',
-            'postal_code' => ''
-        ];
+            'postal_code_head' => '',
+            'postal_code_end' => '',
+            ];
     }
 }

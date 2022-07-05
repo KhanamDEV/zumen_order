@@ -73,10 +73,29 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label for="">郵便番号</label>
-                                        <input type="text" name="postal_code" class="form-control">
+                                    <div class="form-row">
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <label for="">郵便番号</label>
+                                                <input type="text" name="postal_code_head" class="form-control text-center">
+                                            </div>
+                                        </div>
+                                        <div style="width: 30px">
+                                            <div class="form-group">
+                                                <label for="" style="opacity: 0">1</label>
+                                                <div class="form-control" style="border: none; text-align: center">
+                                                    -
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <label for="" style="opacity: 0">郵便番号</label>
+                                                <input type="text" name="postal_code_end" class="form-control text-center">
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">

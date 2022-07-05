@@ -18,7 +18,8 @@ class CreateProjectRequest extends FormRequest
             'owner' => 'required',
             'type' => 'required',
             'delivery_date' => 'required',
-            'postal_code' => 'required|digits:7|numeric'
+            'postal_code_head' => 'required|digits:3|numeric',
+            'postal_code_end' => 'required|digits:4|numeric',
 
         ];
     }
@@ -41,7 +42,8 @@ class CreateProjectRequest extends FormRequest
             'type' => '',
             'delivery_date' => '',
             'importunate' => '',
-            'postal_code' => ''
+            'postal_code_head' => '',
+            'postal_code_end' => '',
         ];
     }
 }

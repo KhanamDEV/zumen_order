@@ -92,6 +92,7 @@ class ProjectService
             'other_information' => json_encode($data['other_information'] ?? []),
             'url' => json_encode($data['url'] ?? []),
             'documents' => $data['documents'],
+            'postal_code' => $data['postal_code_head'].$data['postal_code_end'],
             'updated_at' => date('Y-m-d H:i:s')
         ];
         return $this->projectRepository->update($id, $dataUpdate);

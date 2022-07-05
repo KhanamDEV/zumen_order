@@ -49,7 +49,7 @@ class ProjectService
                 'other_information' => json_encode($data['other_information'] ?? []),
                 'url' => json_encode($data['url'] ?? []),
                 'documents' => $data['documents'],
-                'postal_code' => $data['postal_code'],
+                'postal_code' => $data['postal_code_head'].$data['postal_code_end'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ];
@@ -65,7 +65,7 @@ class ProjectService
                 return false;
             }
             $order = $this->orderRepository->find(['id' => $orderId]);
-            $this->mailService->sendMailCreateProject($order);
+//            $this->mailService->sendMailCreateProject($order);
 //            $job = new SendMailCreateProject($order);
 //            dispatch($job)->delay(now()->addSeconds(2));
             DB::commit();
@@ -89,7 +89,7 @@ class ProjectService
             'note' => $data['note'] ?? '',
             'other_information' => json_encode($data['other_information'] ?? []),
             'url' => json_encode($data['url'] ?? []),
-            'postal_code' => $data['postal_code'],
+            'postal_code' => $data['postal_code_head'].$data['postal_code_end'],
             'documents' => $data['documents'],
             'updated_at' => date('Y-m-d H:i:s')
         ];
