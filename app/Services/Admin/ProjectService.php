@@ -13,6 +13,7 @@ use App\Jobs\SendMailCompleteProject;
 use App\Jobs\SendMailContinueProject;
 use App\Repositories\Order\OrderRepositoryInterface;
 use App\Repositories\Project\ProjectRepositoryInterface;
+use App\Services\System\MailService;
 use Illuminate\Support\Facades\DB;
 
 class ProjectService
@@ -21,10 +22,13 @@ class ProjectService
 
     private $orderRepository;
 
-    public function __construct(ProjectRepositoryInterface  $projectRepository, OrderRepositoryInterface $orderRepository)
+    private $mailService;
+
+    public function __construct(ProjectRepositoryInterface  $projectRepository, OrderRepositoryInterface $orderRepository, MailService $mailService)
     {
         $this->projectRepository = $projectRepository;
         $this->orderRepository = $orderRepository;
+        $this->mailService = $mailService;
     }
 
     public function getList($data){
@@ -104,8 +108,9 @@ class ProjectService
         ]);
         if ($status){
             $order->updated_at = date('Y-m-d H:i:s');
-            $job = new SendMailCancelProject($order);
-            dispatch($job)->delay(now()->addSeconds(2));
+            $this->mailService->sendMailCancelProject($order);
+//            $job = new SendMailCancelProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
         }
         return  $status;
     }
@@ -119,8 +124,9 @@ class ProjectService
         ]);
         if ($status){
             $order->updated_at = date('Y-m-d H:i:s');
-            $job = new SendMailContinueProject($order);
-            dispatch($job)->delay(now()->addSeconds(2));
+            $this->mailService->sendMailContinueProject($order);
+//            $job = new SendMailContinueProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
         }
         return  $status;
     }

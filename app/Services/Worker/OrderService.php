@@ -13,14 +13,18 @@ namespace App\Services\Worker;
 use App\Jobs\SendMailCompleteProject;
 use App\Jobs\SendMailLeaveProject;
 use App\Repositories\Order\OrderRepositoryInterface;
+use App\Services\System\MailService;
 
 class OrderService
 {
     private $orderRepository;
 
-    public function __construct(OrderRepositoryInterface  $orderRepository)
+    private $mailService;
+
+    public function __construct(OrderRepositoryInterface  $orderRepository, MailService $mailService)
     {
         $this->orderRepository = $orderRepository;
+        $this->mailService = $mailService;
     }
 
     public function getList($data){
@@ -74,8 +78,9 @@ class OrderService
         $status = $this->orderRepository->update($id, $dataUpdate);
         if ($status){
             $order->updated_at = date('Y-m-d');
-            $job = new SendMailLeaveProject($order);
-            dispatch($job)->delay(now()->addSeconds(2));
+            $this->mailService->sendMailLeaveProject($order);
+//            $job = new SendMailLeaveProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
         }
         return  $status;
 
@@ -90,8 +95,9 @@ class OrderService
         ]);
         if ($status){
             $order->finish_day = date('Y-m-d');
-            $job = new SendMailCompleteProject($order);
-            dispatch($job)->delay(now()->addSeconds(2));
+            $this->mailService->sendMailCompleteProject($order);
+//            $job = new SendMailCompleteProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
         }
         return  $status;
     }

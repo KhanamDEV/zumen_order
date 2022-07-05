@@ -14,6 +14,7 @@ use App\Jobs\SendMailCreateProject;
 use App\Repositories\Order\OrderRepositoryInterface;
 use App\Repositories\Project\ProjectRepository;
 use App\Repositories\Project\ProjectRepositoryInterface;
+use App\Services\System\MailService;
 use Illuminate\Support\Facades\DB;
 
 class ProjectService
@@ -22,10 +23,13 @@ class ProjectService
 
     private $orderRepository;
 
-    public function __construct(ProjectRepositoryInterface $projectRepository, OrderRepositoryInterface $orderRepository)
+    private $mailService;
+
+    public function __construct(ProjectRepositoryInterface $projectRepository, OrderRepositoryInterface $orderRepository, MailService $mailService)
     {
         $this->projectRepository = $projectRepository;
         $this->orderRepository = $orderRepository;
+        $this->mailService = $mailService;
     }
 
     public function store($data){
@@ -61,8 +65,9 @@ class ProjectService
                 return false;
             }
             $order = $this->orderRepository->find(['id' => $orderId]);
-            $job = new SendMailCreateProject($order);
-            dispatch($job)->delay(now()->addSeconds(2));
+            $this->mailService->sendMailCreateProject($order);
+//            $job = new SendMailCreateProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
             DB::commit();
             return  $projectId;
         } catch (\Exception $e){

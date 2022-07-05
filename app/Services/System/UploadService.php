@@ -21,7 +21,8 @@ class UploadService
                 $randomKey = bin2hex(random_bytes(3));
                 $file = request()->file('file');
                 //1048576,2 = 1mb
-                if ($file->getSize() > 5242880) return ResponseHelpers::serverErrorResponse([], '', __('message.response.max_size'));
+                $maxUpload = env('MAX_UPLOAD', 25) * 1048576;
+                if ($file->getSize() > $maxUpload) return ResponseHelpers::serverErrorResponse([], '', __('message.response.max_size'));
                 $explodeOriginalNam = explode(".", $file->getClientOriginalName());
                 $name = $file->getClientOriginalName();
                 $path = $explodeOriginalNam[0].$randomKey.'.'.$file->getClientOriginalExtension();

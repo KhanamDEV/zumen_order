@@ -13,6 +13,7 @@ namespace App\Services\Worker;
 use App\Jobs\SendMailOrder;
 use App\Repositories\Order\OrderRepositoryInterface;
 use App\Repositories\Project\ProjectRepositoryInterface;
+use App\Services\System\MailService;
 
 class ProjectService
 {
@@ -20,10 +21,13 @@ class ProjectService
 
     private $orderRepository;
 
-    public function __construct(ProjectRepositoryInterface  $projectRepository, OrderRepositoryInterface $orderRepository)
+    private $mailService;
+
+    public function __construct(ProjectRepositoryInterface  $projectRepository, OrderRepositoryInterface $orderRepository, MailService $mailService)
     {
         $this->projectRepository = $projectRepository;
         $this->orderRepository = $orderRepository;
+        $this->mailService = $mailService;
     }
 
     public function getList($data){
@@ -65,8 +69,9 @@ class ProjectService
             'created_at' => date('Y-m-d H:i:s')
         ]);
         if ($status){
-            $job = new SendMailOrder($order);
-            dispatch($job)->delay(now()->addSeconds(2));
+            $this->mailService->sendMailOrderProject($order);
+//            $job = new SendMailOrder($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
         }
         return $status;
     }
