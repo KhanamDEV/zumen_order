@@ -65,7 +65,7 @@ class ProjectService
                 return false;
             }
             $order = $this->orderRepository->find(['id' => $orderId]);
-//            $this->mailService->sendMailCreateProject($order);
+            $this->mailService->sendMailCreateProject($order);
 //            $job = new SendMailCreateProject($order);
 //            dispatch($job)->delay(now()->addSeconds(2));
             DB::commit();
