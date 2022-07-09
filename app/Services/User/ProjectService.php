@@ -143,6 +143,7 @@ class ProjectService
 
     }
 
+
     public function updateAdditional($id, $data){
         $data['url_additional'] = array_filter($data['url_additional'], function ($value) {
             return !empty($value);

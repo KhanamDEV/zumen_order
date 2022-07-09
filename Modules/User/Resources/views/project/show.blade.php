@@ -112,7 +112,7 @@
                     </p>
                 @endif
             </div>
-            @if(empty($project->order->worker_id) && $project->order->worker_id == 1 && auth('users')->id() == $project->user_id)
+            @if(empty($project->order->worker_id) && $project->order->status == 1 && auth('users')->id() == $project->user_id)
             <div class="text-center pb-3">
                 <a href="{{route('user.project.delete', ['id'=> $project->id])}}" class="btn btn-danger">削除</a>
             </div>
