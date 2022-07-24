@@ -79,11 +79,12 @@
                     </ul>
                     </p>
                 @endif
-                @if($project->order->status == 1)
+{{--                @if($project->order->status == 1)--}}
                 <div class="w-100 text-center">
-                    <a href="{{route('worker.project.do_project', ['id' => $project->id])}}" class="btn btn-success">受付</a>
+                    <a href="{{route('worker.project.do_project', ['id' => $project->id])}}" class="btn btn-success mr-2 button-width">受付</a>
+                    <a href="{{route('worker.project.index')}}" class="btn btn-secondary  button-width">戻る</a>
                 </div>
-                    @endif
+{{--                    @endif--}}
             </div>
         </div>
         @if(!empty($project->order->worker_id))
@@ -94,7 +95,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="owner">補充</label>
+                                    <label for="owner">補足</label>
                                     <p>{{@$project->additional}}</p>
                                 </div>
                             </div>

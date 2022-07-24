@@ -6,10 +6,27 @@
  * Time: 11:13
  */
 ?>
-@extends('admin::layouts.master')
+@extends('user::layouts.master')
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
+            <div class="row mb-2">
+
+                {{--                <div class="col-sm-4 amount-project-by-type">--}}
+                {{--                    <div class="">--}}
+                {{--                        <div class="form-group">--}}
+                {{--                            <input type="text" class="form-control date-picker-month-year" value="{{date('Y-m')}}">--}}
+                {{--                        </div>--}}
+                {{--                        <div class="list-type">--}}
+                {{--                            @foreach(config('project.status') as $key => $status)--}}
+                {{--                                @if(!empty(config('project.color_status')[$key]))--}}
+                {{--                                <div class="{{$key}}" style="background-color: {{config('project.color_status')[$key]}}">1</div>--}}
+                {{--                                @endif--}}
+                {{--                            @endforeach--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
+                {{--                </div>--}}
+            </div>
             <div class="col-md-12">
                 <div class="card card-primary collapsed-card">
                     <div class="card-header">
@@ -44,7 +61,7 @@
                                     <select class="form-control select2bs4" name="type" style="width: 100%;">
                                         <option selected="selected"></option>
                                         @foreach(config('project.type') as $key => $value)
-                                        <option value="{{$key}}" @if(request()->has('type') && request()->get('type') == $key) selected @endif>{{$value}}</option>
+                                            <option value="{{$key}}" @if(request()->has('type') && request()->get('type') == $key) selected @endif>{{$value}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -136,59 +153,58 @@
         </div>
     </section>
     <section class="content">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">図面発注一覧</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <table class="table table-bordered" id="table-project">
-                                <thead>
-                                <tr>
-                                    <th data-orderable="false" class="no-sort"  style="width: 10px">No</th>
-                                    <th data-orderable="false" class="no-sort"  >現場名</th>
-                                    <th data-orderable="false" class="no-sort"  >図面種類</th>
-                                    <th data-orderable="false" class="no-sort"  >ステータス</th>
-                                    <th>納品日</th>
-                                    <th>発注日</th>
-                                    <th>受付日</th>
-                                    <th>完成日</th>
-                                    <th data-orderable="false" class="no-sort"  >営業者</th>
-                                    <th data-orderable="false" class="no-sort"  >作業者</th>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title w-100 text-center">図面発注一覧</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered" id="table-project">
+                            <thead>
+                            <tr>
+                                <th data-orderable="false" class="no-sort" style="width: 10px">No</th>
+                                <th data-orderable="false" class="no-sort">現場名</th>
+                                <th data-orderable="false" class="no-sort">図面種類</th>
+                                <th data-orderable="false" class="no-sort">ステータス</th>
+                                <th>納品日</th>
+                                <th>発注日</th>
+                                <th>受付日</th>
+                                <th>完成日</th>
+                                <th data-orderable="false" class="no-sort"  >営業者</th>
+                                <th data-orderable="false" class="no-sort">作業者</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($data['projects'] as $key => $project)
+                                <tr  class=" @if(!empty($project->importunate)) has-importunate @endif "
+                                     style="background-color: {{config('project.color_status')[$project->order->status]}}"
+                                >
+                                    <td class="index"><a href="{{route('user.project.show', ['id' => $project->id])}}">{{$key + 1}}</a></td>
+                                    <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{@$project->owner}}</a></td>
+                                    <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
+                                    <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{config('project.status')[$project->order->status]}}</a></td>
+                                    <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{ !empty($project->importunate) ? '3日以内' : @$project->delivery_date}}</a></td>
+                                    <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{date('Y-m-d', strtotime($project->created_at))}}</a></td>
+                                    <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{ !empty($project->order->worker_id) ? date('Y-m-d', strtotime($project->order->created_at)) : ''}}</a></td>
+                                    <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{@$project->order->finish_day}}</a></td>
+                                    <td><a href="{{route('admin.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{@$project->user->first_name}} {{@$project->user->last_name}}</a></td>
+                                    <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{@$project->order->worker->first_name}} {{@$project->order->worker->last_name}}</a></td>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($data['projects'] as $key => $project)
-                                    <tr
-                                        class="@if(!empty($project->importunate)) has-importunate @endif"
-                                         style="background-color: {{config('project.color_status')[$project->order->status]}}"
-                                    >
-                                        <td class="index" >
-                                            <a href="{{route('admin.project.show', ['id' => $project->id])}}">{{$key +  1}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{@$project->owner}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{config('project.status')[$project->order->status]}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{@$project->delivery_date}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{date('Y-m-d', strtotime($project->created_at))}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{ !empty($project->order->worker_id) ? date('Y-m-d', strtotime($project->order->created_at)) : ''}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{@$project->order->finish_day}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{@$project->user->first_name}} {{@$project->user->last_name}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{@$project->order->worker->first_name}} {{@$project->order->worker->last_name}}</a></td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.content-wrapper -->
+                            @endforeach
+                            </tbody>
+                        </table>
 
                     </div>
+                    <!-- /.content-wrapper -->
                 </div>
             </div>
+        </div>
     </section>
 @endsection
 @section('scripts')
+    <script src="{{asset('static/js/jquery-ui.min.js')}}"></script>
     <script>
         $(document).ready( function () {
             $('#table-project').DataTable({
@@ -208,7 +224,7 @@
             });
             $('#table-project').on( 'order.dt', function () {
                 $("td.index").each(function (index, value){
-                   $(value).find('a').text(index + 1);
+                    $(value).find('a').text(index + 1);
                 });
             });
         } );
@@ -221,19 +237,43 @@
         $('input.date-picker').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
         });
+        $.datepicker.setDefaults({
+            closeText: "关闭",
+            prevText: "&#x3C;上月",
+            nextText: "下月&#x3E;",
+            currentText: "今天",
+            monthNames: [ "一月","二月","三月","四月","五月","六月",
+                "七月","八月","九月","十月","十一月","十二月" ],
+            monthNamesShort: [ "一月","二月","三月","四月","五月","六月",
+                "七月","八月","九月","十月","十一月","十二月" ],
+            dayNames: [ "星期日","星期一","星期二","星期三","星期四","星期五","星期六" ],
+            dayNamesShort: [ "周日","周一","周二","周三","周四","周五","周六" ],
+            dayNamesMin: [ "日","一","二","三","四","五","六" ],
+            weekHeader: "周",
+            dateFormat: "yy-mm-dd",
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: true,
+            yearSuffix: ""
+        });
+        $(".date-picker-month-year").datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            maxDate: new Date(),
+            dateFormat: 'yy-mm',
+            onClose: function(dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+        });
     </script>
 @endsection
 @section('extra-css')
+    <link rel="stylesheet" href="{{asset('static/css/jquery-ui.css')}}">
     <style>
-        #table-project tbody tr td a{color: black}
-        tr td a{color: white !important;}
-        tr.has-importunate td a{color: black !important;}
-        tbody tr:hover{background-color: #0000ff1f}
-        tr.cancel{background-color: #80808085 !important;}
-        tr.success{background-color: red !important; }
-        tr.success td a{color: white !important;}
-        th.no-sort::before{display: none !important;}
-        th.no-sort::after{display: none !important;}
-    </style>
+        .ui-datepicker-calendar {
+            display: none;
+        }
 
-    @endsection
+    </style>
+@endsection

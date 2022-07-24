@@ -163,7 +163,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="owner">補充</label>
+                                <label for="owner">補足</label>
                                     <p>{{@$order->project->additional}}</p>
                             </div>
                         </div>
@@ -199,13 +199,16 @@
                 </div>
         </div>
         @if($isWorkerOfProject)
-            <div class="group-button mt-3 pb-3 text-right">
-                <button type="submit" class="btn btn-info mr-2">確認</button>
+            <div class="group-button-end " >
+                <button type="submit" class="btn btn-info button-width mr-2">確認</button>
+                    @php $documents = empty($order->documents) ? [] : json_decode($order->documents) @endphp
+                    @if(!empty($documents))
+                        <a href="{{route('worker.order.done_project', ['id' => $order->id])}}" class="btn button-width btn-success ">完了</a>
+                    @endif
                 @if(!$readonly )
-
-                    <a href="{{route('worker.order.done_project', ['id' => $order->id])}}" class="btn btn-success mr-2">完了</a>
-                    <a href="{{route('worker.order.leave_project', ['id' => $order->id])}}" class="btn btn-danger">中止</a>
+                <a href="{{route('worker.order.leave_project', ['id' => $order->id])}}" class="btn button-width btn-danger">中止</a>
                 @endif
+                <a href="{{route('worker.order.index')}}" class="btn button-width btn-secondary">戻る</a>
 
             </div>
         @endif

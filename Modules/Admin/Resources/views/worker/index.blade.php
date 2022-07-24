@@ -57,7 +57,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table class="table table-bordered" id="table-project">
+                        <table class="table table-bordered" id="table-worker">
                             <thead>
                             <tr>
                                 <th style="width: 10px">No</th>
@@ -92,7 +92,14 @@
 @section('scripts')
     <script>
         $(document).ready( function () {
-            $('#table-project').DataTable({
+            $('#table-worker').DataTable({
+                language: {
+                    "lengthMenu": " _MENU_ アイテム",
+                    "paginate": {
+                        "previous": "前のページ",
+                        "next": "次のページ"
+                    }
+                },
                 searching: false,
                 ordering:  true,
                 paging: true,
@@ -100,6 +107,7 @@
                 pageLength: 15,
                 info: false
             });
+
             $('#table-project').on( 'order.dt', function () {
                 $("td.index").each(function (index, value){
                     $(value).find('a').text(index + 1);

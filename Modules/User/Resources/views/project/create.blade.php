@@ -51,7 +51,8 @@
         </div>
     </div>
     <section class="content">
-        <form action="" method="POST" id="form-create">
+        <form action="" method="POST" id="form-create" class="h-adr">
+            <span class="p-country-name" style="display:none;">Japan</span>
             @csrf
             <div class="row">
                 <div class="col-md-12">
@@ -74,10 +75,10 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-row">
-                                        <div class="col-md-1">
+                                        <div class="col-md-1 col-4">
                                             <div class="form-group">
                                                 <label for="">郵便番号</label>
-                                                <input type="text" name="postal_code_head" class="form-control text-center">
+                                                <input type="text" name="postal_code_head" class="form-control text-center p-postal-code" size="3">
                                             </div>
                                         </div>
                                         <div style="width: 30px">
@@ -88,10 +89,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-1">
+                                        <div class="col-md-1 col-4">
                                             <div class="form-group">
                                                 <label for="" style="opacity: 0">郵便番号</label>
-                                                <input type="text" name="postal_code_end" class="form-control text-center">
+                                                <input type="text" name="postal_code_end" class="form-control text-center p-postal-code" size="4">
                                             </div>
                                         </div>
                                     </div>
@@ -100,7 +101,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="">現場住所</label>
-                                        <input type="text" name="name" class="form-control">
+                                        <input type="text" readonly name="name" class="form-control p-region p-locality p-street-address p-extended-address">
                                     </div>
                                 </div>
                             </div>

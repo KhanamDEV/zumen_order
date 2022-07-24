@@ -107,7 +107,7 @@ class ProjectService
             'documents' => json_encode([]),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
-        if ($status){
+        if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
             $order->updated_at = date('Y-m-d H:i:s');
             $this->mailService->sendMailCancelProject($order);
 //            $job = new SendMailCancelProject($order);
@@ -123,7 +123,7 @@ class ProjectService
             'status' => 1,
             'updated_at' => date('Y-m-d H:i:s')
         ]);
-        if ($status){
+        if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
             $order->updated_at = date('Y-m-d H:i:s');
             $this->mailService->sendMailContinueProject($order);
 //            $job = new SendMailContinueProject($order);

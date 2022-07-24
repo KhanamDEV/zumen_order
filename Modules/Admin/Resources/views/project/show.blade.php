@@ -131,7 +131,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="owner">補充</label>
+                                    <label for="owner">補足</label>
                                         <p>{{@$project->additional}}</p>
                                 </div>
                             </div>
@@ -173,6 +173,9 @@
 
             </div>
         @endif
+        <div class="group-button-end" style="width: 100%; display: flex; justify-content: center;  ">
+            <a class="btn button-width btn-secondary" href="{{route('admin.project.index')}}">戻る</a>
+        </div>
     </section>
 @endsection
 @section('extra-css')

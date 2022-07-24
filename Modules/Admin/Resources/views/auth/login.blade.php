@@ -13,8 +13,10 @@
         <div class="card-header text-center">
             <b>ログイン</b>
         </div>
-        <div class="card-body">
-            <p class="login-box-msg">図面発注システム</p>
+        <div class="card-body pt-0">
+            <p class="login-box-msg pb-0 mb-4" style="border-bottom: 1px solid #ccc">
+                <img class="w-100" src="{{asset('static/images/admin_login.png')}}" alt="">
+            </p>
 
             <form action="" method="post" id="form-login">
                 @csrf

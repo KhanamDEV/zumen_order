@@ -77,10 +77,10 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-row">
-                                        <div class="col-md-1">
+                                        <div class="col-md-1 col-4">
                                             <div class="form-group">
                                                 <label for="">郵便番号</label>
-                                                <input type="text" name="postal_code_head" value="{{!empty($project->postal_code) ? substr($project->postal_code, 0, 3) : ''}}" class="text-center form-control">
+                                                <input type="text" name="postal_code_head" value="{{!empty($project->postal_code) ? substr($project->postal_code, 0, 3) : ''}}" class="text-center form-control p-postal-code" size="3">
                                             </div>
                                         </div>
                                         <div style="width: 30px">
@@ -91,10 +91,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-1">
+                                        <div class="col-md-1 col-4">
                                             <div class="form-group">
                                                 <label for="" style="opacity: 0">郵便番号</label>
-                                                <input type="text" name="postal_code_end" value="{{!empty($project->postal_code) ? substr($project->postal_code, 3, 6) : ''}}" class="text-center form-control">
+                                                <input type="text" name="postal_code_end" value="{{!empty($project->postal_code) ? substr($project->postal_code, 3, 6) : ''}}" class="text-center form-control p-postal-code" size="4">
                                             </div>
                                         </div>
                                     </div>
@@ -103,7 +103,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="">現場住所</label>
-                                        <input type="text" name="name" value="{{@$project->name}}" class="form-control">
+                                        <input type="text" name="name" readonly value="{{@$project->name}}" class="form-control p-region p-locality p-street-address p-extended-address">
                                     </div>
                                 </div>
                             </div>
@@ -230,9 +230,13 @@
 
                 <!-- /.card-body -->
             </div>
-            <div style="width: 100%; display: flex; justify-content: end; ">
-                <button class="btn-success btn" style="margin-bottom: 20px">保存</button>
-
+            <div class="group-button-end " >
+                <button class="btn-success btn button-width" style="margin-bottom: 20px">保存</button>
+                @if(request()->has('from'))
+                    <a class="btn button-width btn-secondary" href="{{ route('user.project.show', ['id' => request()->route('id'), 'from' => 'all'])}}">戻る</a>
+                @else
+                    <a class="btn button-width btn-secondary" href="{{ route('user.project.show', ['id' => request()->route('id')])}}">戻る</a>
+                @endif
             </div>
         </form>
     </section>

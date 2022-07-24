@@ -56,7 +56,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table class="table table-bordered" id="table-project">
+                        <table class="table table-bordered" id="table-user">
                             <thead>
                             <tr>
                                 <th style="width: 10px">No</th>
@@ -91,7 +91,14 @@
 @section('scripts')
     <script>
         $(document).ready( function () {
-            $('#table-project').DataTable({
+            $('#table-user').DataTable({
+                language: {
+                    "lengthMenu": " _MENU_ アイテム",
+                    "paginate": {
+                        "previous": "前のページ",
+                        "next": "次のページ"
+                    }
+                },
                 searching: false,
                 ordering:  true,
                 paging: true,

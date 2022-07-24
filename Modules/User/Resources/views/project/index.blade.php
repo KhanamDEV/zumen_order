@@ -19,13 +19,32 @@
                         <span class="text">案件作成</span>
                     </a>
                 </div>
+{{--                <div class="col-sm-4 amount-project-by-type">--}}
+{{--                    <div class="">--}}
+{{--                        <div class="form-group">--}}
+{{--                            <input type="text" class="form-control date-picker-month-year" value="{{date('Y-m')}}">--}}
+{{--                        </div>--}}
+{{--                        <div class="list-type">--}}
+{{--                            @foreach(config('project.status') as $key => $status)--}}
+{{--                                @if(!empty(config('project.color_status')[$key]))--}}
+{{--                                <div class="{{$key}}" style="background-color: {{config('project.color_status')[$key]}}">1</div>--}}
+{{--                                @endif--}}
+{{--                            @endforeach--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
             </div>
             <div class="col-md-12">
-                <div class="card card-primary">
+                <div class="card card-primary collapsed-card">
                     <div class="card-header">
                         <h3 class="card-title">フィルター</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="display: none">
                         <form action="" class="row g-3" method="get" autocomplete="off">
                             <div class="col-md-4">
                                 <label class="form-label">現場住所</label>
@@ -145,7 +164,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">図面発注一覧</h3>
+                            <h3 class="card-title w-100 text-center">マイ図面</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -192,14 +211,22 @@
     </section>
 @endsection
 @section('scripts')
+    <script src="{{asset('static/js/jquery-ui.min.js')}}"></script>
     <script>
         $(document).ready( function () {
             $('#table-project').DataTable({
+                language: {
+                    "lengthMenu": " _MENU_ アイテム",
+                    "paginate": {
+                        "previous": "前のページ",
+                        "next": "次のページ"
+                    }
+                },
                 searching: false,
                 ordering:  true,
                 paging: true,
-                lengthChange: false,
-                pageLength: 15,
+                lengthChange: true,
+                pageLength: 10,
                 info: false
             });
             $('#table-project').on( 'order.dt', function () {
@@ -217,19 +244,43 @@
         $('input.date-picker').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
         });
-
+        $.datepicker.setDefaults({
+            closeText: "关闭",
+            prevText: "&#x3C;上月",
+            nextText: "下月&#x3E;",
+            currentText: "今天",
+            monthNames: [ "一月","二月","三月","四月","五月","六月",
+                "七月","八月","九月","十月","十一月","十二月" ],
+            monthNamesShort: [ "一月","二月","三月","四月","五月","六月",
+                "七月","八月","九月","十月","十一月","十二月" ],
+            dayNames: [ "星期日","星期一","星期二","星期三","星期四","星期五","星期六" ],
+            dayNamesShort: [ "周日","周一","周二","周三","周四","周五","周六" ],
+            dayNamesMin: [ "日","一","二","三","四","五","六" ],
+            weekHeader: "周",
+            dateFormat: "yy-mm-dd",
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: true,
+            yearSuffix: ""
+        });
+        $(".date-picker-month-year").datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            maxDate: new Date(),
+            dateFormat: 'yy-mm',
+            onClose: function(dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+        });
     </script>
 @endsection
 @section('extra-css')
+    <link rel="stylesheet" href="{{asset('static/css/jquery-ui.css')}}">
     <style>
-        #table-project tbody tr td a{color: black}
-        tr td a{color: white !important;}
-        tr.has-importunate td a{color: black !important;}
-        tbody tr:hover{background-color: #0000ff1f}
-        tr.cancel{background-color: #80808085 !important;}
-        tr.success{background-color: red !important; }
-        tr.success td a{color: white !important;}
-        th.no-sort::before{display: none !important;}
-        th.no-sort::after{display: none !important;}
+        .ui-datepicker-calendar {
+            display: none;
+        }
+
     </style>
     @endsection

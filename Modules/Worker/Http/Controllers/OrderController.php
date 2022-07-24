@@ -46,7 +46,6 @@ class OrderController extends Controller
             $this->orderService->update($id, $request->all());
             return back();
         } catch (\Exception $e){
-            dd($e);
             abort(500);
         }
     }

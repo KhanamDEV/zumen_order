@@ -15,4 +15,5 @@
 <script src="{{asset('static/js/daterangepicker.js')}}"></script>
 <script src="{{asset('static/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <script src="{{asset('static/js/adminlte.js')}}"></script>
+<script src="{{asset('static/js/yubinbango.js')}}" charset="UTF-8"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>

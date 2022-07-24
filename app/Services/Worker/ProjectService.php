@@ -68,7 +68,7 @@ class ProjectService
             'status' => 2,
             'created_at' => date('Y-m-d H:i:s')
         ]);
-        if ($status){
+        if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
             $this->mailService->sendMailOrderProject($order);
 //            $job = new SendMailOrder($order);
 //            dispatch($job)->delay(now()->addSeconds(2));

@@ -84,9 +84,17 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
                 <li class="nav-item">
                     <a href="{{route('user.project.index')}}" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            マイ図面
+                            <!-- <span class="right badge badge-danger">New</span>-->
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('user.project.all')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             発注図面一覧

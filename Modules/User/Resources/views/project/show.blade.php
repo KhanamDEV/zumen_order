@@ -23,7 +23,11 @@
             @if(empty($project->order->worker_id) && $project->order->status != 5 && auth('users')->id() == $project->user_id)
             <div class="card-header">
                 <div class="w-100 text-right">
-                    <a class="btn btn-secondary" href="{{route('user.project.edit', ['id' => $project->id])}}">変更</a>
+                    @if(request()->has('from'))
+                        <a class="btn btn-secondary" href="{{route('user.project.edit', ['id' => $project->id, 'from' => 'all'])}}">変更</a>
+                    @else
+                        <a class="btn btn-secondary" href="{{route('user.project.edit', ['id' => $project->id])}}">変更</a>
+                    @endif
                 </div>
             </div>
             @endif
@@ -31,7 +35,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>発注者</span>: {{auth()->guard('users')->user()->first_name}} {{auth()->guard('users')->user()->last_name}}
+                            <span>発注者</span>: {{$project->user->first_name}} {{$project->user->last_name}}
                         </p>
                     </div>
                     <div class="col-md-4">
@@ -113,9 +117,11 @@
                 @endif
             </div>
             @if(empty($project->order->worker_id) && $project->order->status == 1 && auth('users')->id() == $project->user_id)
-            <div class="text-center pb-3">
-                <a href="{{route('user.project.delete', ['id'=> $project->id])}}" class="btn btn-danger">削除</a>
-            </div>
+                    <div class="group-button-end " >
+                            <a href="{{route('user.project.delete', ['id'=> $project->id])}}" class="btn btn-danger button-width">削除</a>
+                        <a class="btn button-width btn-secondary" href="{{!request()->has('from') ? route('user.project.index') : route('user.project.all')}}">戻る</a>
+                    </div>
+
                 @endif
         </div>
         @if(!empty($project->order->worker_id))
@@ -130,7 +136,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="owner">補充</label>
+                                <label for="owner">補足</label>
                                 @if($isEditAdditional)
 
                                 <textarea name="additional" class="form-control" rows="5">{{@$project->additional}}</textarea>

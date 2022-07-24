@@ -25,9 +25,21 @@ class ProjectController extends Controller
     {
         try {
             $data['workers'] = DB::table('workers')->get();
-            $data['projects'] = $this->projectService->getList($request->all());
+            $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['user_id' => auth('users')->id()]));
             $data['users'] = DB::table('users')->get();
             return view('user::project.index', compact('data'));
+        } catch (\Exception $e){
+            abort(500);
+        }
+    }
+
+    public function all(Request $request)
+    {
+        try {
+            $data['workers'] = DB::table('workers')->get();
+            $data['projects'] = $this->projectService->getList($request->all());
+            $data['users'] = DB::table('users')->get();
+            return view('user::project.all', compact('data'));
         } catch (\Exception $e){
             abort(500);
         }

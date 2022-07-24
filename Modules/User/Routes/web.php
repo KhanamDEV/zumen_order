@@ -23,6 +23,7 @@ Route::prefix('')->name('user.')->group(function() {
         Route::post('change-password', 'UserController@updatePassword');
         Route::prefix('project')->name('project.')->group(function (){
             Route::get('', 'ProjectController@index')->name('index');
+            Route::get('all', 'ProjectController@all')->name('all');
             Route::get('create', 'ProjectController@create')->name('create');
             Route::post('create', 'ProjectController@store');
             Route::get('{id}/edit', 'ProjectController@edit')->name('edit');

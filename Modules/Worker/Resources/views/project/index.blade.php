@@ -11,11 +11,16 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="col-md-12">
-                <div class="card card-primary">
+                <div class="card card-primary collapsed-card">
                     <div class="card-header">
                         <h3 class="card-title">フィルター</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="display: none">
                         <form action="" class="row g-3" method="get" autocomplete="off">
                             <div class="col-md-4">
                                 <label class="form-label">現場住所</label>
@@ -183,11 +188,18 @@
     <script>
         $(document).ready( function () {
             $('#table-project').DataTable({
+                language: {
+                    "lengthMenu": " _MENU_ アイテム",
+                    "paginate": {
+                        "previous": "前のページ",
+                        "next": "次のページ"
+                    }
+                },
                 searching: false,
                 ordering:  true,
                 paging: true,
-                lengthChange: false,
-                pageLength: 15,
+                lengthChange: true,
+                pageLength: 10,
                 info: false
             });
             $('#table-project').on( 'order.dt', function () {

@@ -80,13 +80,10 @@
                                     <input type="text" class="form-control" id="" placeholder="" name="password" >
                                 </div>
                             </div>
-                            <div class="form-group" style="display: flex">
-                                <div class="col-sm-offset-2 ">
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> 保存</button>
-                                </div>
-                                <div class="col-sm-offset-2 col-sm-10">
-                                    <a href="{{route('admin.worker.delete', ['id' => $data['worker']->id])}}"  class="btn btn-danger"> 削除</a>
-                                </div>
+                            <div class="group-button-end justify-content-start" >
+                                <button type="submit" class="btn button-width btn-primary"><i class="fa fa-save"></i> 保存</button>
+                                <a href="{{route('admin.worker.delete', ['id' => $data['worker']->id])}}"  class="btn button-width btn-danger"> 削除</a>
+                                <a href="{{route('admin.worker.index')}}"  class="btn button-width btn-secondary"> 戻る</a>
                             </div>
                         </form>
                     </div>

@@ -48,7 +48,7 @@ class OrderService
             $data['finish_day_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
-        return $this->orderRepository->getList(array_merge($data, []));
+        return $this->orderRepository->getList(array_merge($data, ['worker_id' => auth('workers')->id()]));
     }
 
     public function findById($id){
@@ -63,6 +63,9 @@ class OrderService
         if (!empty($data['status'])){
             $dataUpdate['status'] = $data['status'];
         }
+        if (empty($data['documents'])){
+            $dataUpdate['status'] = 2;
+        }
         return $this->orderRepository->update($id, $dataUpdate);
     }
 
@@ -76,7 +79,7 @@ class OrderService
             'updated_at' => date('Y-m-d H:i:s')
         ];
         $status = $this->orderRepository->update($id, $dataUpdate);
-        if ($status){
+        if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
             $order->updated_at = date('Y-m-d');
             $this->mailService->sendMailLeaveProject($order);
 //            $job = new SendMailLeaveProject($order);
@@ -93,7 +96,7 @@ class OrderService
             'status' => 3,
             'finish_day' => date('Y-m-d H:i:s')
         ]);
-        if ($status){
+        if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
             $order->finish_day = date('Y-m-d');
             $this->mailService->sendMailCompleteProject($order);
 //            $job = new SendMailCompleteProject($order);
