@@ -101,7 +101,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="">現場住所</label>
-                                        <input type="text" readonly name="name" class="form-control p-region p-locality p-street-address p-extended-address">
+                                        <input type="text"  name="name" class="form-control p-region p-locality p-street-address p-extended-address">
                                     </div>
                                 </div>
                             </div>
@@ -213,8 +213,11 @@
                 <!-- /.card-body -->
             </div>
             <div style="width: 100%; display: flex; justify-content: end; ">
-                <button class="btn-success btn" style="margin-bottom: 20px">保存</button>
 
+            </div>
+            <div class="group-button-end " >
+                <button class="btn-success btn button-width" style="margin-bottom: 20px">保存</button>
+                    <a class="btn button-width btn-secondary" href="{{ route('user.project.index')}}">戻る</a>
             </div>
         </form>
     </section>

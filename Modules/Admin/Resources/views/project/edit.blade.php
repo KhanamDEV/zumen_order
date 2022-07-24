@@ -103,7 +103,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="">現場住所</label>
-                                        <input type="text" name="name" readonly value="{{@$project->name}}" class="form-control p-region p-locality p-street-address p-extended-address">
+                                        <input type="text" name="name"  value="{{@$project->name}}" class="form-control p-region p-locality p-street-address p-extended-address">
                                     </div>
                                 </div>
                             </div>
