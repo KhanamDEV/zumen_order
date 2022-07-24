@@ -77,11 +77,16 @@ class MailService
     public function sendMailCreateProject($order){
         $admins = $this->adminRepository->getList();
         $workers = $this->workerRepository->getList();
+        $users = $this->userRepository->getList(['email' => $order->project->user->email]);
+
         foreach ($admins as $admin){
             Mail::to($admin->email)->send(new MailCreateProject('admin', $order));
         }
         foreach ($workers as $worker){
             Mail::to($worker->email)->send(new MailCreateProject('worker', $order));
+        }
+        foreach ($users as $user){
+            Mail::to($user->email)->send(new MailCreateProject('user', $order));
         }
     }
 

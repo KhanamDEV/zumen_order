@@ -33,6 +33,6 @@
 @if($type == 'admin')
     <a href="{{route('admin.project.show', ['id' => $order->project->id])}}">{{route('admin.project.show', ['id' => $order->project->id])}}</a>
 @endif
-{{--@if($type == 'user')--}}
-{{--    <a href="{{route('user.project.show', ['id' => $order->project->id])}}">{{route('user.project.show', ['id' => $order->project->id])}}</a>--}}
-{{--@endif--}}
+@if($type == 'user')
+    <a href="{{route('user.project.show', ['id' => $order->project->id])}}">{{route('user.project.show', ['id' => $order->project->id])}}</a>
+@endif
