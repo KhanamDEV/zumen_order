@@ -216,8 +216,8 @@
 
             </div>
             <div class="group-button-end " >
+                <a class="btn button-width btn-secondary" href="{{ route('user.project.index')}}">戻る</a>
                 <button class="btn-success btn button-width" style="margin-bottom: 20px">保存</button>
-                    <a class="btn button-width btn-secondary" href="{{ route('user.project.index')}}">戻る</a>
             </div>
         </form>
     </section>

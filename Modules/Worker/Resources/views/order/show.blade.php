@@ -200,6 +200,8 @@
         </div>
         @if($isWorkerOfProject)
             <div class="group-button-end " >
+                <a href="{{route('worker.order.index')}}" class="btn button-width btn-secondary">戻る</a>
+
                 <button type="submit" class="btn btn-info button-width mr-2">確認</button>
                     @php $documents = empty($order->documents) ? [] : json_decode($order->documents) @endphp
                     @if(!empty($documents))
@@ -208,7 +210,6 @@
                 @if(!$readonly )
                 <a href="{{route('worker.order.leave_project', ['id' => $order->id])}}" class="btn button-width btn-danger">中止</a>
                 @endif
-                <a href="{{route('worker.order.index')}}" class="btn button-width btn-secondary">戻る</a>
 
             </div>
         @endif

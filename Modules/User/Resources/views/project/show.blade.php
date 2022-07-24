@@ -118,8 +118,8 @@
             </div>
             @if(empty($project->order->worker_id) && $project->order->status == 1 && auth('users')->id() == $project->user_id)
                     <div class="group-button-end " >
-                            <a href="{{route('user.project.delete', ['id'=> $project->id])}}" class="btn btn-danger button-width">削除</a>
                         <a class="btn button-width btn-secondary" href="{{!request()->has('from') ? route('user.project.index') : route('user.project.all')}}">戻る</a>
+                        <a href="{{route('user.project.delete', ['id'=> $project->id])}}" class="btn btn-danger button-width">削除</a>
                     </div>
 
                 @endif

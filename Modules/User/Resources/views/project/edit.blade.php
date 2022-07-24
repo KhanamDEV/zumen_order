@@ -231,12 +231,13 @@
                 <!-- /.card-body -->
             </div>
             <div class="group-button-end " >
-                <button class="btn-success btn button-width" style="margin-bottom: 20px">保存</button>
                 @if(request()->has('from'))
                     <a class="btn button-width btn-secondary" href="{{ route('user.project.show', ['id' => request()->route('id'), 'from' => 'all'])}}">戻る</a>
                 @else
                     <a class="btn button-width btn-secondary" href="{{ route('user.project.show', ['id' => request()->route('id')])}}">戻る</a>
                 @endif
+                <button class="btn-success btn button-width" style="margin-bottom: 20px">保存</button>
+
             </div>
         </form>
     </section>

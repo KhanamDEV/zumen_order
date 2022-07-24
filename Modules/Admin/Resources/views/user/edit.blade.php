@@ -81,9 +81,9 @@
                                 </div>
                             </div>
                             <div class="group-button-end justify-content-start" >
+                                <a href="{{route('admin.user.index')}}"  class="btn button-width btn-secondary"> 戻る</a>
                                 <button type="submit" class="btn btn-primary button-width"><i class="fa fa-save"></i> 保存</button>
                                 <a href="{{route('admin.user.delete', ['id' => $data['user']->id])}}"  class="btn btn-danger button-width"> 削除</a>
-                                <a href="{{route('admin.user.index')}}"  class="btn button-width btn-secondary"> 戻る</a>
                             </div>
 
                         </form>

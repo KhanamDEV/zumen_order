@@ -78,7 +78,6 @@ class MailService
         $admins = $this->adminRepository->getList();
         $workers = $this->workerRepository->getList();
         $users = $this->userRepository->getList(['email' => $order->project->user->email]);
-
         foreach ($admins as $admin){
             Mail::to($admin->email)->send(new MailCreateProject('admin', $order));
         }

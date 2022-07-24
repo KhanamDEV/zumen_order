@@ -230,8 +230,8 @@
                 <!-- /.card-body -->
             </div>
             <div class="group-button-end" style="width: 100%; display: flex; justify-content: center;  ">
-                <a class="btn button-width btn-secondary" href="{{route('admin.project.show', ['id' => request()->route('id')])}}">戻る</a>
                 <button class="btn-success btn button-width" >保存</button>
+                <a class="btn button-width btn-secondary" href="{{route('admin.project.show', ['id' => request()->route('id')])}}">戻る</a>
             </div>
         </form>
     </section>
