@@ -119,7 +119,18 @@ class ProjectService
             $data['finish_day_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
-        return $this->projectRepository->getList(array_merge([], $data) );
+        $projects = $this->projectRepository->getList($data);
+        $amountProject = ['all' => count($projects)];
+        foreach (config('project.status') as $key => $status){
+            if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
+        }
+        foreach ($projects as $project){
+            $amountProject[$project->order->status]++;
+        }
+        return [
+            'list' => $projects,
+            'amount' => $amountProject
+        ];
     }
 
     public function findById($id){
@@ -157,5 +168,9 @@ class ProjectService
             'updated_at' => date('Y-m-d H:i:s')
         ];
         return $this->projectRepository->update($id, $dataUpdate);
+    }
+
+    public function search($data){
+        return $this->projectRepository->getList($data);
     }
 }

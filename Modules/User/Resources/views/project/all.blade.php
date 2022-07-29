@@ -11,21 +11,19 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-
-                {{--                <div class="col-sm-4 amount-project-by-type">--}}
-                {{--                    <div class="">--}}
-                {{--                        <div class="form-group">--}}
-                {{--                            <input type="text" class="form-control date-picker-month-year" value="{{date('Y-m')}}">--}}
-                {{--                        </div>--}}
-                {{--                        <div class="list-type">--}}
-                {{--                            @foreach(config('project.status') as $key => $status)--}}
-                {{--                                @if(!empty(config('project.color_status')[$key]))--}}
-                {{--                                <div class="{{$key}}" style="background-color: {{config('project.color_status')[$key]}}">1</div>--}}
-                {{--                                @endif--}}
-                {{--                            @endforeach--}}
-                {{--                        </div>--}}
-                {{--                    </div>--}}
-                {{--                </div>--}}
+                <div class="col-sm-8"></div>
+                <div class="col-sm-4 amount-project-by-type">
+                    <div class="">
+                        <div class="list-type">
+                            <div class="all" style="background-color: #8e44ad">{{$data['projects']['amount']['all']}}</div>
+                            @foreach(config('project.status') as $key => $status)
+                                @if(!empty(config('project.color_status')[$key]))
+                                    <div class="{{$key}}" style="background-color: {{config('project.color_status')[$key]}}">{{$data['projects']['amount'][$key]}}</div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-md-12">
                 <div class="card card-primary collapsed-card">
@@ -177,7 +175,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($data['projects'] as $key => $project)
+                            @foreach($data['projects']['list'] as $key => $project)
                                 <tr  class=" @if(!empty($project->importunate)) has-importunate @endif "
                                      style="background-color: {{config('project.color_status')[$project->order->status]}}"
                                 >

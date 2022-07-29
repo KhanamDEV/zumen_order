@@ -10,6 +10,22 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-8"></div>
+                <div class="col-sm-4 amount-project-by-type">
+                    <div class="">
+                        {{--                        <p class="date-amount-project mb-0">全て</p>--}}
+                        <div class="list-type">
+                            <div class="all" style="background-color: #8e44ad">{{$data['orders']['amount']['all']}}</div>
+                            @foreach(config('project.status') as $key => $status)
+                                @if(!empty(config('project.color_status')[$key]))
+                                    <div class="{{$key}}" style="background-color: {{config('project.color_status')[$key]}}">{{$data['orders']['amount'][$key]}}</div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-12">
                 <div class="card card-primary collapsed-card">
                     <div class="card-header">
@@ -149,7 +165,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($data['orders'] as $key => $order)
+                                @foreach($data['orders']['list'] as $key => $order)
                                     <tr class=" @if(!empty($order->project->importunate)) has-importunate @endif "  style="background-color: {{config('project.color_status')[$order->status]}}" >
                                         <td class="index"><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{$key + 1}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->project->owner}}</a></td>
@@ -176,6 +192,15 @@
 @section('scripts')
     <script>
         $(document).ready( function () {
+            @if(session()->has('message'))
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: '{{session()->get('message')}}',
+                showConfirmButton: false,
+                timer: 2000
+            })
+            @endif
             $('#table-project').DataTable({
                 language: {
                     "lengthMenu": " _MENU_ アイテム",

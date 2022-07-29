@@ -53,6 +53,7 @@ class OrderController extends Controller
     public function leaveProject($id){
         try {
             $this->orderService->leaveProject($id);
+            session()->flash('message', '中止しました。');
             return redirect()->route('worker.order.index');
         } catch (\Exception $e){
             abort(500);

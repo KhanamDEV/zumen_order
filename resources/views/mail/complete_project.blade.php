@@ -25,6 +25,24 @@
     </ul>
     </p>
 @endif
+@php $documentUser = json_decode($order->project->documents) @endphp
+@if(!empty($documentUser))
+    <p class="info"><span>Documents:</span>
+    <ul>
+        @foreach($documentUser as $key => $value)
+            <li><a target="_blank" href="{{asset($value->path)}}">{{$value->name}}</a></li>
+        @endforeach
+    </ul>
+@endif
+@php $documentWorker = !empty($order->documents) ?  json_decode($order->documents) : []; @endphp
+@if(!empty($documentWorker))
+    <p class="info"><span>Documents of Worker:</span>
+    <ul>
+        @foreach($documentWorker as $key => $value)
+            <li><a target="_blank" href="{{asset($value->path)}}">{{$value->name}}</a></li>
+        @endforeach
+    </ul>
+@endif
 <br>
 <p>▽「案件受付」こちら: </p>
 @if($type == 'worker')

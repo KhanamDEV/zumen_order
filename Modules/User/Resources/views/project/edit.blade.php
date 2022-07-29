@@ -70,9 +70,20 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="form-group">
+
+                                    <div class="form-group position-relative">
                                         <label for="owner">現場名</label>
-                                        <input type="text" id="owner" name="owner" value="{{@$project->owner}}" class="form-control">
+                                        <div class="input-group mb-3">
+                                            <input type="text" id="owner" name="owner" value="{{@$project->owner}}" class="form-control">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-success" type="button" id="button-search-project">探す</button>
+                                            </div>
+                                        </div>
+                                        <div class="list-project-search">
+                                            <ul>
+
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
@@ -124,7 +135,7 @@
                                     <!-- text input -->
                                     <div class="form-group">
                                         <label class="form-label">納品日</label>
-                                        <input type="hidden" class="form-control" value="{{\Carbon\Carbon::now()->addDays(3)->format('Y-m-d')}}" name="delivery_date">
+                                        <input type="hidden" class="form-control" value="{{ \Carbon\Carbon::now()->dayOfWeek  <= 2 ? \Carbon\Carbon::now()->addDays(3)->format('Y-m-d') : \Carbon\Carbon::now()->addDays(5)->format('Y-m-d')}}" name="delivery_date">
                                         <input type="text" class="form-control delivery-date-show" value="{{@$project->delivery_date}}" @if(!empty($project->importunate)) disabled @endif name="delivery_date">
                                     </div>
                                 </div>
@@ -262,7 +273,47 @@
                                     <button class="btn delete-url btn-danger ml-1" type="button">削除</button>
                                 </div>`;
         $(function (){
-            let dateAdd = moment().add(3, 'days');
+            let projectSearch = [];
+            function autoFillData(){
+                $(".list-project-search ul li").click(function (){
+                    let id = $(this).data('project-id');
+                    let project = projectSearch.filter(value => value.id == id)[0];
+                    $("#owner").val(project.owner);
+                    if (project.postal_code){
+                        let head = project.postal_code.substring(0,3);
+                        let end = project.postal_code.substring(3, 7);
+                        $("input[name='postal_code_head']").val(head);
+                        $("input[name='postal_code_end']").val(end);
+                    }
+                    $("input[name='name']").val(project.name);
+                    $(".list-project-search").hide();
+                })
+            }
+            $("#button-search-project").click(function (){
+                $.ajax({
+                    url: '{{route('user.project.search')}}',
+                    method: 'GET',
+                    data: {owner: $("#owner").val()},
+                    success: function (res){
+                        projectSearch = res;
+                        let template = "";
+                        if (res.length){
+                            template = `<ul>`;
+                            res.forEach(item => template += `<li data-project-id="${item.id}" >${item.owner}</li>`);
+                            template += '</ul>';
+                        } else{
+                            template = "<span>データなし</span>";
+                        }
+                        $(".list-project-search").html(template);
+                        $(".list-project-search").show();
+                        autoFillData();
+                    }
+                })
+            })
+            $("#owner").keyup(function (){
+                $(".list-project-search").hide();
+            })
+            let dateAdd = moment().day() <= 2 ?  moment().add(3, 'days') : moment().add(5, 'days');
             $('input[name=delivery_date]').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,

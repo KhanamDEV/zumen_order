@@ -113,13 +113,15 @@
                     <div class="text-center pb-3">
                         @if($project->order->status  != 3)
                             @if($project->order->status == 5)
-                            <a href="{{route('admin.project.continue', ['id' => $project->id])}}" class="btn btn-success">続き</a>
+                            <a href="{{route('admin.project.continue', ['id' => $project->id])}}" class="btn continue-project button-width btn-success">続き</a>
                             @endif
                             @if($project->order->status != 5)
-                            <a href="{{route('admin.project.cancel' , ['id' => $project->id])}}" class="btn btn-secondary">キャンセル</a>
+                            <a href="{{route('admin.project.cancel' , ['id' => $project->id])}}"  class="btn cancel-project button-width btn-secondary">キャンセル</a>
                                 @endif
                         @endif
-                        <a href="{{route('admin.project.delete', ['id'=> $project->id])}}" class="btn btn-danger">削除</a>
+                        @if($project->order->status != 3 )
+                        <a href="{{route('admin.project.delete', ['id'=> $project->id])}}" class="btn delete-project button-width btn-danger">削除</a>
+                            @endif
                     </div>
             </div>
         </div>
@@ -177,6 +179,73 @@
             <a class="btn button-width btn-secondary" href="{{route('admin.project.index')}}">戻る</a>
         </div>
     </section>
+@endsection
+@section('scripts')
+    <script>
+        @if(session()->has('message'))
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '{{session()->get('message')}}',
+            showConfirmButton: false,
+            timer: 2000
+        })
+        @endif
+        $(".cancel-project").click(function (e){
+            e.preventDefault();
+            let url = $(this).attr('href');
+            Swal.fire({
+                title: 'キャンセルしますか？',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'はい',
+                cancelButtonText: 'いいえ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.replace(url);
+                }
+            })
+        });
+
+        $(".continue-project").click(function (e){
+            e.preventDefault();
+            let url = $(this).attr('href');
+            Swal.fire({
+                title: '続きますか？',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'はい',
+                cancelButtonText: 'いいえ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.replace(url);
+                }
+            })
+        });
+
+        $(".delete-project").click(function (e){
+            e.preventDefault();
+            let url = $(this).attr('href');
+            Swal.fire({
+                title: '削除しますか？',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'はい',
+                cancelButtonText: 'いいえ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.replace(url);
+                }
+            })
+        })
+
+    </script>
 @endsection
 @section('extra-css')
     <style>

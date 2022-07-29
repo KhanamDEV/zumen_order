@@ -52,7 +52,18 @@ class ProjectService
             $data['finish_day_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
-        return $this->projectRepository->getList($data);
+        $projects = $this->projectRepository->getList($data);
+        $amountProject = ['all' => count($projects)];
+        foreach (config('project.status') as $key => $status){
+            if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
+        }
+        foreach ($projects as $project){
+            $amountProject[$project->order->status]++;
+        }
+        return [
+            'list' => $projects,
+            'amount' => $amountProject
+        ];
     }
 
     public function findById($id){
@@ -62,7 +73,9 @@ class ProjectService
     public function delete($id){
         DB::beginTransaction();
         try {
+
             $project = $this->projectRepository->findById($id);
+            if ($project->order->status == 3) return false;
             if (empty($project) || !empty($project->order->worker_id)) return false;
             if (!$this->orderRepository->delete(['project_id' => $project->id])) return  false;
             if (!$this->projectRepository->delete($id)){

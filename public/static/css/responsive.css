@@ -2,3 +2,10 @@
     .card-body{overflow-y: scroll}
     .card-body table{min-width: 400%}
 }
+
+@media (max-width: 575px) {
+    .amount-project-by-type{justify-content: center; margin-bottom: 15px}
+    .amount-project-by-type > div{flex-direction: column}
+    .amount-project-by-type > div p {margin-bottom: 10px !important;}
+    .amount-project-by-type .list-type{margin-left: 0}
+}

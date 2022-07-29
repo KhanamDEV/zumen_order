@@ -119,7 +119,7 @@
             @if(empty($project->order->worker_id) && $project->order->status == 1 && auth('users')->id() == $project->user_id)
                     <div class="group-button-end " >
                         <a class="btn button-width btn-secondary" href="{{!request()->has('from') ? route('user.project.index') : route('user.project.all')}}">戻る</a>
-                        <a href="{{route('user.project.delete', ['id'=> $project->id])}}" class="btn btn-danger button-width">削除</a>
+                        <a href="{{route('user.project.delete', ['id'=> $project->id])}}" class="btn btn-danger delete-project button-width">削除</a>
                     </div>
 
                 @endif
@@ -234,20 +234,37 @@
 @endsection
 @section('scripts')
     <script>
+        $(".delete-project").click(function (e){
+            e.preventDefault();
+            let url = $(this).attr('href');
+            Swal.fire({
+                title: '削除しますか？',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'はい',
+                cancelButtonText: 'いいえ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.replace(url);
+                }
+            })
+        })
         @if(session()->has('message'))
         Swal.fire({
             position: 'center',
             icon: 'success',
-            title: '成功するプロジェクトを作成する',
+            title: '図面依頼が完了しました。',
             showConfirmButton: false,
             timer: 2000
         })
         @endif
-        @if(session()->has('update_additional_success'))
+        @if(session()->has('update_project'))
         Swal.fire({
             position: 'center',
             icon: 'success',
-            title: '補充しました',
+            title: '変更しました',
             showConfirmButton: false,
             timer: 2000
         })

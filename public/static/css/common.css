@@ -1,5 +1,7 @@
+ul{list-style: none;  padding-left: 0; margin-bottom: 0}
  tbody tr td a{color: black}
-#table-project tr td a{color: white !important;}
+
+ #table-project tr td a{color: white !important;}
 #table-project tr.has-importunate td a{color: black !important;}
 #table-project tbody tr:hover{background-color: #0000ff1f}
 #table-project tr.cancel{background-color: #80808085 !important;}
@@ -8,12 +10,17 @@
 #table-project th.no-sort::before{display: none !important;}
 #table-project th.no-sort::after{display: none !important;}
 .amount-project-by-type{display: flex; justify-content: end}
-.amount-project-by-type > div{display: flex}
+.amount-project-by-type > div{display: flex; align-items: center}
 .amount-project-by-type .date-picker-month-year{max-width: 100px}
 .amount-project-by-type .list-type{display: flex; margin-left: 30px}
 .amount-project-by-type .list-type > div{height: 40px; width: 40px; display: flex; align-items: center; justify-content: center; color: white}
 .amount-project-by-type .list-type > div:nth-child(n+2){margin-left: 10px}
-.button-width{width: 100px}
+.button-width{min-width: 100px}
  .group-button-end{width: 100%; display: flex; justify-content: center;}
 .group-button-end .btn:nth-child(n+2){margin-left: 10px}
 .group-button-end .btn{margin-bottom: 20px}
+
+.list-project-search{position: absolute; z-index: 99; width: 100%; border: 1px solid #ccc; display: none; top: 100%; background-color: white}
+.list-project-search ul li{background-color: white; padding: 5px}
+.list-project-search ul li:hover{background-color: lightslategray}
+.list-project-search ul li:nth-child(n+2){border-top: 1px solid #ccc}

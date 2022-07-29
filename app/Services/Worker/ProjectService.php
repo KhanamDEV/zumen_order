@@ -53,7 +53,18 @@ class ProjectService
             $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
 //        $data['unexpired'] = true;
-        return $this->projectRepository->getList(array_merge($data, []));
+        $projects = $this->projectRepository->getList($data);
+        $amountProject = ['all' => count($projects)];
+        foreach (config('project.status') as $key => $status){
+            if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
+        }
+        foreach ($projects as $project){
+            $amountProject[$project->order->status]++;
+        }
+        return [
+            'list' => $projects,
+            'amount' => $amountProject
+        ];
     }
 
     public function findById($id){

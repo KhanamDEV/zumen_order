@@ -32,6 +32,7 @@ class ProjectRepository implements ProjectRepositoryInterface
         $query = $this->model->with(['order', 'user']);
         if (!empty($data['user_id'])) $query = $query->where('user_id', $data['user_id']);
         if (!empty($data['name'])) $query = $query->where('name', 'like', '%' . $data['name'] . '%');
+        if (!empty($data['owner'])) $query = $query->where('owner', 'like', '%' . $data['owner'] . '%');
         if (!empty($data['type'])) $query = $query->where('type', $data['type']);
         if (!empty($data['status'])){
             if ($data['status'] == 4){

@@ -208,7 +208,7 @@
                         <a href="{{route('worker.order.done_project', ['id' => $order->id])}}" class="btn button-width btn-success ">完了</a>
                     @endif
                 @if(!$readonly )
-                <a href="{{route('worker.order.leave_project', ['id' => $order->id])}}" class="btn button-width btn-danger">中止</a>
+                <a href="{{route('worker.order.leave_project', ['id' => $order->id])}}" class="btn button-width leave-project btn-danger">中止</a>
                 @endif
 
             </div>
@@ -226,6 +226,23 @@
 @section('scripts')
     <script>
         $(function (){
+            $(".leave-project").click(function (e){
+                e.preventDefault();
+                let url = $(this).attr('href');
+                Swal.fire({
+                    title: '中止しますか？',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'はい',
+                    cancelButtonText: 'いいえ'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.replace(url);
+                    }
+                })
+            })
             function removeDocument(){
                 $(".remove-document").click(function (){
                     let path =$(this).data('path');

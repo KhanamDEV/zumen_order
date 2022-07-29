@@ -96,6 +96,7 @@ class ProjectController extends Controller
                 $errors = new MessageBag(['update_false' => __('message.alert.has_error')]);
                 return redirect()->back()->withInput($request->all())->withErrors($errors);
             }
+            session()->flash('update_project', 'Success');
             return redirect()->route('user.project.show', ['id' => $id]);
         } catch (\Exception $e){
             abort(500);
@@ -119,6 +120,7 @@ class ProjectController extends Controller
             $project = $this->projectService->findById($id);
             if (empty($project) || !empty($project->order->worker_id)) abort(404);
             if ($this->projectService->delete($id)){
+                session()->flash('message', '削除しました。');
                 return redirect()->route('user.project.index');
             }
             return  redirect()->route('user.project.show', ['id' => $id]);
@@ -130,11 +132,19 @@ class ProjectController extends Controller
     public function updateAdditional(UpdateAdditionalProjectRequest $request, $id){
         try {
             if ($this->projectService->updateAdditional($id, $request->all())){
-                session()->flash('update_additional_success', 'Success');
+                session()->flash('update_project', 'Success');
             }
             return redirect()->back();
         } catch (\Exception $e){
             abort(500);
+        }
+    }
+
+    public function search(Request $request){
+        try {
+            return response()->json($this->projectService->search($request->all()));
+        } catch (\Exception $e){
+            return response()->json([]);
         }
     }
 }

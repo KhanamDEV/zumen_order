@@ -53,7 +53,10 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         try {
-            if ($this->projectService->delete($id)) return redirect()->route('admin.project.index');
+            if ($this->projectService->delete($id)){
+                session()->flash('message', '削除しました。');
+                return redirect()->route('admin.project.index');
+            }
             return back();
         } catch (\Exception $e){
             abort(500);
@@ -76,6 +79,7 @@ class ProjectController extends Controller
                 $errors = new MessageBag(['update_false' => __('message.alert.has_error')]);
                 return redirect()->back()->withInput($request->all())->withErrors($errors);
             }
+            session()->flash('message', '変更しました');
             return redirect()->route('admin.project.show', ['id' => $id]);
         } catch (\Exception $e){
             abort(500);
@@ -85,6 +89,7 @@ class ProjectController extends Controller
     public function cancel($id){
         try {
             $this->projectService->cancel($id);
+            session()->flash('message', 'キャンセルしました。');
             return redirect()->route('admin.project.show', ['id' => $id]);
         } catch (\Exception $e){
             abort(500);
@@ -94,6 +99,7 @@ class ProjectController extends Controller
     public function continueProject($id){
         try {
             $this->projectService->continue($id);
+            session()->flash('message', '続きまました。');
             return redirect()->route('admin.project.show', ['id' => $id]);
         } catch (\Exception $e){
             abort(500);

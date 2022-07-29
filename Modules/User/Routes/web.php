@@ -14,7 +14,7 @@
 Route::prefix('')->name('user.')->group(function() {
     Route::get('sign-in', 'Auth\LoginController@getLogin')->name('login');
     Route::post('sign-in', 'Auth\LoginController@postLogin');
-
+    Route::get('search-project', 'ProjectController@search')->name('project.search');
     Route::middleware(['users'])->group(function (){
         Route::get('profile', 'UserController@edit')->name('profile.edit');
         Route::post('profile', 'UserController@update');
