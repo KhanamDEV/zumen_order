@@ -352,6 +352,7 @@
                     if (!statusErrors){
                         $("#modal-confirm").modal('show');
                         $(".submit-form").click(function (){
+                            $(this).attr('disabled', true);
                             $('#form-create').unbind('submit').submit();
                         })
                     }
