@@ -79,11 +79,7 @@
                                                 <button class="btn btn-success" type="button" id="button-search-project">探す</button>
                                             </div>
                                         </div>
-                                        <div class="list-project-search">
-                                            <ul>
 
-                                            </ul>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
@@ -251,6 +247,34 @@
 
             </div>
         </form>
+        <div class="modal fade" id="modal-search-data" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">の検索結果</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered" id="table-search">
+                            <thead>
+                            <tr>
+                                <th>現場名</th>
+                                <th>郵便番号</th>
+                                <th>現場住所</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody class="body-search">
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </section>
 @endsection
 @section('validation')
@@ -263,6 +287,8 @@
         .group-add-url .item-url:last-child button.delete-url{display: none}
         .group-add-url .item-url:not(:last-child) button.add-url{display: none}
         .item-document{display: flex; justify-content: space-between; align-items: center}
+        #table-search_info{display: none !important;}
+
     </style>
 @endsection
 @section('scripts')
@@ -275,8 +301,8 @@
         $(function (){
             let projectSearch = [];
             function autoFillData(){
-                $(".list-project-search ul li").click(function (){
-                    let id = $(this).data('project-id');
+                $(".use-project").click(function (){
+                    let id = $(this).data('id');
                     let project = projectSearch.filter(value => value.id == id)[0];
                     $("#owner").val(project.owner);
                     if (project.postal_code){
@@ -286,32 +312,81 @@
                         $("input[name='postal_code_end']").val(end);
                     }
                     $("input[name='name']").val(project.name);
-                    $(".list-project-search").hide();
+                    $("#modal-search-data").modal('hide');
                 })
             }
+            let tableSearch = $("#table-search").DataTable({
+                language: {
+                    "lengthMenu": " _MENU_ アイテム",
+                    "paginate": {
+                        "previous": "前のページ",
+                        "next": "次のページ",
+                        "search": "探す"
+                    },
+                    ordering:  true,
+                    paging: true,
+                    lengthChange: true,
+                    pageLength: 10,
+                    info: false,
+                    bInfo : false,
+                    bDestroy: true
+                },
+            });
             $("#button-search-project").click(function (){
-                $.ajax({
-                    url: '{{route('user.project.search')}}',
-                    method: 'GET',
-                    data: {owner: $("#owner").val()},
-                    success: function (res){
-                        projectSearch = res;
-                        let template = "";
-                        if (res.length){
-                            template = `<ul>`;
-                            res.forEach(item => template += `<li data-project-id="${item.id}" >${item.owner}</li>`);
-                            template += '</ul>';
-                        } else{
-                            template = "<span>データなし</span>";
+                if($("#owner").val()){
+                    $.ajax({
+                        url: '{{route('user.project.search')}}',
+                        method: 'GET',
+                        data: {owner: $("#owner").val(), user_id: '{{auth('users')->id()}}'},
+                        success: function (res){
+                            projectSearch = res;
+                            let template = "";
+                            if (res.length){
+                                tableSearch.destroy();
+                                $(".body-search").html('');
+                                res.forEach(item => {
+                                    console.log(item);
+                                    let head = item.postal_code.substring(0,3);
+                                    let end = item.postal_code.substring(3, 7);
+                                    template += `<tr>`;
+                                    template += `<td>${item.owner}</td>`;
+                                    template += `<td>${head}-${end}</td>`;
+                                    template += `<td>${item.name??''}</td>`;
+                                    template += `<td style="text-align: center"><button data-id="${item.id}" class="btn btn-info use-project">使用する</button></td>`;
+                                    template += '</tr>';
+                                })
+                                $(".body-search").html(template);
+                                tableSearch = $("#table-search").DataTable({
+                                    language: {
+                                        "lengthMenu": " _MENU_ アイテム",
+                                        "paginate": {
+                                            "previous": "前のページ",
+                                            "next": "次のページ",
+                                            "search" : "探す"
+                                        },
+                                        ordering:  true,
+                                        paging: true,
+                                        lengthChange: true,
+                                        pageLength: 10,
+                                        info: false,
+                                        bInfo : false,
+                                        bDestroy: true
+                                    },
+                                });
+                                autoFillData();
+                                $("#modal-search-data").modal('show');
+                            } else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '一致する図面がありません',
+                                })
+                            }
+
+                            autoFillData();
                         }
-                        $(".list-project-search").html(template);
-                        $(".list-project-search").show();
-                        autoFillData();
-                    }
-                })
-            })
-            $("#owner").keyup(function (){
-                $(".list-project-search").hide();
+                    })
+                }
+
             })
             let dateAdd = moment().day() <= 2 ?  moment().add(3, 'days') : moment().add(5, 'days');
             $('input[name=delivery_date]').daterangepicker({

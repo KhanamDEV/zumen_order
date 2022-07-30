@@ -77,11 +77,6 @@
                                                 <button class="btn btn-success" type="button" id="button-search-project">探す</button>
                                             </div>
                                         </div>
-                                        <div class="list-project-search">
-                                            <ul>
-
-                                            </ul>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
@@ -232,6 +227,65 @@
             </div>
         </form>
     </section>
+    <div class="modal fade" id="modal-confirm" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">図面依頼情報</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="info"><span>発注日</span>: <span>{{date('Y-m-d')}}</span></p>
+                    <p class="info"><span>現場名</span>: <span class="owner-confirm"></span></p>
+                    <p class="info"><span>現場住所</span>: <span class="name-confirm"></span></p>
+                    <p class="info"><span>図面種類</span>: <span class="type-confirm"></span></p>
+                    <p class="info"><span>納品日</span>: <span class="delivery_date-confirm"></span></p>
+                    <p class="info"><span>納期相談希望</span>: <span class="importunate-confirm">いいえ</span> </p>
+                    <p class="info"><span>郵便番号</span>: <span class="postal_code_head-confirm"></span>-<span class="postal_code_end-confirm"></span></p>
+                    <p class="info"><span>備考</span>: <span class="note-confirm"></span></p>
+                    <p class="info"><span>図面情報</span>: <span class="other_information-confirm"></span></p>
+                    <p class="info"><span>URL</span>: </p>
+                    <ul class="url-confirm"></ul>
+                    <p class="info"><span>Documents</span>: </p>
+                    <ul class="documents-confirm"></ul>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn submit-form btn-primary">確認</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-search-data" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">の検索結果</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" id="table-search">
+                        <thead>
+                        <tr>
+                            <th>現場名</th>
+                            <th>郵便番号</th>
+                            <th>現場住所</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody class="body-search">
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('validation')
     {!! JsValidator::formRequest('Modules\User\Http\Requests\CreateProjectRequest', '#form-create') !!}
@@ -243,10 +297,15 @@
         .group-add-url .item-url:last-child button.delete-url{display: none}
         .group-add-url .item-url:not(:last-child) button.add-url{display: none}
         .item-document{display: flex; justify-content: space-between; align-items: center}
+        .modal-body p span:first-child{font-weight: bold}
+        .modal-body span:last-child{font-weight: normal}
+        #table-search_info{display: none !important;}
     </style>
 @endsection
 @section('scripts')
     <script>
+        const projectInformation = JSON.parse('{!!  json_encode(config('project.other_information'))!!}');
+        const projectType = JSON.parse('{!!  json_encode(config('project.type'))!!}')
         let templateUrl = `<div class="item-url mb-3">
                                     <input type="text" name="url[]" class="form-control">
                                     <button class="btn add-url btn-success ml-1" type="button">追加</button>
@@ -255,24 +314,53 @@
         $(function (){
             $("#form-create").submit(function (e){
                 e.preventDefault();
-                Swal.fire({
-                    title: 'インポートしたコンテンツで図面を作成しますか？',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'はい',
-                    cancelButtonText: 'いいえ'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $('#form-create').unbind('submit').submit();
+                setTimeout(function (){
+                    let formData = $("#form-create").serializeArray();
+                    let statusErrors = false;
+                    $(".invalid-feedback").each(function (index, value){
+                        if ($(value).text()) statusErrors = true;
+                    })
+                    $(".other_information-confirm").text('')
+                    $(".documents-confirm").html('');
+                    $(".url-confirm").html('')
+                    formData.forEach(input => {
+                        if (!input.name.includes('[]')){
+                            if (input.name == 'documents'){
+                                let documents = JSON.parse(input.value);
+                                documents.forEach(value => {
+                                    $(".documents-confirm").append(`<li><a href="${value.path}">${value.name}</a></li>`)
+                                })
+                            } else{
+                                if (input.name == 'importunate') input.value = input.value == 'on' ? 'はい' : 'いいえ'
+                                if (input.name == 'type') input.value = projectType[input.value];
+                                $(`.${input.name}-confirm`).text(input.value);
+                            }
+
+                        } else{
+                            if (input.name.includes('other_information')){
+                                let currentText = $(".other_information-confirm").text();
+                                if (currentText){
+                                    $(".other_information-confirm").text(`${currentText}, ${projectInformation[input.value]}`)
+                                } else{
+                                    $(".other_information-confirm").text(projectInformation[input.value])
+                                }
+                            } else if(input.name.includes('url')){
+                                $(".url-confirm").append(`<li>${input.value}</li>`)
+                            }
+                        }
+                    })
+                    if (!statusErrors){
+                        $("#modal-confirm").modal('show');
+                        $(".submit-form").click(function (){
+                            $('#form-create').unbind('submit').submit();
+                        })
                     }
-                })
+                }, 500)
             })
             let projectSearch = [];
             function autoFillData(){
-                $(".list-project-search ul li").click(function (){
-                    let id = $(this).data('project-id');
+                $(".use-project").click(function (){
+                    let id = $(this).data('id');
                     let project = projectSearch.filter(value => value.id == id)[0];
                     $("#owner").val(project.owner);
                     if (project.postal_code){
@@ -282,33 +370,83 @@
                         $("input[name='postal_code_end']").val(end);
                     }
                     $("input[name='name']").val(project.name);
-                    $(".list-project-search").hide();
+                    $("#modal-search-data").modal('hide');
                 })
             }
+            let tableSearch = $("#table-search").DataTable({
+                language: {
+                    "lengthMenu": " _MENU_ アイテム",
+                    "paginate": {
+                        "previous": "前のページ",
+                        "next": "次のページ",
+                        "search": "探す"
+                    },
+                    ordering:  true,
+                    paging: true,
+                    lengthChange: true,
+                    pageLength: 10,
+                    info: false,
+                    bInfo : false,
+                    bDestroy: true
+                },
+            });
             $("#button-search-project").click(function (){
-                $.ajax({
-                    url: '{{route('user.project.search')}}',
-                    method: 'GET',
-                    data: {owner: $("#owner").val()},
-                    success: function (res){
-                        projectSearch = res;
-                        let template = "";
-                        if (res.length){
-                             template = `<ul>`;
-                            res.forEach(item => template += `<li data-project-id="${item.id}" >${item.owner}</li>`);
-                            template += '</ul>';
-                        } else{
-                            template = "<span>データなし</span>";
+                if($("#owner").val()){
+                    $.ajax({
+                        url: '{{route('user.project.search')}}',
+                        method: 'GET',
+                        data: {owner: $("#owner").val(), user_id: '{{auth('users')->id()}}'},
+                        success: function (res){
+                            projectSearch = res;
+                            let template = "";
+                            if (res.length){
+                                tableSearch.destroy();
+                                $(".body-search").html('');
+                                res.forEach(item => {
+                                    console.log(item);
+                                    let head = item.postal_code.substring(0,3);
+                                    let end = item.postal_code.substring(3, 7);
+                                    template += `<tr>`;
+                                    template += `<td>${item.owner}</td>`;
+                                    template += `<td>${head}-${end}</td>`;
+                                    template += `<td>${item.name??''}</td>`;
+                                    template += `<td style="text-align: center"><button data-id="${item.id}" class="btn btn-info use-project">使用する</button></td>`;
+                                    template += '</tr>';
+                                })
+                                $(".body-search").html(template);
+                                tableSearch = $("#table-search").DataTable({
+                                    language: {
+                                        "lengthMenu": " _MENU_ アイテム",
+                                        "paginate": {
+                                            "previous": "前のページ",
+                                            "next": "次のページ",
+                                            "search" : "探す"
+                                        },
+                                        ordering:  true,
+                                        paging: true,
+                                        lengthChange: true,
+                                        pageLength: 10,
+                                        info: false,
+                                        bInfo : false,
+                                        bDestroy: true
+                                    },
+                                });
+                                autoFillData();
+                                $("#modal-search-data").modal('show');
+                            } else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '一致する図面がありません',
+                                })
+                            }
+
+                            autoFillData();
                         }
-                        $(".list-project-search").html(template);
-                        $(".list-project-search").show();
-                        autoFillData();
-                    }
-                })
+                    })
+                }
+
             })
-            $("#owner").keyup(function (){
-                $(".list-project-search").hide();
-            })
+
             let dateAdd = moment().day() <= 2 ?  moment().add(3, 'days') : moment().add(5, 'days');
             $('input[name=delivery_date]').daterangepicker({
                 singleDatePicker: true,

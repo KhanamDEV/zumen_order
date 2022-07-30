@@ -79,12 +79,14 @@
                     </ul>
                     </p>
                 @endif
-{{--                @if($project->order->status == 1)--}}
+
                 <div class="w-100 text-center">
                     <a href="{{route('worker.project.index')}}" class="btn btn-secondary  button-width">戻る</a>
+                                    @if($project->order->status == 1)
                     <a href="{{route('worker.project.do_project', ['id' => $project->id])}}" class="btn btn-success mr-2 button-width">受付</a>
+                                        @endif
+
                 </div>
-{{--                    @endif--}}
             </div>
         </div>
         @if(!empty($project->order->worker_id))

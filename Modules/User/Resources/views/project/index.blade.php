@@ -16,7 +16,7 @@
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
                 </span>
-                        <span class="text">案件作成</span>
+                        <span class="text">図面依頼</span>
                     </a>
                 </div>
                 <div class="col-sm-4 amount-project-by-type">

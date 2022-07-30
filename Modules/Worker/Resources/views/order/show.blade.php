@@ -225,6 +225,15 @@
 @endsection
 @section('scripts')
     <script>
+        @if(session()->has('error'))
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '{{session()->get('error')}}',
+            showConfirmButton: false,
+            timer: 3000
+        })
+        @endif
         $(function (){
             $(".leave-project").click(function (e){
                 e.preventDefault();

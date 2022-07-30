@@ -43,6 +43,11 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $document = json_decode(\request()->get('documents'));
+            if (empty($document)){
+                session()->flash('error', '図面をアップロードしてください。');
+                return redirect()->back();
+            }
             $this->orderService->update($id, $request->all());
             return back();
         } catch (\Exception $e){

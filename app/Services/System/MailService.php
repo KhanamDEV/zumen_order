@@ -38,23 +38,21 @@ class MailService
     }
 
     public function sendMailCancelProject($order){
-        $workers = $this->workerRepository->getList();
         $users = $this->userRepository->getList(['email' => $order->project->user->email]);
-        foreach ($workers as $worker){
-            Mail::to($worker->email)->send(new MailCancelProject('worker', $order));
-        }
         foreach ($users as $user){
             Mail::to($user->email)->send(new MailCancelProject('user', $order));
+        }
+        if (!empty($order->worker)){
+            $workers = $this->workerRepository->getList();
+            foreach ($workers as $worker){
+                Mail::to($worker->email)->send(new MailCancelProject('worker', $order));
+            }
         }
     }
 
     public function sendMailCompleteProject($order){
-//        $admins = $this->adminRepository->getList();
-        $workers = $this->workerRepository->getList();
+        $workers = $this->workerRepository->getList(['email' => auth('workers')->user()->email]);
         $users = $this->userRepository->getList(['email' => $order->project->user->email]);
-//        foreach ($admins as $admin){
-//            Mail::to($admin->email)->send(new MailCompleteProject('admin', $order));
-//        }
         foreach ($workers as $worker){
             Mail::to($worker->email)->send(new MailCompleteProject('worker', $order));
         }
@@ -64,23 +62,21 @@ class MailService
     }
 
     public function sendMailContinueProject($order){
-        $workers = $this->workerRepository->getList();
         $users = $this->userRepository->getList(['email' => $order->project->user->email]);
-        foreach ($workers as $worker){
-            Mail::to($worker->email)->send(new MailContinueProject('worker', $order));
-        }
         foreach ($users as $user){
             Mail::to($user->email)->send(new MailContinueProject('user', $order));
+        }
+        if (!empty($order->worker)){
+            $workers = $this->workerRepository->getList();
+            foreach ($workers as $worker){
+                Mail::to($worker->email)->send(new MailContinueProject('worker', $order));
+            }
         }
     }
 
     public function sendMailCreateProject($order){
-//        $admins = $this->adminRepository->getList();
         $workers = $this->workerRepository->getList();
         $users = $this->userRepository->getList(['email' => $order->project->user->email]);
-//        foreach ($admins as $admin){
-//            Mail::to($admin->email)->send(new MailCreateProject('admin', $order));
-//        }
         foreach ($workers as $worker){
             Mail::to($worker->email)->send(new MailCreateProject('worker', $order));
         }
@@ -90,12 +86,8 @@ class MailService
     }
 
     public function sendMailLeaveProject($order){
-//        $admins = $this->adminRepository->getList();
-        $workers = $this->workerRepository->getList();
+        $workers = $this->workerRepository->getList(['email' => auth('workers')->user()->email]);
         $users = $this->userRepository->getList(['email' => $order->project->user->email]);
-//        foreach ($admins as $admin){
-//            Mail::to($admin->email)->send(new MailLeaveProject('admin', $order));
-//        }
         foreach ($workers as $worker){
             Mail::to($worker->email)->send(new MailLeaveProject('worker', $order));
         }
@@ -105,12 +97,8 @@ class MailService
     }
 
     public function sendMailOrderProject($order){
-//        $admins = $this->adminRepository->getList();
-        $workers = $this->workerRepository->getList();
+        $workers = $this->workerRepository->getList(['email' => auth('workers')->user()->email]);
         $users = $this->userRepository->getList(['email' => $order->project->user->email]);
-//        foreach ($admins as $admin){
-//            Mail::to($admin->email)->send(new MailOrder('admin', $order));
-//        }
         foreach ($workers as $worker){
             Mail::to($worker->email)->send(new MailOrder('worker', $order));
         }
