@@ -334,6 +334,13 @@
             });
             $("#button-search-project").click(function (){
                 if($("#owner").val()){
+                    Swal.fire({
+                        title: '検索中...',
+                        didOpen: () => {
+                            Swal.showLoading()
+                        },
+                        allowOutsideClick: false
+                    })
                     $.ajax({
                         url: '{{route('user.project.search')}}',
                         method: 'GET',
@@ -374,6 +381,7 @@
                                     },
                                 });
                                 autoFillData();
+                                Swal.close();
                                 $("#modal-search-data").modal('show');
                             } else{
                                 Swal.fire({

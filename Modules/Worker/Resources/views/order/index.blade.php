@@ -172,7 +172,7 @@
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{!empty($order->project->type) ? config('project.type')[$order->project->type] : ''}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{config('project.status')[$order->status]}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->project->delivery_date}}</a></td>
-                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{date('Y-m-d', strtotime($order->project->created_at))}}</a></td>
+                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{ !empty($order->project->created_at) ? date('Y-m-d', strtotime($order->project->created_at)): ''}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{date('Y-m-d', strtotime($order->created_at))}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->finish_day}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->project->user->first_name}} {{@$order->project->user->last_name}}</a></td>
