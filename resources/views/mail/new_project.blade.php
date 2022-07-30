@@ -31,7 +31,7 @@
     <p class="info"><span>Documents:</span>
     <ul>
         @foreach($documentUser as $key => $value)
-            <li><a target="_blank" href="http://zumen-order.com/{{$value->path}}">{{$value->name}}</a></li>
+            <li><a target="_blank" href="http://zumen-order.com/public{{$value->path}}">{{$value->name}}</a></li>
         @endforeach
     </ul>
 @endif
@@ -40,7 +40,7 @@
     <p class="info"><span>Documents of Worker:</span>
     <ul>
         @foreach($documentWorker as $key => $value)
-            <li><a target="_blank" href="http://zumen-order.com/{{$value->path}}">{{$value->name}}</a></li>
+            <li><a target="_blank" href="http://zumen-order.com/puclic{{$value->path}}">{{$value->name}}</a></li>
         @endforeach
     </ul>
 @endif
