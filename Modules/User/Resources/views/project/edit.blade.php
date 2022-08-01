@@ -437,6 +437,7 @@
                 })
             }
             addUrl();
+            removeUrl();
             function removeDocument(){
                 $(".remove-document").click(function (){
                     let path =$(this).data('path');
