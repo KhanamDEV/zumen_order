@@ -48,13 +48,17 @@ class OrderService
             $data['finish_day_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
-        $orders = $this->orderRepository->getList(array_merge($data, ['worker_id' => auth('workers')->id()]));
+        $orders =  $this->orderRepository->getList(array_merge($data, ['worker_id' => auth('workers')->id()]));
         $amountProject = ['all' => count($orders)];
         foreach (config('project.status') as $key => $status){
             if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
         }
-        foreach ($orders as $order){
-            $amountProject[$order->status]++;
+        foreach ($orders as $key => $order){
+            if (!empty($order->project)){
+                $amountProject[$order->status]++;
+            } else{
+                unset($orders[$key]);
+            }
         }
         return [
             'list' => $orders,
