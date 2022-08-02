@@ -25,6 +25,7 @@ class OrderController extends Controller
             $data['orders'] = $this->orderService->getList($request->all());
             return view('worker::order.index', compact('data'));
         } catch (\Exception $e){
+            dd($e);
             abort(500);
         }
     }
