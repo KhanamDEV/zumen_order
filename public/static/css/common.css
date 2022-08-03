@@ -24,3 +24,5 @@ ul{list-style: none; margin-bottom: 0}
 .list-project-search ul li{background-color: white; padding: 5px}
 .list-project-search ul li:hover{background-color: lightslategray}
 .list-project-search ul li:nth-child(n+2){border-top: 1px solid #ccc}
+.paginate_button.previous.disabled, .paginate_button.next.disabled{display: none}
+

@@ -171,6 +171,19 @@ class ProjectService
     }
 
     public function search($data){
-        return $this->projectRepository->getList($data);
+        $projects = $this->projectRepository->getList($data);
+        $uniqueProjects = [];
+        foreach ($projects as $project){
+            if (empty($uniqueProjects)){
+                array_push($uniqueProjects, $project);
+            } else{
+                foreach ($uniqueProjects as $uniqueProject){
+                    if ($uniqueProject->name != $project->name || $uniqueProject->owner != $project->owner || $uniqueProject->postal_code != $project->postal_code){
+                        array_push($uniqueProjects, $project);
+                    }
+                }
+            }
+        }
+        return $uniqueProjects;
     }
 }
