@@ -61,7 +61,7 @@
                         <p class="info"><span>郵便番号</span>: {{ @$order->project->postal_code}}</p>
                     </div>
                 </div>
-                <p class="info"><span>備考</span>: {{@$order->project->note}}</p>
+                <p class="info pre-line"><span>備考</span>: {{@$order->project->note}}</p>
                 @php $information = json_decode($order->project->other_information) @endphp
                 @if(!empty($information))
                     <p class="info"><span>図面情報</span>:

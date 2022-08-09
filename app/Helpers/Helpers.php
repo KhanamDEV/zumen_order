@@ -15,4 +15,12 @@ class Helpers
     public static function getUrlUploadFile($file){
         return asset($file);
     }
+
+    public static function getStatusUser($type = 'all'){
+        $status = [
+            1 => 'アクティブ',
+            0 => '非活性'
+        ];
+        return $type === 'all' ? $status : $status[$type];
+    }
 }

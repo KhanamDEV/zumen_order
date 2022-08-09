@@ -119,13 +119,20 @@ class ProjectService
             $data['finish_day_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
-        $projects = $this->projectRepository->getList($data);
+        $data['auth_type'] = 'user';
+        $projects = $this->projectRepository->getList($data)->toArray();
+        $projects = array_filter($projects, function ($item){
+           return !empty($item['user']);
+        });
         $amountProject = ['all' => count($projects)];
         foreach (config('project.status') as $key => $status){
             if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
         }
-        foreach ($projects as $project){
-            $amountProject[$project->order->status]++;
+        foreach ($projects as $key =>  $project){
+            $projects[$key] = (object) $project;
+            $projects[$key]->order = (object) $project['order'];
+            $projects[$key]->user = (object) $project['user'];
+            $amountProject[$project['order']['status']]++;
         }
         return [
             'list' => $projects,

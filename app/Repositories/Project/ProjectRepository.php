@@ -29,9 +29,17 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function getList($data)
     {
-        $query = $this->model->with(['order', 'user']);
+        $query = $this->model->with(['order', 'user' => function($query) use ($data){
+            if (!empty($data['auth_type']) && $data['auth_type'] == 'user'){
+                $user = auth('users')->user();
+                return $query->where('company_id', $user->company_id);
+            }
+        }]);
         if (!empty($data['user_id'])) $query = $query->where('user_id', $data['user_id']);
-        if (!empty($data['name'])) $query = $query->where('name', 'like', '%' . $data['name'] . '%');
+        if (!empty($data['name'])){
+            $query = $query->where('name', 'like', '%' . $data['name'] . '%')
+                ->orWhere('owner', 'like', '%'.$data['name'].'%');
+        }
         if (!empty($data['owner'])) $query = $query->where('owner', 'like', '%' . $data['owner'] . '%');
         if (!empty($data['type'])) $query = $query->where('type', $data['type']);
         if (!empty($data['status'])){
@@ -81,7 +89,9 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function findById($id, $data = [])
     {
-        $query = $this->model->with(['order', 'user']);
+        $query = $this->model->with(['order', 'user', 'feedbacks' => function($query){
+            return $query->orderBy('id', 'DESC');
+        }, 'feedbacks.worker']);
         if (!empty($data['status'])) $query = $query->whereHas('order', function ($query) use ($data) {
             $query->where('status', $data['status']);
         });

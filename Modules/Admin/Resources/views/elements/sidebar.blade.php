@@ -111,6 +111,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{route('admin.company.index')}}" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            会社管理
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{route('admin.profile.edit')}}" class="nav-link">
                         <i class="nav-icon fas fa-users mr-2"></i>
                         <p>

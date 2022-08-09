@@ -64,6 +64,8 @@
                                 <th>名</th>
                                 <th>ユーザー名</th>
                                 <th>電話番号</th>
+                                <th>会社名</th>
+                                <th>ステータス</th>
 
                             </tr>
                             </thead>
@@ -75,6 +77,8 @@
                                     <td><a href="{{route('admin.user.edit', ['id' => $user->id])}}">{{@$user->last_name}}</a></td>
                                     <td><a href="{{route('admin.user.edit', ['id' => $user->id])}}">{{@$user->email}}</a></td>
                                     <td><a href="{{route('admin.user.edit', ['id' => $user->id])}}">{{@$user->phone_number}}</a></td>
+                                    <td><a href="{{route('admin.user.edit', ['id' => $user->id])}}">{{@$user->company->name}}</a></td>
+                                    <td><a href="{{route('admin.user.edit', ['id' => $user->id])}}">{{\App\Helpers\Helpers::getStatusUser($user->status)}}</a></td>
                                 </tr>
                             @endforeach
                             </tbody>

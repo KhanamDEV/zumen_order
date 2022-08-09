@@ -25,4 +25,32 @@ ul{list-style: none; margin-bottom: 0}
 .list-project-search ul li:hover{background-color: lightslategray}
 .list-project-search ul li:nth-child(n+2){border-top: 1px solid #ccc}
 .paginate_button.previous.disabled, .paginate_button.next.disabled{display: none}
+.pre-line{white-space: pre-line}
+td{vertical-align: middle !important;}
+p.info span {
+    font-weight: bold
+}
+
+.group-add-url .item-url {
+    display: flex;
+    align-items: center
+}
+
+.group-add-url .item-url input {
+    max-width: 400px
+}
+
+.group-add-url .item-url:last-child button.delete-url {
+    display: none
+}
+
+.group-add-url .item-url:not(:last-child) button.add-url {
+    display: none
+}
+
+.item-document {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
 

@@ -19,6 +19,8 @@ class UpdateUserRequest extends FormRequest
             'email' => 'required|email|unique:users,email,'.request()->id,
             'phone_number' => 'required',
             'avatar' => 'mimes:jpeg,png,jpg|max:' . 5 * 1024,
+            'company_id' => 'required',
+            'status' => 'required',
             'password' => 'nullable|min:8'
         ];
     }

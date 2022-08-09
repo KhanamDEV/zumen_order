@@ -30,7 +30,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function getList($data)
     {
-        $query = DB::table('users');
+        $query = $this->model->with('company');
         if (!empty($data['email'])) $query->where('email', $data['email']);
         if (!empty($data['last_name'])) $query->where('last_name', 'like', '%'.$data['last_name'].'%');
         $query->orderBy('created_at', 'DESC');

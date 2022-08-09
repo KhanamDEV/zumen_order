@@ -55,6 +55,27 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="" class="col-sm-2 control-label">会社名</label>
+                                <div class="col-sm-10">
+                                    <select name="company_id" id="" class="form-control">
+                                        <option value=""></option>
+                                        @foreach($data['companies'] as $company)
+                                            <option  value="{{$company->id}}">{{$company->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-sm-2 control-label">ステータス</label>
+                                <div class="col-sm-10">
+                                    <select name="status" id="" class="form-control">
+                                        @foreach(\App\Helpers\Helpers::getStatusUser() as $key =>  $status)
+                                            <option value="{{$key}}">{{$status}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="" class="col-sm-2 control-label">電話番号</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="" placeholder="" name="phone_number" >

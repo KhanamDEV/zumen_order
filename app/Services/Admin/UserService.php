@@ -46,6 +46,8 @@ class UserService
             'last_name' => $data['last_name'],
             'created_at' => date('Y-m-d H:i:s'),
             'phone_number' => $data['phone_number'],
+            'company_id' => $data['company_id'],
+            'status' => $data['status'],
             'password' => Hash::make($data['password'])
         ];
         if (request()->has('avatar')){
@@ -61,6 +63,8 @@ class UserService
             'email' => $data['email'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
+            'company_id' => $data['company_id'],
+            'status' => $data['status'],
             'created_at' => date('Y-m-d H:i:s'),
         ];
         if (!empty($data['password'])) $dataUpdate['password'] = Hash::make($data['password']);

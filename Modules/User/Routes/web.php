@@ -31,6 +31,13 @@ Route::prefix('')->name('user.')->group(function() {
             Route::get('{id}/detail', 'ProjectController@show')->name('show');
             Route::get('destroy/{id}', 'ProjectController@destroy')->name('delete');
             Route::post('{id}/update-additional', 'ProjectController@updateAdditional')->name('update_additional');
+            Route::prefix('{project_id}')->group(function (){
+                Route::prefix('feedback')->name('feedback.')->group(function (){
+                    Route::post('create', 'FeedbackController@store')->name('create');
+                    Route::get('{id}/show', 'FeedbackController@show')->name('detail');
+                });
+            });
+
         });
     });
     Route::post('upload-file', 'UserController@uploadFile')->name('upload_file');

@@ -29,6 +29,7 @@ class ProjectController extends Controller
             $data['users'] = DB::table('users')->get();
             return view('user::project.index', compact('data'));
         } catch (\Exception $e){
+            dd($e);
             abort(500);
         }
     }
@@ -64,7 +65,7 @@ class ProjectController extends Controller
                 $errors = new MessageBag(['create_false' => __('message.alert.has_error')]);
                 return redirect()->back()->withInput($request->all())->withErrors($errors);
             }
-            session()->flash('message', 'message');
+            session()->flash('message', '図面依頼が完了しました。');
             return redirect()->route('user.project.show', ['id' => $id]);
         } catch (\Exception $e){
             abort(500);

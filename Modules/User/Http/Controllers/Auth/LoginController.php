@@ -32,6 +32,11 @@ class LoginController extends Controller
     {
         try {
             if ($this->loginService->login($request->all())){
+                if (!auth('users')->user()->status){
+                    auth('users')->logout();
+                    $errors = new MessageBag(['authenticate' => __('あなたのアカウントは非アクティブです')]);
+                    return back()->withInput($request->all())->withErrors($errors);
+                }
                 return redirect()->route('user.project.index');
             }
             $errors = new MessageBag(['authenticate' => __('auth.failed')]);

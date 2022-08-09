@@ -24,6 +24,11 @@ Route::prefix('worker')->name('worker.')->group(function () {
             Route::get('', 'ProjectController@index')->name('index');
             Route::get('{id}/detail', 'ProjectController@show')->name('show');
             Route::get('{id}/do-project', 'ProjectController@doProject')->name('do_project');
+            Route::prefix('{project_id}')->name('feedback.')->group(function (){
+               Route::prefix('feedback')->group(function (){
+                  Route::get('{id}/show', 'FeedbackController@show')->name('detail');
+               });
+            });
         });
         Route::prefix('order')->name('order.')->group(function () {
             Route::get('', 'OrderController@index')->name('index');

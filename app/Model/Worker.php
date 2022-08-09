@@ -42,4 +42,8 @@ class Worker extends Authenticatable
     public function orders(){
         return $this->hasMany(Order::class);
     }
+
+    public function feedbacks(){
+        return $this->hasMany(Feedback::class);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Modules\Admin\Http\Controllers;
 
+use App\Services\Admin\CompanyService;
 use App\Services\Admin\UserService;
 use App\Services\Admin\WorkerService;
 use Illuminate\Contracts\Support\Renderable;
@@ -14,10 +15,12 @@ use Modules\Admin\Http\Requests\UpdateWorkerRequest;
 class UserController extends Controller
 {
     private $userService;
+    private $companyService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, CompanyService $companyService)
     {
         $this->userService = $userService;
+        $this->companyService = $companyService;
     }
 
     public function index(Request $request)
@@ -34,7 +37,8 @@ class UserController extends Controller
     public function create()
     {
         try {
-            return view('admin::user.create');
+            $data['companies'] = $this->companyService->getList();
+            return view('admin::user.create', compact('data'));
         } catch (\Exception $e){
             abort(500);
         }
@@ -71,6 +75,7 @@ class UserController extends Controller
     {
         try {
             $data['user'] = $this->userService->findById($id);
+            $data['companies'] = $this->companyService->getList();
             return view('admin::user.edit', compact('data'));
         } catch (\Exception $e){
             abort(500);

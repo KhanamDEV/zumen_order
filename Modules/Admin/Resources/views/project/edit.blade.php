@@ -222,7 +222,7 @@
                                     <label class="custom-file-label" for="customFile">ファイルを選択</label>
                                 </div>
                                 <div class="list-documents">
-                                    @php $documents = json_decode($project->documents); @endphp
+                                    @php $documents = empty($project->documents) ? [] : json_decode($project->documents);  @endphp
                                     @foreach($documents as $key => $document)
                                         <div class="item-document mt-2">
                                             <span><a target="_blank" href="{{asset($document->path)}}">{{$document->name}}</a></span>

@@ -62,6 +62,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="" class="col-sm-2 control-label">会社名</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control" id=""  value="{{@$data['user']->company->name}}" >
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="" class="col-sm-2 control-label">ユーザー名</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id=""  value="{{@$data['user']->email}}" name="email">

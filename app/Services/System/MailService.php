@@ -74,14 +74,14 @@ class MailService
         }
     }
 
-    public function sendMailCreateProject($order){
+    public function sendMailCreateProject($order, $isFeedback = false){
         $workers = $this->workerRepository->getList();
         $users = $this->userRepository->getList(['email' => $order->project->user->email]);
         foreach ($workers as $worker){
-            Mail::to($worker->email)->send(new MailCreateProject('worker', $order));
+            Mail::to($worker->email)->send(new MailCreateProject('worker', $order, $isFeedback));
         }
         foreach ($users as $user){
-            Mail::to($user->email)->send(new MailCreateProject('user', $order));
+            Mail::to($user->email)->send(new MailCreateProject('user', $order, $isFeedback));
         }
     }
 

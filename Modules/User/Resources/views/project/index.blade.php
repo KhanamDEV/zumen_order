@@ -46,7 +46,7 @@
                     <div class="card-body" style="display: none">
                         <form action="" class="row g-3" method="get" autocomplete="off">
                             <div class="col-md-4">
-                                <label class="form-label">現場住所</label>
+                                <label class="form-label">現場情報</label>
                                 <input type="text" name="name"  autocomplete="off" class="form-control" value="{{request()->has('name') ? request()->get('name') : ''}}">
                             </div>
                             <div class="col-md-4">
@@ -191,7 +191,7 @@
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->owner}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{config('project.status')[$project->order->status]}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{ !empty($project->importunate) ? '3日以内' : @$project->delivery_date}}</a></td>
+                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{  @$project->delivery_date}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{date('Y-m-d', strtotime($project->created_at))}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{ !empty($project->order->worker_id) ? date('Y-m-d', strtotime($project->order->created_at)) : ''}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->order->finish_day}}</a></td>

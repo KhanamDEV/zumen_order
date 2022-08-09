@@ -8,7 +8,7 @@
 ?>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>@yield('title')</title>
+<title>発注図面システム </title>
 <link rel="shortcut icon" type="image/png" href="{{asset('static/images/logo.png')}}"/>
 
 
