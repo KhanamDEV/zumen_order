@@ -29,7 +29,9 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function getList($data)
     {
-        $query = $this->model->with(['order', 'user' => function($query) use ($data){
+        $query = $this->model->with(['order' => function($query){
+            return $query->with('worker');
+        }, 'user' => function($query) use ($data){
             if (!empty($data['auth_type']) && $data['auth_type'] == 'user'){
                 $user = auth('users')->user();
                 return $query->where('company_id', $user->company_id);

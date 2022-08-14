@@ -196,7 +196,7 @@
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{ !empty($project->order->worker_id) ? date('Y-m-d', strtotime($project->order->created_at)) : ''}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->order->finish_day}}</a></td>
                                         <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{@$project->user->first_name}} {{@$project->user->last_name}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->order->worker->first_name}} {{@$project->order->worker->last_name}}</a></td>
+                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->order->worker['first_name']}} {{@$project->order->worker['last_name']}}</a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>

@@ -175,11 +175,6 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    @if($project->order->status == 3)
-                        <div class="wrap-button" style="text-align: end">
-                            <button style="margin-bottom: 20px"  type="button" class="btn btn-success create-feedback">新しく追加する</button>
-                        </div>
-                    @endif
                     <table class="table table-bordered" id="table-feedback">
                         <thead>
                         <tr>

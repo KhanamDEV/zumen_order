@@ -10,7 +10,7 @@
 @section('content')
     <section class="content-header">
         <h1>
-            アカウント情報
+            会社情報
         </h1>
         <ol class="breadcrumb">
         </ol>

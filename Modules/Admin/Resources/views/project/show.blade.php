@@ -127,10 +127,10 @@
                                class="btn cancel-project button-width btn-secondary">キャンセル</a>
                         @endif
                     @endif
-                    @if($project->order->status != 3 )
+{{--                    @if($project->order->status != 3 )--}}
                         <a href="{{route('admin.project.delete', ['id'=> $project->id])}}"
                            class="btn delete-project button-width btn-danger">削除</a>
-                    @endif
+{{--                    @endif--}}
                 </div>
             </div>
         </div>

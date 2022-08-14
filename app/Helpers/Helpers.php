@@ -18,7 +18,7 @@ class Helpers
 
     public static function getStatusUser($type = 'all'){
         $status = [
-            1 => 'アクティブ',
+            1 => '活性',
             0 => '非活性'
         ];
         return $type === 'all' ? $status : $status[$type];

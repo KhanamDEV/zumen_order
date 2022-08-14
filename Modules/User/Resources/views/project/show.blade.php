@@ -260,7 +260,7 @@
                 <div class="card-body">
                     @if($project->order->status == 3)
                         <div class="wrap-button" style="text-align: end">
-                            <button style="margin-bottom: 20px"  type="button" class="btn btn-success create-feedback">新しく追加する</button>
+                            <button style="margin-bottom: 20px"  type="button" class="btn btn-success create-feedback">追加</button>
                         </div>
                     @endif
                     <table class="table table-bordered" id="table-feedback">
@@ -298,7 +298,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">新しいフィードバックを追加</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">新しいフィードバック</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -344,7 +344,7 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">近い</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
                             <button type="submit" form="form-create-feedback" class="btn btn-primary">保存</button>
                         </div>
                     </div>
