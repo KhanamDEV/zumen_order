@@ -16,7 +16,7 @@
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
                 </span>
-                        <span class="text">アカウント作成</span>
+                        <span class="text">会社名入力</span>
                     </a>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                     <div class="card-body">
                         <form action="" class="row g-3" method="get" autocomplete="off">
                             <div class="col-md-4">
-                                <label class="form-label">会社名入力</label>
+                                <label class="form-label">会社名</label>
                                 <input type="text" name="name"  autocomplete="off" class="form-control" value="{{request()->has('name') ? request()->get('name') : ''}}">
                             </div>
                             <div class="col-4">

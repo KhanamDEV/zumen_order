@@ -66,6 +66,7 @@ class FeedbackService
                 'documents' => $data['documents'],
                 'importunate' => empty($data['importunate']) ? 0 : 1,
                 'created_at' => date('Y-m-d H:i:s'),
+                'note' => $data['note'],
                 'additional' => '',
                 'documents_additional' => null,
                 'url_additional' => null

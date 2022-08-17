@@ -327,6 +327,10 @@
                                         <label for="importunate" class="form-check-label">納期相談希望</label>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="">備考</label>
+                                    <textarea name="note" class="form-control" rows="4"></textarea>
+                                </div>
                                 <div class="">
                                     <div class="form-group">
                                         <label for="">Documents</label>
@@ -341,6 +345,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </form>
                         </div>
                         <div class="modal-footer">
