@@ -36,7 +36,8 @@ Route::prefix('worker')->name('worker.')->group(function () {
             Route::post('{id}/detail', 'OrderController@update');
             Route::get('leave-project/{id}', 'OrderController@leaveProject')->name('leave_project');
             Route::get('{id}/done-project', 'OrderController@doneProject')->name('done_project');
-
+            Route::get('{id}/request-confirmation', 'OrderController@requestConfirmation')->name('request_confirmation_project');
+            Route::post('{id}/add-message', 'OrderController@addMessage')->name('add_message');
         });
     });
 });

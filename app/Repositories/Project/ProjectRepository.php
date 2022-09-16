@@ -91,7 +91,7 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function findById($id, $data = [])
     {
-        $query = $this->model->with(['order', 'user', 'feedbacks' => function($query){
+        $query = $this->model->with(['order','order.worker', 'user', 'feedbacks' => function($query){
             return $query->orderBy('id', 'DESC');
         }, 'feedbacks.worker']);
         if (!empty($data['status'])) $query = $query->whereHas('order', function ($query) use ($data) {

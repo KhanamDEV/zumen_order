@@ -54,3 +54,13 @@ p.info span {
     align-items: center
 }
 
+.list-message{
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.list-message .item-message{padding: 5px 0}
+.list-message .item-message:nth-child(n+2){border-top: 1px solid #ccc}
+.list-message .message-content{margin-left: 20px}
+.list-message .message-content ul{list-style: square}
+

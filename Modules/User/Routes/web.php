@@ -31,6 +31,8 @@ Route::prefix('')->name('user.')->group(function() {
             Route::get('{id}/detail', 'ProjectController@show')->name('show');
             Route::get('destroy/{id}', 'ProjectController@destroy')->name('delete');
             Route::post('{id}/update-additional', 'ProjectController@updateAdditional')->name('update_additional');
+            Route::post('{id}/add-message', 'ProjectController@addMessage')->name('add_message');
+            Route::get('{id}/done', 'ProjectController@done')->name('done');
             Route::prefix('{project_id}')->group(function (){
                 Route::prefix('feedback')->name('feedback.')->group(function (){
                     Route::post('create', 'FeedbackController@store')->name('create');

@@ -148,4 +148,24 @@ class ProjectController extends Controller
             return response()->json([]);
         }
     }
+
+    public function addMessage(Request $request, $id){
+        try {
+            if ($this->projectService->addMessage($id, $request->all())){
+                session()->flash('send_message_success', '送信に成功しました');
+            }
+            return redirect()->back();
+        } catch (\Exception $e){
+            abort(500);
+        }
+    }
+
+    public function done($id){
+        try {
+            $this->projectService->done($id);
+            return redirect()->route('user.project.index');
+        } catch (\Exception $e){
+            abort(500);
+        }
+    }
 }

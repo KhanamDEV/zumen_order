@@ -75,4 +75,24 @@ class OrderController extends Controller
         }
     }
 
+    public function requestConfirmation($id){
+        try {
+            $this->orderService->requestConfirmation($id);
+            return redirect()->route('worker.order.show', ['id' => $id]);
+        } catch (\Exception $e){
+            abort(500);
+        }
+    }
+
+    public function addMessage(Request $request, $id){
+        try {
+            if ($this->orderService->addMessage($id, $request->all())){
+                session()->flash('send_message_success', '送信に成功しました');
+            }
+            return redirect()->back();
+        } catch (\Exception $e){
+            abort(500);
+        }
+    }
+
 }

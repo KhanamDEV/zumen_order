@@ -118,7 +118,7 @@
                     $readonly = strtotime(date('Y-m-d')) > strtotime(date('Y-m-d', strtotime($order->project->delivery_date))) ||
                     $order->status == 5 || $order->status == 3;
                 @endphp
-                <form action="" method="POST">
+                <form action="" id="form-order" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
@@ -140,10 +140,10 @@
                             </div>
                             @if($isWorkerOfProject)
                                 <div class="group-add-documents mt-3">
-                                    <input type="hidden" id="listDocument" name="documents"
+                                    <input type="hidden"  name="documents" class="listDocument"
                                            value="{{$order->documents ?? json_encode([])}}">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="uploadDocument">
+                                        <input type="file" class="custom-file-input upload-document" id="uploadDocument">
                                         <label class="custom-file-label" for="customFile">ファイルを選択</label>
                                     </div>
                                 </div>
@@ -170,6 +170,7 @@
                             @endif
                         </div>
                 @endif
+                </form>
             </div>
         </div>
         <div class="card card-info">
@@ -182,42 +183,69 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="owner">補足</label>
-                            <p class="pre-line">{{@$order->project->additional}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        @php $urls = !empty($order->project->url_additional) ? json_decode($order->project->url_additional) : []; @endphp
-                        <p class="info"><span>URL</span>:
-                        <ul>
-                            @foreach($urls as $url)
-                                <li><a href="{{$url}}">{{$url}}</a></li>
-                            @endforeach
-                        </ul>
-                        </p>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Documents</label>
-                        </div>
-                        <div class="group-add-documents">
+                @php
+                    $messages = !empty($order->project->messages) ? json_decode($order->project->messages) : [];
 
-                            <div class="">
-                                @php $documents = !empty($order->project->documents_additional) ? json_decode($order->project->documents_additional) : []; @endphp
-                                @foreach($documents as $key => $document)
-                                    <div class="item-document mt-2">
-                                        <span><a target="_blank"
-                                                 href="{{asset($document->path)}}">{{$document->name}}</a></span>
+                @endphp
+                <div class="row">
+                    <div class="col-md-12">
+                        <strong>メッセージ一覧</strong>
+                        @if(!empty($messages))
+                            <div class="list-message">
+
+                                @foreach($messages as $message)
+                                    <div class="item-message">
+                                        @php $seederName = $message->sender == 'order' ? $order->project->user->first_name.' '.$order->project->user->last_name :
+                                                    $order->worker->first_name.' '.$order->worker->last_name @endphp
+                                        <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
+                                        <div class="message-content">
+                                            <p class="mb-0">コンテンツ: {{$message->content}}</p>
+                                            @php $documents = !empty($message->documents) ? json_decode($message->documents) : []; @endphp
+                                            @if(!empty($documents))
+                                                <p class="mb-0">Documents</p>
+                                                <ul>
+                                                    @foreach($documents as $document)
+                                                        <li><a href="{{asset($document->path)}}" target="_blank">{{$document->name}}</a> </li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                        </div>
+
                                     </div>
                                 @endforeach
+
                             </div>
-                        </div>
+                        @endif
+
                     </div>
+                    @if(!in_array($order->status , [3,4,5]))
+                    <div class="col-md-12" >
+                        <form method="POST" action="{{route('worker.order.add_message', ['id' => $order->project->id])}}">
+                            @csrf
+                            <div class="form-group">
+                                <label for="">コンテンツ</label>
+                                <textarea class="form-control" rows="3" name="content"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="" class="mb-0">Documents</label>
+                            </div>
+                            <div class="group-add-documents">
+                                <input type="hidden"  class="listDocument" name="documents"
+                                       value="{{json_encode([])}}">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input upload-document" >
+                                    <label class="custom-file-label" for="customFile">ファイルを選択</label>
+                                </div>
+                                <div class="list-documents">
+                                </div>
+                            </div>
+                            <div class="group-button mt-2 d-flex justify-content-end">
+                                <button class="btn btn-success mr-2" type="submit">送信</button>
+                            </div>
+                        </form>
+                    </div>
+                        @endif
                 </div>
             </div>
         </div>
@@ -247,11 +275,21 @@
                         @foreach($order->project->feedbacks as $key => $feedback)
                             <tr>
                                 <td>{{$key+1}}</td>
-                                <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{config('project.type')[$feedback->type]}}</a></td>
-                                <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{@$feedback->finish_day}}</a></td>
-                                <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a></td>
-                                <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a></td>
-                                <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->worker->first_name ?? ''}} {{$feedback->worker->last_name ?? ''}}</a></td>
+                                <td>
+                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{config('project.type')[$feedback->type]}}</a>
+                                </td>
+                                <td>
+                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{@$feedback->finish_day}}</a>
+                                </td>
+                                <td>
+                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a>
+                                </td>
+                                <td>
+                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a>
+                                </td>
+                                <td>
+                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->worker->first_name ?? ''}} {{$feedback->worker->last_name ?? ''}}</a>
+                                </td>
                             </tr>
                         @endforeach
                     @endif
@@ -261,15 +299,19 @@
 
         </div>
 
-    @if($isWorkerOfProject)
+        @if($isWorkerOfProject)
             <div class="group-button-end ">
                 <a href="{{route('worker.order.index')}}" class="btn button-width btn-secondary">戻る</a>
 
-                <button type="submit" class="btn btn-info button-width mr-2">確認</button>
+                <button type="submit" class="btn btn-info button-width mr-2" form="form-order">確認</button>
                 @php $documents = empty($order->documents) ? [] : json_decode($order->documents) @endphp
+                {{--                @if(!empty($documents))--}}
+                {{--                    <a href="{{route('worker.order.done_project', ['id' => $order->id])}}"--}}
+                {{--                       class="btn button-width btn-success ">リクエスト確認</a>--}}
+                {{--                @endif--}}
                 @if(!empty($documents))
-                    <a href="{{route('worker.order.done_project', ['id' => $order->id])}}"
-                       class="btn button-width btn-success ">完了</a>
+                    <a href="{{route('worker.order.request_confirmation_project', ['id' => $order->id])}}"
+                       class="btn button-width btn-success ">リクエスト確認</a>
                 @endif
                 @if(!$readonly )
                     <a href="{{route('worker.order.leave_project', ['id' => $order->id])}}"
@@ -304,6 +346,15 @@
             timer: 3000
         })
         @endif
+        @if(session()->has('send_message_success'))
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '{{session()->get('send_message_success')}}',
+            showConfirmButton: false,
+            timer: 3000
+        })
+        @endif
         $(function () {
             $(".leave-project").click(function (e) {
                 e.preventDefault();
@@ -326,21 +377,25 @@
             function removeDocument() {
                 $(".remove-document").click(function () {
                     let path = $(this).data('path');
-                    let documents = JSON.parse($("#listDocument").val());
+                    let inputListDocument = $(this).parent().parent().parent().find('.listDocument').first();
+                    let documents = JSON.parse($(inputListDocument).val());
                     documents = documents.filter(function (document) {
                         return document.path != path;
                     })
-                    $("#listDocument").val(JSON.stringify(documents));
+                    $(inputListDocument).val(JSON.stringify(documents));
                     $(this).parent().remove();
                 });
             }
 
             removeDocument();
-            $('#uploadDocument').change(function () {
+            $('.upload-document').change(function () {
                 Swal.showLoading();
                 let formData = new FormData();
                 formData.append('file', $(this)[0].files[0]);
                 formData.append('_token', '{{csrf_token()}}');
+                let that = $(this);
+                let listDocuments = $(this).parent().parent().find('.listDocument').first();
+                console.log(listDocuments);
                 $.ajax({
                     url: '{{route('user.upload_file')}}',
                     method: 'POST',
@@ -352,10 +407,10 @@
                         console.log(res);
                         Swal.close();
                         if (res.meta.status == 200) {
-                            let documents = JSON.parse($("#listDocument").val());
+                            let documents = JSON.parse($(listDocuments).val());
                             documents.push({name: res.response.name, path: res.response.path});
-                            $("#listDocument").val(JSON.stringify(documents));
-                            $(".list-documents").append(`<div class="item-document mt-2">
+                            $(listDocuments).val(JSON.stringify(documents));
+                            $(that).parent().parent().parent().find('.list-documents').append(`<div class="item-document mt-2">
                                         <span><a target="_blank" href=${res.response.preview}>${res.response.name}</a></span>
                                         <img class="remove-document" data-path="${res.response.path}" src="{{asset('static/images/x.png')}}" alt="">
                                     </div>`)

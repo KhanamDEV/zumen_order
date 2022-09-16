@@ -141,7 +141,7 @@
         @if(!empty($project->order->worker_id))
             <div class="card-info  card">
                 <div class="card-header">
-                    <h3 class="card-title">補足</h3>
+                    <h3 class="card-title">チャット</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
@@ -152,97 +152,68 @@
                     @php
                         $subDate = \Carbon\Carbon::parse($project->delivery_date)->subDays(2)->format('Y-m-d');
                             $isEditAdditional =  auth('users')->id() == $project->user_id && strtotime($subDate) >= strtotime(date('Y-m-d'));
+                            $messages = !empty($project->messages) ? json_decode($project->messages) : [];
                     @endphp
-                    <form action="{{route('user.project.update_additional', ['id' => request()->route('id')])}}"
-                          method="POST" id="form-update">
-                        @csrf
-                        <div class="">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label for="owner">補足</label>
-                                        @if($isEditAdditional)
-
-                                            <textarea name="additional" class="form-control"
-                                                      rows="5">{{@$project->additional}}</textarea>
-                                        @else
-                                            <p class="pre-line">{{@$project->additional}}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    @php $urls = !empty($project->url_additional) ? json_decode($project->url_additional) : []; @endphp
-                                    @if($isEditAdditional)
-
-                                        <div class="form-group">
-                                            <label for="">URL</label>
-                                        </div>
-                                        <div class="group-add-url">
-                                            @foreach($urls as $key => $url)
-                                                <div class="item-url mb-3">
-                                                    <input type="text" name="url_additional[]" class="form-control"
-                                                           value="{{$url}}">
-                                                    <button class="btn add-url btn-success ml-1" type="button">追加
-                                                    </button>
-                                                    <button class="btn delete-url btn-danger ml-1" type="button">削除
-                                                    </button>
-                                                </div>
-                                            @endforeach
-                                            <div class="item-url mb-3">
-                                                <input type="text" name="url_additional[]" class="form-control">
-                                                <button class="btn add-url btn-success ml-1" type="button">追加</button>
-                                                <button class="btn delete-url btn-danger ml-1" type="button">削除</button>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong>メッセージ一覧</strong>
+                            @if(!empty($messages))
+                                <div class="list-message">
+                                    @foreach($messages as $message)
+                                        @php $seederName = $message->sender == 'order' ? $project->user->first_name.' '.$project->user->last_name :
+                                                    $project->order->worker->first_name.' '.$project->order->worker->last_name @endphp
+                                        <div class="item-message">
+                                            <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
+                                            <div class="message-content">
+                                                <p class="mb-0">コンテンツ: {{$message->content}}</p>
+                                                @php $documents = !empty($message->documents) ? json_decode($message->documents) : []; @endphp
+                                                @if(!empty($documents))
+                                                    <p class="mb-0">Documents</p>
+                                                    <ul>
+                                                        @foreach($documents as $document)
+                                                            <li><a href="{{asset($document->path)}}" target="_blank">{{$document->name}}</a> </li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
                                             </div>
+
                                         </div>
-                                    @else
-                                        <p class="info"><span>URL</span>:
-                                        <ul>
-                                            @foreach($urls as $url)
-                                                <li><a href="{{$url}}">{{$url}}</a></li>
-                                            @endforeach
-                                        </ul>
-                                        </p>
-                                    @endif
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Documents</label>
-                                    </div>
-                                    <div class="group-add-documents">
-                                        @if($isEditAdditional)
-                                            <input type="hidden" id="listDocument" class="listDocument" name="documents_additional"
-                                                   value="{{empty($project->documents_additional) ? json_encode([]) : $project->documents_additional}}">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="uploadDocument">
-                                                <label class="custom-file-label" for="customFile">ファイルを選択</label>
-                                            </div>
-                                        @endif
-                                        <div class="list-documents">
-                                            @php $documents = !empty($project->documents_additional) ? json_decode($project->documents_additional) : []; @endphp
-                                            @foreach($documents as $key => $document)
-                                                <div class="item-document mt-2">
-                                                    <span><a target="_blank"
-                                                             href="{{asset($document->path)}}">{{$document->name}}</a></span>
-                                                    @if(auth('users')->id() == $project->user_id)
-                                                        <img class="remove-document" data-path="{{$document->path}}"
-                                                             src="{{asset('static/images/x.png')}}" alt="">
-                                                    @endif
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @if($isEditAdditional)
-                                <div style="width: 100%; display: flex; justify-content: end; ">
-                                    <button class="btn-success btn" >保存</button>
+                                    @endforeach
+
                                 </div>
                             @endif
-                        </div>
 
-                    </form>
+                        </div>
+                        @if(!in_array($project->order->status , [3,4,5]) && !(request()->has('from') && request()->get('from') == 'all') )
+                        <div class="col-md-12">
+                            <form method="POST" action="{{route('user.project.add_message', ['id' => $project->id])}}">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="">コンテンツ</label>
+                                    <textarea class="form-control" rows="3" name="content"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="" class="mb-0">Documents</label>
+                                </div>
+                                <div class="group-add-documents">
+                                    <input type="hidden" id="listDocument" class="listDocument" name="documents"
+                                           value="{{json_encode([])}}">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="uploadDocument">
+                                        <label class="custom-file-label" for="customFile">ファイルを選択</label>
+                                    </div>
+                                    <div class="list-documents">
+                                    </div>
+                                </div>
+                                <div class="group-button mt-2 d-flex justify-content-end">
+                                    <button class="btn btn-success mr-2" type="submit">送信</button>
+                                    <a href="{{route('user.project.done', ['id' => $project->id])}}" class="btn btn-info">完成</a>
+                                </div>
+                            </form>
+                        </div>
+                            @endif
+                    </div>
                 </div>
 
             </div>
@@ -279,11 +250,11 @@
                             @foreach($project->feedbacks as $key => $feedback)
                                 <tr>
                                     <td>{{$key+1}}</td>
-                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{config('project.type')[$feedback->type]}}</a></td>
-                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{@$feedback->finish_day}}</a></td>
-                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a></td>
-                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a></td>
-                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->worker->first_name ?? ''}} {{$feedback->worker->last_name ?? ''}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{config('project.type')[$feedback->type]}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{@$feedback->finish_day}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->worker->first_name ?? ''}} {{$feedback->worker->last_name ?? ''}}</a></td>
                                 </tr>
                             @endforeach
                         @endif
@@ -424,6 +395,15 @@
                 }
             })
         })
+        @if(session()->has('send_message_success'))
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '{{session()->get('send_message_success')}}',
+            showConfirmButton: false,
+            timer: 2000
+        })
+        @endif
         @if(session()->has('message'))
         Swal.fire({
             position: 'center',

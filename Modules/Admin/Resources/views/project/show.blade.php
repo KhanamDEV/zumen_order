@@ -135,67 +135,55 @@
             </div>
         </div>
         @if(!empty($project->order->worker_id))
-            <div class="card card-info">
-                <div class="card-header">
-                    <h3 class="card-title">補足</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">チャット</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <form action="{{route('user.project.update_additional', ['id' => request()->route('id')])}}"
-                          method="POST" id="form-update">
-                        @csrf
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label for="owner">補足</label>
-                                        <p>{{@$project->additional}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    @php $urls = !empty($project->url_additional) ? json_decode($project->url_additional) : []; @endphp
+                    <div class="card-body">
+                        <div class="row">
+                            @php
+                                $messages = !empty($project->messages) ? json_decode($project->messages) : [];
 
-                                    <p class="info"><span>URL</span>:
-                                    <ul>
-                                        @foreach($urls as $url)
-                                            <li><a href="{{$url}}">{{$url}}</a></li>
-                                        @endforeach
-                                    </ul>
-                                    </p>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Documents</label>
-                                    </div>
-                                    <div class="group-add-documents">
-
-                                        <div class="list-documents">
-                                            @php $documents = !empty($project->documents_additional) ? json_decode($project->documents_additional) : []; @endphp
-                                            @foreach($documents as $key => $document)
-                                                <div class="item-document mt-2">
-                                                <span><a target="_blank"
-                                                         href="{{asset($document->path)}}">{{$document->name}}</a></span>
-
+                            @endphp
+                            <div class="col-md-12">
+                                <strong>メッセージ一覧</strong>
+                                @if(!empty($messages))
+                                    <div class="list-message">
+                                        @foreach($messages as $message)
+                                            @php $seederName = $message->sender == 'order' ? $project->user->first_name.' '.$project->user->last_name :
+                                                    $project->order->worker->first_name.' '.$project->order->worker->last_name @endphp
+                                            <div class="item-message">
+                                                <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
+                                                <div class="message-content">
+                                                    <p class="mb-0">コンテンツ: {{$message->content}}</p>
+                                                    @php $documents = !empty($message->documents) ? json_decode($message->documents) : []; @endphp
+                                                    @if(!empty($documents))
+                                                        <p class="mb-0">Documents</p>
+                                                        <ul>
+                                                            @foreach($documents as $document)
+                                                                <li><a href="{{asset($document->path)}}" target="_blank">{{$document->name}}</a> </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
                                                 </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
+                                            </div>
+                                        @endforeach
+
+                                    </div>
+                                @endif
+
+                            </div>
                         </div>
 
-                    </form>
+                    </div>
 
                 </div>
-
-            </div>
 
             @endif
             @if(!empty($project->feedbacks))

@@ -13,18 +13,20 @@ namespace App\Services\Worker;
 use App\Jobs\SendMailCompleteProject;
 use App\Jobs\SendMailLeaveProject;
 use App\Repositories\Order\OrderRepositoryInterface;
+use App\Repositories\Project\ProjectRepositoryInterface;
 use App\Services\System\MailService;
 
 class OrderService
 {
     private $orderRepository;
-
+    private $projectRepository;
     private $mailService;
 
-    public function __construct(OrderRepositoryInterface  $orderRepository, MailService $mailService)
+    public function __construct(OrderRepositoryInterface  $orderRepository, MailService $mailService, ProjectRepositoryInterface  $projectRepository)
     {
         $this->orderRepository = $orderRepository;
         $this->mailService = $mailService;
+        $this->projectRepository= $projectRepository;
     }
 
     public function getList($data){
@@ -119,5 +121,30 @@ class OrderService
 //            dispatch($job)->delay(now()->addSeconds(2));
         }
         return  $status;
+    }
+
+    public function requestConfirmation($id){
+        $order = $this->orderRepository->find(['id' => $id]);
+        if (empty($order)) return false;
+        $status = $this->orderRepository->update($order->id, [
+            'status' => 6,
+            'finish_day' => date('Y-m-d H:i:s')
+        ]);
+        return  $status;
+    }
+
+    public function addMessage($id, $data){
+        $project = $this->projectRepository->findById($id);
+        $messages = empty($project->messages) ? [] : json_decode($project->messages);
+        $message = (object)[];
+        $message->sender = 'worker';
+        $message->content = $data['content'];
+        $message->documents = $data['documents'];
+        $message->created_at = date('Y-m-d H:i:s');
+        array_push($messages, $message);
+        return $this->projectRepository->update($id, [
+            'messages' => json_encode($messages),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
     }
 }

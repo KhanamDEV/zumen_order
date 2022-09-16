@@ -193,4 +193,35 @@ class ProjectService
         }
         return $uniqueProjects;
     }
+
+    public function addMessage($id, $data){
+        $project = $this->projectRepository->findById($id);
+        $messages = empty($project->messages) ? [] : json_decode($project->messages);
+        $message = (object)[];
+        $message->sender = 'order';
+        $message->content = $data['content'];
+        $message->documents = $data['documents'];
+        $message->created_at = date('Y-m-d H:i:s');
+        array_push($messages, $message);
+        return $this->projectRepository->update($id, [
+            'messages' => json_encode($messages),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+
+    public function done($id){
+        $order = $this->orderRepository->find(['id' => $id]);
+        if (empty($order)) return false;
+        $status = $this->orderRepository->update($order->id, [
+            'status' => 3,
+            'finish_day' => date('Y-m-d H:i:s')
+        ]);
+        if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
+            $order->finish_day = date('Y-m-d');
+            $this->mailService->sendMailCompleteProject($order);
+//            $job = new SendMailCompleteProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
+        }
+        return  $status;
+    }
 }

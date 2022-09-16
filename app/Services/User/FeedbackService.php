@@ -53,6 +53,7 @@ class FeedbackService
                 'postal_code' => $project->postal_code,
                 'additional' => $project->additional,
                 'url_additional' => $project->url_additional,
+                'messages' => $project->messages,
                 'documents_additional' => $project->documents_additional,
                 'importunate' => $project->importunate,
                 'project_created_at' => Carbon::parse($project->created_at)->format('Y-m-d H:i:s'),
@@ -64,6 +65,7 @@ class FeedbackService
                 'type' => $data['type'],
                 'delivery_date' => $data['delivery_date'],
                 'documents' => $data['documents'],
+                'messages' => null,
                 'importunate' => empty($data['importunate']) ? 0 : 1,
                 'created_at' => date('Y-m-d H:i:s'),
                 'note' => $data['note'],
@@ -79,8 +81,6 @@ class FeedbackService
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ];
-            $order = $this->orderRepository->find(['id' => $project->order->id]);
-            $this->mailService->sendMailCreateProject($order, true);
             if (!$this->feedbackRepository->store($dataFeedback)){
                 return false;
             }
@@ -92,10 +92,13 @@ class FeedbackService
                 DB::rollBack();
                 return false;
             }
+            $order = $this->orderRepository->find(['id' => $project->order->id]);
+            $this->mailService->sendMailCreateProject($order, true);
             DB::commit();
             return true;
         } catch (\Exception $e){
             DB::rollBack();
+            dd($e);
             return false;
         }
 
