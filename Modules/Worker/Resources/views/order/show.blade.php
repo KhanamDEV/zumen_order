@@ -175,7 +175,7 @@
         </div>
         <div class="card card-info">
             <div class="card-header">
-                <h3 class="card-title">補足</h3>
+                <h3 class="card-title">チャット</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                         <i class="fas fa-minus"></i>
@@ -189,7 +189,6 @@
                 @endphp
                 <div class="row">
                     <div class="col-md-12">
-                        <strong>メッセージ一覧</strong>
                         @if(!empty($messages))
                             <div class="list-message">
 
@@ -199,7 +198,7 @@
                                                     $order->worker->first_name.' '.$order->worker->last_name @endphp
                                         <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
                                         <div class="message-content">
-                                            <p class="mb-0">コンテンツ: {{$message->content}}</p>
+                                            <p class="mb-0">内容: {{$message->content}}</p>
                                             @php $documents = !empty($message->documents) ? json_decode($message->documents) : []; @endphp
                                             @if(!empty($documents))
                                                 <p class="mb-0">Documents</p>
@@ -219,11 +218,15 @@
 
                     </div>
                     @if(!in_array($order->status , [3,4,5]))
-                    <div class="col-md-12" >
+                        @if(!empty($messages))
+                            <div class="line-row"></div>
+                            @endif
+
+                        <div class="col-md-12" >
                         <form method="POST" action="{{route('worker.order.add_message', ['id' => $order->project->id])}}">
                             @csrf
                             <div class="form-group">
-                                <label for="">コンテンツ</label>
+                                <label for="">内容</label>
                                 <textarea class="form-control" rows="3" name="content"></textarea>
                             </div>
 
@@ -311,7 +314,7 @@
                 {{--                @endif--}}
                 @if(!empty($documents))
                     <a href="{{route('worker.order.request_confirmation_project', ['id' => $order->id])}}"
-                       class="btn button-width btn-success ">リクエスト確認</a>
+                       class="btn button-width btn-success ">発注者確認</a>
                 @endif
                 @if(!$readonly )
                     <a href="{{route('worker.order.leave_project', ['id' => $order->id])}}"

@@ -64,3 +64,9 @@ p.info span {
 .list-message .message-content{margin-left: 20px}
 .list-message .message-content ul{list-style: square}
 
+.line-row{
+    height: 1px;
+    width: 100%;
+    background-color: #ccc;
+    margin: 15px 0 ;
+}

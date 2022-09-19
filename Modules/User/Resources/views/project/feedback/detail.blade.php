@@ -126,7 +126,6 @@
                 @endphp
                 <div class="row">
                     <div class="col-md-12">
-                        <strong>メッセージ一覧</strong>
                         @if(!empty($messages))
                             <div class="list-message">
                                 @foreach($messages as $message)
@@ -135,7 +134,7 @@
                                     <div class="item-message">
                                         <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
                                         <div class="message-content">
-                                            <p class="mb-0">コンテンツ: {{$message->content}}</p>
+                                            <p class="mb-0">内容: {{$message->content}}</p>
                                             @php $documents = !empty($message->documents) ? json_decode($message->documents) : []; @endphp
                                             @if(!empty($documents))
                                                 <p class="mb-0">Documents</p>

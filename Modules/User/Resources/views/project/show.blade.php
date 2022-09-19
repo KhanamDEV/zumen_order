@@ -156,7 +156,6 @@
                     @endphp
                     <div class="row">
                         <div class="col-md-12">
-                            <strong>メッセージ一覧</strong>
                             @if(!empty($messages))
                                 <div class="list-message">
                                     @foreach($messages as $message)
@@ -165,7 +164,7 @@
                                         <div class="item-message">
                                             <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
                                             <div class="message-content">
-                                                <p class="mb-0">コンテンツ: {{$message->content}}</p>
+                                                <p class="mb-0">内容: {{$message->content}}</p>
                                                 @php $documents = !empty($message->documents) ? json_decode($message->documents) : []; @endphp
                                                 @if(!empty($documents))
                                                     <p class="mb-0">Documents</p>
@@ -185,11 +184,13 @@
 
                         </div>
                         @if(!in_array($project->order->status , [3,4,5]) && !(request()->has('from') && request()->get('from') == 'all') )
-                        <div class="col-md-12">
+                            @if(!empty($messages))
+                                <div class="line-row"></div>
+                            @endif                        <div class="col-md-12">
                             <form method="POST" action="{{route('user.project.add_message', ['id' => $project->id])}}">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="">コンテンツ</label>
+                                    <label for="">内容</label>
                                     <textarea class="form-control" rows="3" name="content"></textarea>
                                 </div>
 
