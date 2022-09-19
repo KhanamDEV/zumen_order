@@ -44,7 +44,8 @@ class MailCreateProject extends Mailable
             ->view('mail.new_project')
             ->with([
                 'order' => $this->order,
-                'type' => $this->type
+                'type' => $this->type,
+                'mailFeedback' => $this->mailFeedback
             ]);
     }
 }

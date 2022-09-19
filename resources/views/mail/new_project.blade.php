@@ -17,7 +17,7 @@
 <p class="info"><span>納期相談希望</span>: {{!empty($order->project->importunate) ? 'はい' : 'いいえ'}}</p>
 <p class="info"><span>備考</span>: {{@$order->project->note}} </p>
 @php $information = json_decode($order->project->other_information)  @endphp
-@if(!empty($information))
+@if(!empty($information) && !$mailFeedback)
     <p class="info"><span>図面情報</span>:
     <ul>
         @foreach($information as $value)
