@@ -36,7 +36,7 @@ class MailCompleteProject extends Mailable
             config('project.type')[$this->order->project->type] . '図面 ' .$this->order->finish_day;
         return $this->from(env('MAIL_FROM_ADDRESS', 'no-reply@fuchiso.jp'), env('MAIL_FROM_NAME', 'Fuchiso'))
             ->subject($subject)
-            ->view('mail.new_project')
+            ->view('mail.complete_project')
             ->with([
                 'order' => $this->order,
                 'type' => $this->type

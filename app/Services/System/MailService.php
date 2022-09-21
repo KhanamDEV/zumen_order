@@ -121,8 +121,14 @@ class MailService
     }
 
     public function sendMailNewMessage($order, $message, $from){
-        $workers = $this->workerRepository->getList(['email' => auth('workers')->user()->email]);
-        $users = $this->userRepository->getList(['email' => $order->project->user->email]);
+        if ($from == 'worker'){
+            $workers = $this->workerRepository->getList(['email' => auth('workers')->user()->email]);
+            $users = $this->userRepository->getList(['email' => $order->project->user->email]);
+        } else{
+            $workers = $this->workerRepository->getList(['email' => $order->worker->email]);
+            $users = $this->userRepository->getList(['email' => auth('users')->user()->email]);
+        }
+
         if ($from == 'order'){
             foreach ($workers as $worker){
                 Mail::to($worker->email)->send(new MailChatProject('worker',$message, $order));
