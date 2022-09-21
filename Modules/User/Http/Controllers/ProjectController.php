@@ -152,7 +152,7 @@ class ProjectController extends Controller
     public function addMessage(Request $request, $id){
         try {
             if ($this->projectService->addMessage($id, $request->all())){
-                session()->flash('send_message_success', '送信に成功しました');
+                session()->flash('send_message_success', '送信しました。');
             }
             return redirect()->back();
         } catch (\Exception $e){

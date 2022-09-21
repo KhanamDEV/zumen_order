@@ -187,7 +187,7 @@
                             @if(!empty($messages))
                                 <div class="line-row"></div>
                             @endif                        <div class="col-md-12">
-                            <form method="POST" action="{{route('user.project.add_message', ['id' => $project->id])}}">
+                            <form method="POST" action="{{route('user.project.add_message', ['id' => $project->id])}}" id="form-chat">
                                 @csrf
                                 <div class="form-group">
                                     <label for="">内容</label>
@@ -355,6 +355,7 @@
 @section('validation')
     {!! JsValidator::formRequest('Modules\User\Http\Requests\UpdateAdditionalProjectRequest', '#form-update') !!}
     {!! JsValidator::formRequest('Modules\User\Http\Requests\CreateFeedbackRequest', '#form-create-feedback') !!}
+    {!! JsValidator::formRequest('Modules\User\Http\Requests\ChatRequest', '#form-chat') !!}
 @endsection
 @section('scripts')
     <script>

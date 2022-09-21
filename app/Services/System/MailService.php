@@ -11,11 +11,13 @@ namespace App\Services\System;
 
 
 use App\Mail\MailCancelProject;
+use App\Mail\MailChatProject;
 use App\Mail\MailCompleteProject;
 use App\Mail\MailContinueProject;
 use App\Mail\MailCreateProject;
 use App\Mail\MailLeaveProject;
 use App\Mail\MailOrder;
+use App\Mail\MailWorkerRequestConfirm;
 use App\Repositories\Admin\AdminRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Worker\WorkerRepositoryInterface;
@@ -51,8 +53,8 @@ class MailService
     }
 
     public function sendMailCompleteProject($order){
-        $workers = $this->workerRepository->getList(['email' => auth('workers')->user()->email]);
-        $users = $this->userRepository->getList(['email' => $order->project->user->email]);
+        $workers = $this->workerRepository->getList(['email' => $order->worker->email]);
+        $users = $this->userRepository->getList(['email' => auth('users')->user()->email]);
         foreach ($workers as $worker){
             Mail::to($worker->email)->send(new MailCompleteProject('worker', $order));
         }
@@ -104,6 +106,32 @@ class MailService
         }
         foreach ($users as $user){
             Mail::to($user->email)->send(new MailOrder('user', $order));
+        }
+    }
+
+    public function sendMailWorkerRequestConfirm($order){
+        $workers = $this->workerRepository->getList(['email' => auth('workers')->user()->email]);
+        $users = $this->userRepository->getList(['email' => $order->project->user->email]);
+        foreach ($workers as $worker){
+            Mail::to($worker->email)->send(new MailWorkerRequestConfirm('worker', $order));
+        }
+        foreach ($users as $user){
+            Mail::to($user->email)->send(new MailWorkerRequestConfirm('user', $order));
+        }
+    }
+
+    public function sendMailNewMessage($order, $message, $from){
+        $workers = $this->workerRepository->getList(['email' => auth('workers')->user()->email]);
+        $users = $this->userRepository->getList(['email' => $order->project->user->email]);
+        if ($from == 'order'){
+            foreach ($workers as $worker){
+                Mail::to($worker->email)->send(new MailChatProject('worker',$message, $order));
+            }
+        }
+        if ($from == 'worker'){
+            foreach ($users as $user){
+                Mail::to($user->email)->send(new MailChatProject('user',$message, $order));
+            }
         }
     }
 }

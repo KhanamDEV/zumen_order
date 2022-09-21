@@ -12,6 +12,7 @@ namespace App\Services\System;
 
 use App\Helpers\ResponseHelpers;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UploadService
 {
@@ -25,7 +26,7 @@ class UploadService
                 if ($file->getSize() > $maxUpload) return ResponseHelpers::serverErrorResponse([], '', __('message.response.max_size'));
                 $explodeOriginalNam = explode(".", $file->getClientOriginalName());
                 $name = $file->getClientOriginalName();
-                $path = $explodeOriginalNam[0].$randomKey.'.'.$file->getClientOriginalExtension();
+                $path = Str::slug($explodeOriginalNam[0]).$randomKey.'.'.$file->getClientOriginalExtension();
                 if (!Storage::disk('public')->put($path, $file->getContent())){
                     return ResponseHelpers::serverErrorResponse([], '', __('message.response.internal_server_error'));
                 }

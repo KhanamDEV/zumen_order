@@ -223,7 +223,7 @@
                             @endif
 
                         <div class="col-md-12" >
-                        <form method="POST" action="{{route('worker.order.add_message', ['id' => $order->project->id])}}">
+                        <form method="POST" action="{{route('worker.order.add_message', ['id' => $order->project->id])}}" id="form-chat">
                             @csrf
                             <div class="form-group">
                                 <label for="">内容</label>
@@ -324,6 +324,9 @@
             </div>
         @endif
     </section>
+@endsection
+@section('validation')
+    {!! JsValidator::formRequest('Modules\Worker\Http\Requests\ChatRequest', '#form-chat') !!}
 @endsection
 @section('extra-css')
     <style>

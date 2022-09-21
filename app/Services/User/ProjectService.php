@@ -196,6 +196,7 @@ class ProjectService
 
     public function addMessage($id, $data){
         $project = $this->projectRepository->findById($id);
+        $order =$this->orderRepository->find(['project_id' => $id]);
         $messages = empty($project->messages) ? [] : json_decode($project->messages);
         $message = (object)[];
         $message->sender = 'order';
@@ -203,10 +204,16 @@ class ProjectService
         $message->documents = $data['documents'];
         $message->created_at = date('Y-m-d H:i:s');
         array_push($messages, $message);
-        return $this->projectRepository->update($id, [
+        $status = $this->projectRepository->update($id, [
             'messages' => json_encode($messages),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
+        if ($status ){
+            $this->mailService->sendMailNewMessage($order, $message, 'order');
+//            $job = new SendMailCompleteProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
+        }
+        return $status;
     }
 
     public function done($id){

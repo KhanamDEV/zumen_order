@@ -12,12 +12,6 @@
 */
 
 Route::prefix('')->name('user.')->group(function() {
-    Route::get('clear-cache', function (){
-        Artisan::call('cache:clear');
-        Artisan::call('config:cache');
-        Artisan::call('view:clear');
-        return "Cleared!";
-    });
     Route::get('sign-in', 'Auth\LoginController@getLogin')->name('login');
     Route::post('sign-in', 'Auth\LoginController@postLogin');
     Route::get('search-project', 'ProjectController@search')->name('project.search');

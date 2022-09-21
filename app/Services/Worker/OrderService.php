@@ -130,11 +130,18 @@ class OrderService
             'status' => 6,
             'finish_day' => date('Y-m-d H:i:s')
         ]);
+        if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
+            $order->finish_day = date('Y-m-d');
+            $this->mailService->sendMailWorkerRequestConfirm($order);
+//            $job = new SendMailCompleteProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
+        }
         return  $status;
     }
 
     public function addMessage($id, $data){
         $project = $this->projectRepository->findById($id);
+        $order = $this->orderRepository->find(['project_id' => $project->id]);
         $messages = empty($project->messages) ? [] : json_decode($project->messages);
         $message = (object)[];
         $message->sender = 'worker';
@@ -142,9 +149,15 @@ class OrderService
         $message->documents = $data['documents'];
         $message->created_at = date('Y-m-d H:i:s');
         array_push($messages, $message);
-        return $this->projectRepository->update($id, [
+        $status = $this->projectRepository->update($id, [
             'messages' => json_encode($messages),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
+        if ($status ){
+            $this->mailService->sendMailNewMessage($order, $message, 'worker');
+//            $job = new SendMailCompleteProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
+        }
+        return $status;
     }
 }
