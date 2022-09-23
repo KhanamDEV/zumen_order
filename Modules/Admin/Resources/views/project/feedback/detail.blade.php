@@ -31,7 +31,8 @@
                         </p>
                     </div>
                     <div class="col-md-4">
-                        <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($feedback->project_created_at))}}</p>
+                        <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($feedback->project_created_at))}}
+                        </p>
                     </div>
                 </div>
                 <div class="row">
@@ -84,6 +85,61 @@
                     </ul>
                     </p>
                 @endif
+                <form method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-0">
+                                <label for="">Documents of Worker: </label>
+                            </div>
+                            @php $documentsOfWorker = json_decode($feedback->documents_of_worker) @endphp
+                            <div class="list-documents">
+                                @foreach($documentsOfWorker as $document)
+                                    <div class="item-document mt-2">
+                                        <span><a target="_blank"
+                                                 href="{{asset($document->path)}}">{{$document->name}}</a></span>
+                                            <img class="remove-document" data-path="{{$document->path}}"
+                                                 src="{{asset('static/images/x.png')}}" alt="">
+                                    </div>
+                                @endforeach
+                            </div>
+                                <div class="group-add-documents mt-3">
+                                    <input type="hidden"  name="documents_of_worker" class="listDocument"
+                                           value="{{$feedback->documents_of_worker ?? json_encode([])}}">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input upload-document" id="uploadDocument">
+                                        <label class="custom-file-label" for="customFile">ファイルを選択</label>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-0">
+                                <label for="">Documents: </label>
+                            </div>
+                            @php $documents = json_decode($feedback->documents) @endphp
+                            <div class="list-documents">
+                                @foreach($documents as $document)
+                                    <div class="item-document mt-2">
+                                        <span><a target="_blank"
+                                                 href="{{asset($document->path)}}">{{$document->name}}</a></span>
+                                        <img class="remove-document" data-path="{{$document->path}}"
+                                             src="{{asset('static/images/x.png')}}" alt="">
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="group-add-documents mt-3">
+                                <input type="hidden"  name="documents" class="listDocument"
+                                       value="{{$feedback->documents ?? json_encode([])}}">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input upload-document" id="uploadDocument">
+                                    <label class="custom-file-label" for="customFile">ファイルを選択</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <button type="submit" class="btn btn-success">Update </button>
+                </form>
                 @php $documents = json_decode($feedback->documents) @endphp
 
                 @if(!empty($documents))
@@ -140,7 +196,8 @@
                                                 <p class="mb-0">Documents</p>
                                                 <ul>
                                                     @foreach($documents as $document)
-                                                        <li><a href="{{asset($document->path)}}" target="_blank">{{$document->name}}</a> </li>
+                                                        <li><a href="{{asset($document->path)}}"
+                                                               target="_blank">{{$document->name}}</a></li>
                                                     @endforeach
                                                 </ul>
                                             @endif
@@ -160,4 +217,58 @@
 
 
     </section>
+@endsection
+@section('scripts')
+    <script>
+        function removeDocument() {
+            $(".remove-document").click(function () {
+                let path = $(this).data('path');
+                let inputListDocument = $(this).parent().parent().parent().find('.listDocument').first();
+                let documents = JSON.parse($(inputListDocument).val());
+                documents = documents.filter(function (document) {
+                    return document.path != path;
+                })
+                $(inputListDocument).val(JSON.stringify(documents));
+                $(this).parent().remove();
+            });
+        }
+
+        removeDocument();
+        $('.upload-document').change(function () {
+            Swal.showLoading();
+            let formData = new FormData();
+            formData.append('file', $(this)[0].files[0]);
+            formData.append('_token', '{{csrf_token()}}');
+            let that = $(this);
+            let listDocuments = $(this).parent().parent().find('.listDocument').first();
+            console.log(listDocuments);
+            $.ajax({
+                url: '{{route('user.upload_file')}}',
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: formData,
+                success: function (res) {
+                    console.log(res);
+                    Swal.close();
+                    if (res.meta.status == 200) {
+                        let documents = JSON.parse($(listDocuments).val());
+                        documents.push({name: res.response.name, path: res.response.path});
+                        $(listDocuments).val(JSON.stringify(documents));
+                        $(that).parent().parent().parent().find('.list-documents').append(`<div class="item-document mt-2">
+                                        <span><a target="_blank" href=${res.response.preview}>${res.response.name}</a></span>
+                                        <img class="remove-document" data-path="${res.response.path}" src="{{asset('static/images/x.png')}}" alt="">
+                                    </div>`)
+                        removeDocument();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: res.meta.message,
+                        })
+                    }
+                }
+            })
+        })
+    </script>
 @endsection

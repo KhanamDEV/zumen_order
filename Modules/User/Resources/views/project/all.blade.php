@@ -175,11 +175,14 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @php
+                                $no = 1;
+                            @endphp
                             @foreach($data['projects']['list'] as $key => $project)
                                 <tr  class=" @if(!empty($project->importunate)) has-importunate @endif "
                                      style="background-color: {{config('project.color_status')[$project->order->status]}}"
                                 >
-                                    <td class="index"><a href="{{route('user.project.show', ['id' => $project->id])}}">{{$key + 1}}</a></td>
+                                    <td class="index"><a href="{{route('user.project.show', ['id' => $project->id])}}">{{$no++}}</a></td>
                                     <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{@$project->owner}}</a></td>
                                     <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
                                     <td><a href="{{route('user.project.show', ['id' => $project->id, 'from' => 'all'])}}">{{config('project.status')[$project->order->status]}}</a></td>

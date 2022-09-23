@@ -31,6 +31,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::prefix('{project_id}')->group(function (){
                Route::prefix('feedback')->name('feedback.')->group(function (){
                    Route::get('{id}/show', 'FeedbackController@show')->name('detail');
+                   Route::post('{id}/show', 'FeedbackController@update');
                }) ;
             });
         });
