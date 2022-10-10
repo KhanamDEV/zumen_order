@@ -29,7 +29,6 @@ class ProjectController extends Controller
             $data['users'] = DB::table('users')->get();
             return view('user::project.index', compact('data'));
         } catch (\Exception $e){
-            dd($e);
             abort(500);
         }
     }

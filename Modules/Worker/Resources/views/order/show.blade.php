@@ -198,7 +198,7 @@
                                                     $order->worker->first_name.' '.$order->worker->last_name @endphp
                                         <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
                                         <div class="message-content">
-                                            <p class="mb-0">内容: {{$message->content}}</p>
+                                            <p class="mb-0 pre-line">内容: {!! $message->content !!}</p>
                                             @php $documents = !empty($message->documents) ? json_decode($message->documents) : []; @endphp
                                             @if(!empty($documents))
                                                 <p class="mb-0">Documents</p>
@@ -254,7 +254,7 @@
         </div>
         <div class="card card-warning">
             <div class="card-header">
-                <h3 class="card-title">フィードバック</h3>
+                <h3 class="card-title">案件アップデート</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                         <i class="fas fa-minus"></i>

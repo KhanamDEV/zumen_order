@@ -6,7 +6,7 @@
  * Time: 22:55
  */
 ?>
-<p class="info"><span>内容</span>: {{$chat->content}}</p>
+<p class="info" style="white-space: pre-line"><span>内容</span>: {!!  $chat->content !!}</p>
 @php
     $documents = json_decode($chat->documents);
     @endphp

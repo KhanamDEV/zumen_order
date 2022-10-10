@@ -35,7 +35,7 @@ class MailCreateProject extends Mailable
      */
     public function build()
     {
-        $title = $this->mailFeedback ? 'フィードバック' : '発注';
+        $title = $this->mailFeedback ? '案件アップデート' : '発注';
         $subject = "【".$title."】" . $this->order->project->owner . '様 ' .
             config('project.type')[$this->order->project->type] . '図面 ' .
             (!empty($this->order->project->importunate) ? '納期相談希望' : $this->order->project->delivery_date);

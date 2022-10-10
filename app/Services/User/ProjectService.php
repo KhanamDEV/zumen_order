@@ -217,7 +217,7 @@ class ProjectService
     }
 
     public function done($id){
-        $order = $this->orderRepository->find(['id' => $id]);
+        $order = $this->orderRepository->find(['project_id' => $id]);
         if (empty($order)) return false;
         $status = $this->orderRepository->update($order->id, [
             'status' => 3,
