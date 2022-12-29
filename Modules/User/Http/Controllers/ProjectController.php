@@ -3,6 +3,8 @@
 namespace Modules\User\Http\Controllers;
 
 use App\Services\User\ProjectService;
+use App\Services\User\UserService;
+use App\Services\User\WorkerService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -15,10 +17,14 @@ use Modules\User\Http\Requests\UpdateProjectRequest;
 class ProjectController extends Controller
 {
     private $projectService;
+    private $userService;
+    private $workerService;
 
-    public function __construct(ProjectService $projectService)
+    public function __construct(ProjectService $projectService, UserService $userService, WorkerService $workerService)
     {
         $this->projectService = $projectService;
+        $this->userService = $userService;
+        $this->workerService = $workerService;
     }
 
     public function index(Request $request)
@@ -108,6 +114,8 @@ class ProjectController extends Controller
     {
         try {
             $data['project'] = $this->projectService->findById($id);
+            $data['users'] = $this->userService->pluckNameById();
+            $data['workers'] = $this->workerService->pluckNameById();
             if (empty($data['project'])) abort(404);
             return view('user::project.show', compact('data'));
         } catch (\Exception $e){

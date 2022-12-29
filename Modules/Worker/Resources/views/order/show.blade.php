@@ -33,11 +33,11 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>発注者</span>: {{@$order->project->user->first_name}} {{@$order->project->user->last_name}}
+                            <span>発注者</span>: {{$order->project->user->first_name}} {{$order->project->user->last_name}}
                         </p>
                     </div>
                     <div class="col-md-4">
-                        <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($order->project->created_at))}}</p>
+                        <p class="info"><span>図面種類</span>: {{config('project.type')[$order->project->type]}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -45,25 +45,19 @@
                         <p class="info"><span>現場名</span>: {{@$order->project->owner}}</p>
                     </div>
                     <div class="col-md-4">
-                        <p class="info"><span>現場住所</span>: {{@$order->project->name}}</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <p class="info"><span>図面種類</span>: {{config('project.type')[$order->project->type]}}</p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="info"><span>ステータス</span>: {{config('project.status')[$order->status]}}</p>
+                        <p class="info">
+                            <span>納品日</span>: {{ !empty($order->project->importunate) ? '5日以内' : @$order->project->delivery_date}}</p>
+
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>納品日</span>: {{ !empty($order->project->importunate) ? '3日以内' : @$order->project->delivery_date}}
+                            <span>管理番号</span>: {{$order->project->control_number}}
                         </p>
                     </div>
                     <div class="col-md-4">
-                        <p class="info"><span>納期相談希望</span>: {{!empty($order->project->importunate) ? 'はい' : 'いいえ'}}</p>
+                        <p class="info"><span>ステータス</span>: {{config('project.status')[$order->project->order->status]}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -71,6 +65,26 @@
                         <p class="info">
                             <span>郵便番号</span>: {{ !empty($order->project->postal_code) ? substr($order->project->postal_code, 0, 3).'-'.substr($order->project->postal_code, 3, 6) : ''}}
                         </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($order->project->created_at))}}</p>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="info"><span>現場住所</span>: {{@$order->project->name}}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>納期相談希望</span>: {{!empty($order->project->importunate) ? 'はい' : 'いいえ'}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="info"><span>現場住所</span>: {{@$order->project->name}}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>プロジェクトコード</span>: {{@$order->project->number}}</p>
                     </div>
                 </div>
                 <p class="info pre-line"><span>備考</span>: {{@$order->project->note}}</p>
@@ -194,8 +208,13 @@
 
                                 @foreach($messages as $message)
                                     <div class="item-message">
-                                        @php $seederName = $message->sender == 'order' ? $order->project->user->first_name.' '.$order->project->user->last_name :
+                                        @if(!empty($message->created_by))
+                                            @php $seederName = $message->sender == 'order' ? $data['users'][$message->created_by] ?? '' : $data['workers'][$message->created_by] ?? '';
+                                            @endphp
+                                        @else
+                                            @php $seederName = $message->sender == 'order' ? $order->project->user->first_name.' '.$order->project->user->last_name :
                                                     $order->worker->first_name.' '.$order->worker->last_name @endphp
+                                        @endif
                                         <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
                                         <div class="message-content">
                                             <p class="mb-0 pre-line">内容: {!! $message->content !!}</p>
@@ -244,7 +263,7 @@
                                 </div>
                             </div>
                             <div class="group-button mt-2 d-flex justify-content-end">
-                                <button class="btn btn-success mr-2" type="submit">送信</button>
+                                <button class="btn btn-success mr-2 btn-send-message" type="submit">送信</button>
                             </div>
                         </form>
                     </div>
@@ -318,7 +337,7 @@
                 @endif
                 @if(!$readonly )
                     <a href="{{route('worker.order.leave_project', ['id' => $order->id])}}"
-                       class="btn button-width leave-project btn-danger">中止</a>
+                       class="btn button-width leave-project btn-danger">作業者変更</a>
                 @endif
 
             </div>
@@ -343,6 +362,11 @@
 @endsection
 @section('scripts')
     <script>
+        $(".btn-send-message").click(function (){
+            $(this).prop('disabled', true);
+            Swal.showLoading();
+            $("#form-chat").submit();
+        })
         @if(session()->has('error'))
         Swal.fire({
             position: 'center',

@@ -33,6 +33,7 @@ class UserRepository implements UserRepositoryInterface
         $query = $this->model->with('company');
         if (!empty($data['email'])) $query->where('email', $data['email']);
         if (!empty($data['last_name'])) $query->where('last_name', 'like', '%'.$data['last_name'].'%');
+        if (!empty($data['company_id'])) $query->where('company_id', $data['company_id']);
         $query->orderBy('created_at', 'DESC');
         if (!empty($data['per_page'])) return $query->paginate($data['per_page']);
         return $query->get();
@@ -40,7 +41,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function findById($id)
     {
-        return $this->model->where('id', $id)->first();
+        return $this->model->with('company')->where('id', $id)->first();
     }
 
     public function store($data)
@@ -52,4 +53,5 @@ class UserRepository implements UserRepositoryInterface
     {
         return $this->model->where('id', $id)->delete();
     }
+
 }

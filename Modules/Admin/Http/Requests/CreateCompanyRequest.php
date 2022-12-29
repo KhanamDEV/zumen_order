@@ -16,6 +16,7 @@ class CreateCompanyRequest extends FormRequest
         return [
             'name' => 'required',
             'address' => 'required',
+            'short_name' => 'required',
             'phone_number' => 'required'
         ];
     }

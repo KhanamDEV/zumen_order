@@ -37,6 +37,10 @@ class ProjectRepository implements ProjectRepositoryInterface
                 return $query->where('company_id', $user->company_id);
             }
         }]);
+        if(!empty($data['company_id'])) $query = $query->whereHas('user', function ($subQuery) use($data){
+            return $subQuery->where('company_id', $data['company_id']);
+        });
+        if (!empty($data['number'])) $query = $query->where('number', $data['number']);
         if (!empty($data['user_id'])) $query = $query->where('user_id', $data['user_id']);
         if (!empty($data['name'])){
             $query = $query->where('name', 'like', '%' . $data['name'] . '%')
@@ -91,7 +95,7 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function findById($id, $data = [])
     {
-        $query = $this->model->with(['order','order.worker', 'user', 'feedbacks' => function($query){
+        $query = $this->model->with(['order','order.worker', 'user','user.company', 'feedbacks' => function($query){
             return $query->orderBy('id', 'DESC');
         }, 'feedbacks.worker']);
         if (!empty($data['status'])) $query = $query->whereHas('order', function ($query) use ($data) {
@@ -108,5 +112,10 @@ class ProjectRepository implements ProjectRepositoryInterface
     public function delete($id)
     {
         return $this->model->where('id', $id)->delete();
+    }
+
+    public function getLastProjectByCompany($users)
+    {
+        return $this->model->whereIn('user_id', $users)->whereNotNull('number')->orderBy('created_at', 'DESC')->first();
     }
 }

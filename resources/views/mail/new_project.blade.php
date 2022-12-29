@@ -12,7 +12,7 @@
 <p class="info"><span>現場住所</span>: {{@$order->project->name}}</p>
 <p class="info"><span>図面種類</span>: {{config('project.type')[$order->project->type]}}</p>
 <p class="info"><span>ステータス</span>: {{config('project.status')[$order->status]}}</p>
-<p class="info"><span>納品日</span>: {{ !empty($order->project->importunate) ? '3日以内' : @$order->project->delivery_date}}
+<p class="info"><span>納品日</span>: {{ !empty($order->project->importunate) ? '5日以内' : @$order->project->delivery_date}}
 </p>
 <p class="info"><span>納期相談希望</span>: {{!empty($order->project->importunate) ? 'はい' : 'いいえ'}}</p>
 <p class="info"><span>備考</span>: {{@$order->project->note}} </p>

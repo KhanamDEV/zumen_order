@@ -35,11 +35,11 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>発注者</span>: {{@$project->user->first_name}} {{@$project->user->last_name}}
+                            <span>発注者</span>: {{$project->user->first_name}} {{$project->user->last_name}}
                         </p>
                     </div>
                     <div class="col-md-4">
-                        <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($project->created_at))}}</p>
+                        <p class="info"><span>図面種類</span>: {{config('project.type')[$project->type]}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -47,12 +47,16 @@
                         <p class="info"><span>現場名</span>: {{@$project->owner}}</p>
                     </div>
                     <div class="col-md-4">
-                        <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
+                        <p class="info">
+                            <span>納品日</span>: {{ !empty($project->importunate) ? '5日以内' : @$project->delivery_date}}</p>
+
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <p class="info"><span>図面種類</span>: {{config('project.type')[$project->type]}}</p>
+                        <p class="info">
+                            <span>管理番号</span>: {{$project->control_number}}
+                        </p>
                     </div>
                     <div class="col-md-4">
                         <p class="info"><span>ステータス</span>: {{config('project.status')[$project->order->status]}}</p>
@@ -60,7 +64,18 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <p class="info"><span>納品日</span>: {{@$project->delivery_date}}</p>
+                        <p class="info">
+                            <span>郵便番号</span>: {{ !empty($project->postal_code) ? substr($project->postal_code, 0, 3).'-'.substr($project->postal_code, 3, 6) : ''}}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($project->created_at))}}</p>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
                     </div>
                     <div class="col-md-4">
                         <p class="info"><span>納期相談希望</span>: {{!empty($project->importunate) ? 'はい' : 'いいえ'}}</p>
@@ -68,9 +83,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <p class="info">
-                            <span>郵便番号</span>: {{ !empty($project->postal_code) ? substr($project->postal_code, 0, 3).'-'.substr($project->postal_code, 3, 6) : ''}}
-                        </p>
+                        <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>プロジェクトコード</span>: {{@$project->number}}</p>
                     </div>
                 </div>
                 <p class="info pre-line"><span>備考</span>: {{@$project->note}}</p>

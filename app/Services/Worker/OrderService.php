@@ -98,8 +98,8 @@ class OrderService
         ];
         $status = $this->orderRepository->update($id, $dataUpdate);
         if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
-            $order->updated_at = date('Y-m-d');
-            $this->mailService->sendMailLeaveProject($order);
+//            $order->updated_at = date('Y-m-d');
+//            $this->mailService->sendMailLeaveProject($order);
 //            $job = new SendMailLeaveProject($order);
 //            dispatch($job)->delay(now()->addSeconds(2));
         }
@@ -112,7 +112,7 @@ class OrderService
         if (empty($order)) return false;
         $status = $this->orderRepository->update($order->id, [
             'status' => 3,
-            'finish_day' => date('Y-m-d H:i:s')
+//            'finish_day' => date('Y-m-d H:i:s')
         ]);
         if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
             $order->finish_day = date('Y-m-d');
@@ -128,7 +128,7 @@ class OrderService
         if (empty($order)) return false;
         $status = $this->orderRepository->update($order->id, [
             'status' => 6,
-            'finish_day' => date('Y-m-d H:i:s')
+//            'finish_day' => date('Y-m-d H:i:s')
         ]);
         if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
             $order->finish_day = date('Y-m-d');
@@ -147,13 +147,14 @@ class OrderService
         $message->sender = 'worker';
         $message->content = $data['content'];
         $message->documents = $data['documents'];
+        $message->created_by =  auth('workers')->id();
         $message->created_at = date('Y-m-d H:i:s');
         array_push($messages, $message);
         $status = $this->projectRepository->update($id, [
             'messages' => json_encode($messages),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
-        if ($status ){
+        if ($status && env('APP_ENVIRONMENT') != 'local-nam'){
             $this->mailService->sendMailNewMessage($order, $message, 'worker');
 //            $job = new SendMailCompleteProject($order);
 //            dispatch($job)->delay(now()->addSeconds(2));

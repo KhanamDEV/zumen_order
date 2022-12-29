@@ -14,27 +14,39 @@ use App\Jobs\SendMailCreateProject;
 use App\Repositories\Order\OrderRepositoryInterface;
 use App\Repositories\Project\ProjectRepository;
 use App\Repositories\Project\ProjectRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
 use App\Services\System\MailService;
 use Illuminate\Support\Facades\DB;
 
 class ProjectService
 {
     private $projectRepository;
-
     private $orderRepository;
-
     private $mailService;
+    private $userRepository;
 
-    public function __construct(ProjectRepositoryInterface $projectRepository, OrderRepositoryInterface $orderRepository, MailService $mailService)
+    public function __construct(ProjectRepositoryInterface $projectRepository, OrderRepositoryInterface $orderRepository, MailService $mailService,
+                                UserRepositoryInterface $userRepository)
     {
         $this->projectRepository = $projectRepository;
         $this->orderRepository = $orderRepository;
         $this->mailService = $mailService;
+        $this->userRepository = $userRepository;
     }
 
     public function store($data){
         DB::beginTransaction();
         try {
+            $usersByCompany = $this->userRepository->getList(['company_id' => auth('users')->user()->company_id]);
+            $lastProject = $this->projectRepository->getLastProjectByCompany(collect($usersByCompany)->pluck('id', 'id')->toArray());
+            $number = 1;
+            if (!empty($lastProject)) $number = (string) ((int) $lastProject->number + 1);
+            $user = $this->userRepository->findById(auth('users')->user()->id);
+            $numberString = $user->company->short_name.'-';
+            for ($i = 0; $i < (5 - strlen($number)); $i++){
+                $numberString .= '0';
+            }
+            $numberString .= $number;
             $data['url'] = array_filter($data['url'], function ($value) {
                 return !empty($value);
             });
@@ -49,6 +61,8 @@ class ProjectService
                 'other_information' => json_encode($data['other_information'] ?? []),
                 'url' => json_encode($data['url'] ?? []),
                 'documents' => $data['documents'],
+                'control_number' => $data['control_number'],
+                'number' => $numberString,
                 'postal_code' => $data['postal_code_head'].$data['postal_code_end'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
@@ -92,6 +106,7 @@ class ProjectService
             'other_information' => json_encode($data['other_information'] ?? []),
             'url' => json_encode($data['url'] ?? []),
             'postal_code' => $data['postal_code_head'].$data['postal_code_end'],
+            'control_number' => $data['control_number'],
             'documents' => $data['documents'],
             'updated_at' => date('Y-m-d H:i:s')
         ];
@@ -202,13 +217,14 @@ class ProjectService
         $message->sender = 'order';
         $message->content = $data['content'];
         $message->documents = $data['documents'];
+        $message->created_by = auth('users')->user()->id;
         $message->created_at = date('Y-m-d H:i:s');
         array_push($messages, $message);
         $status = $this->projectRepository->update($id, [
             'messages' => json_encode($messages),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
-        if ($status ){
+        if ($status && env('APP_ENVIRONMENT') != 'local-nam' ){
             $this->mailService->sendMailNewMessage($order, $message, 'order');
 //            $job = new SendMailCompleteProject($order);
 //            dispatch($job)->delay(now()->addSeconds(2));

@@ -45,4 +45,9 @@ class CompanyRepository implements CompanyRepositoryInterface
     {
         return $this->model->where('id', $id)->update($data);
     }
+
+    public function pluck()
+    {
+        return $this->model->pluck('name', 'id');
+    }
 }

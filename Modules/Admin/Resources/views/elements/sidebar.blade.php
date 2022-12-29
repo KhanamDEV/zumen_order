@@ -127,6 +127,16 @@
                     </a>
                     <!-- <span class="badge badge-info right">6</span>-->
                 </li>
+                <li class="nav-item">
+                    <a href="{{route('admin.logout')}}" class="nav-link">
+                        <i class="fas fa-sign-out-alt  nav-icon mr-2 "></i>
+                        <p>
+                            ログアウト
+                        </p>
+                    </a>
+                    <!-- <span class="badge badge-info right">6</span>-->
+                </li>
             </ul>
         </nav>
+    </div>
 </aside>

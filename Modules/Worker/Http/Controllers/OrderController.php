@@ -3,6 +3,8 @@
 namespace Modules\Worker\Http\Controllers;
 
 use App\Services\Worker\OrderService;
+use App\Services\Worker\UserService;
+use App\Services\Worker\WorkerService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -12,10 +14,14 @@ class OrderController extends Controller
 {
 
     private $orderService;
+    private $userService;
+    private $workerService;
 
-    public function __construct(OrderService $orderService)
+    public function __construct(OrderService $orderService, UserService $userService, WorkerService $workerService)
     {
         $this->orderService = $orderService;
+        $this->userService = $userService;
+        $this->workerService = $workerService;
     }
 
     public function index(Request $request)
@@ -25,7 +31,6 @@ class OrderController extends Controller
             $data['orders'] = $this->orderService->getList($request->all());
             return view('worker::order.index', compact('data'));
         } catch (\Exception $e){
-            dd($e);
             abort(500);
         }
     }
@@ -35,6 +40,8 @@ class OrderController extends Controller
     {
         try {
             $data['order'] = $this->orderService->findById($id);
+            $data['users'] = $this->userService->pluckNameById();
+            $data['workers'] = $this->workerService->pluckNameById();
             return view('worker::order.show', compact('data'));
         } catch (\Exception $e){
             abort(500);
@@ -91,7 +98,6 @@ class OrderController extends Controller
             }
             return redirect()->back();
         } catch (\Exception $e){
-            dd($e);
             abort(500);
         }
     }

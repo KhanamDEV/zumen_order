@@ -147,6 +147,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <label class="form-label">プロジェクトコード</label>
+                                <input type="text" name="number"  autocomplete="off" class="form-control" value="{{request()->has('number') ? request()->get('number') : ''}}">
+                            </div>
                             <div class="col-12 mt-2">
                                 <button type="submit" class="btn btn-primary">フィルター</button>
                                 <a href="{{route('admin.project.index')}}" class="btn btn-danger"><i class="fas fa-times"></i> キャンセル</a>
@@ -172,6 +176,7 @@
                                 <tr>
                                     <th data-orderable="false" class="no-sort" style="width: 10px">No</th>
                                     <th data-orderable="false" class="no-sort">現場名</th>
+                                    <th data-orderable="false" class="no-sort">プロジェクトコード</th>
                                     <th data-orderable="false" class="no-sort">図面種類</th>
                                     <th data-orderable="false" class="no-sort">ステータス</th>
                                     <th>納品日</th>
@@ -187,16 +192,17 @@
                                     <tr  class=" @if(!empty($project->importunate)) has-importunate @endif "
                                         style="background-color: {{config('project.color_status')[$project->order->status]}}"
                                     >
-                                        <td class="index"><a href="{{route('user.project.show', ['id' => $project->id])}}">{{$key + 1}}</a></td>
+                                        <td class="index"><a href="#">{{$key + 1}}</a></td>
                                         <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->owner}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{config('project.status')[$project->order->status]}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{  @$project->delivery_date}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{date('Y-m-d', strtotime($project->created_at))}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{ !empty($project->order->worker_id) ? date('Y-m-d', strtotime($project->order->created_at)) : ''}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->order->finish_day}}</a></td>
-                                        <td><a href="{{route('admin.project.show', ['id' => $project->id])}}">{{@$project->user->first_name}} {{@$project->user->last_name}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->order->worker['first_name']}} {{@$project->order->worker['last_name']}}</a></td>
+                                        <td><a href="#">{{@$project->number}}</a></td>
+                                        <td><a href="#">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
+                                        <td><a href="#">{{config('project.status')[$project->order->status]}}</a></td>
+                                        <td><a href="#">{{  @$project->delivery_date}}</a></td>
+                                        <td><a href="#">{{date('Y-m-d', strtotime($project->created_at))}}</a></td>
+                                        <td><a href="#">{{ !empty($project->order->worker_id) ? date('Y-m-d', strtotime($project->order->created_at)) : ''}}</a></td>
+                                        <td><a href="#">{{@$project->order->finish_day}}</a></td>
+                                        <td><a href="#">{{@$project->user->first_name}} {{@$project->user->last_name}}</a></td>
+                                        <td><a href="#">{{@$project->order->worker['first_name']}} {{@$project->order->worker['last_name']}}</a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -234,7 +240,7 @@
                 ordering:  true,
                 paging: true,
                 lengthChange: true,
-                pageLength: 10,
+                pageLength: 50,
                 info: false
             });
             $('#table-project').on( 'order.dt', function () {

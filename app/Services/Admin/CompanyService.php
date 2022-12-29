@@ -30,6 +30,7 @@ class CompanyService
         $dataInsert = [
             'name' => $data['name'],
             'address' => $data['address'],
+            'short_name' => $data['short_name'],
             'phone_number' => $data['phone_number'],
             'created_at' => date('Y-m-d H:i:s')
         ];
@@ -44,6 +45,7 @@ class CompanyService
         $dataUpdate = [
             'name' => $data['name'],
             'address' => $data['address'],
+            'short_name' => $data['short_name'],
             'phone_number' => $data['phone_number'],
             'updated_at' => date('Y-m-d H:i:s')
         ];

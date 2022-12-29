@@ -52,4 +52,13 @@ class WorkerService
         ];
         return $this->workerRepository->update(auth('workers')->user()->id, $dataUpdate);
     }
+
+    public function pluckNameById(){
+        $workerList = $this->workerRepository->getList([]);
+        $workers = [];
+        foreach ($workerList as $worker){
+            $workers[$worker->id] = $worker->first_name.' '.$worker->last_name;
+        }
+        return $workers;
+    }
 }

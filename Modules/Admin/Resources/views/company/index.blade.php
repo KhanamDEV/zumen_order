@@ -61,6 +61,7 @@
                             <tr>
                                 <th style="width: 10px">No</th>
                                 <th>会社名</th>
+                                <th>略名</th>
                                 <th>住所</th>
                                 <th>電話番号</th>
                             </tr>
@@ -70,6 +71,7 @@
                                 <tr >
                                     <td><a href="{{route('admin.company.edit', ['id' => $company->id])}}">{{$key + 1}}</a></td>
                                     <td><a href="{{route('admin.company.edit', ['id' => $company->id])}}">{{@$company->name}}</a></td>
+                                    <td><a href="{{route('admin.company.edit', ['id' => $company->id])}}">{{@$company->short_name}}</a></td>
                                     <td><a href="{{route('admin.company.edit', ['id' => $company->id])}}">{{@$company->address}}</a></td>
                                     <td><a href="{{route('admin.company.edit', ['id' => $company->id])}}">{{@$company->phone_number}}</a></td>
                                 </tr>

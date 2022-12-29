@@ -48,4 +48,13 @@ class UserService
         ];
         return $this->userRepository->update(auth('users')->user()->id, $dataUpdate);
     }
+
+    public function pluckNameById(){
+        $userList = $this->userRepository->getList([]);
+        $users = [];
+        foreach ($userList as $user){
+            $users[$user->id] = $user->first_name.' '.$user->last_name;
+        }
+        return $users;
+    }
 }

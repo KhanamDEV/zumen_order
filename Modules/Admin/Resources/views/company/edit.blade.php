@@ -38,6 +38,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="short_name" class="col-sm-2 control-label">略名<b style="color: red;">*</b></label>
+                                <div class="col-sm-10">
+                                    <input type="text" value="{{@$data['company']->short_name}}" cl class="form-control" id="short_name" name="short_name">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="address" class="col-sm-2 control-label">住所<b
                                         style="color: red;">*</b></label>
                                 <div class="col-sm-10">

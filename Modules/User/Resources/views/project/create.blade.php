@@ -80,6 +80,13 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="">管理番号</label>
+                                        <input type="text" name="control_number" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 ">
                                     <div class="form-row">
                                         <div class="col-md-1 col-4">
                                             <div class="form-group">
@@ -127,8 +134,8 @@
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label class="form-label">納品日</label>
-                                            <input type="hidden" class="form-control" value="{{ \Carbon\Carbon::now()->dayOfWeek  <= 2 ? \Carbon\Carbon::now()->addDays(3)->format('Y-m-d') : \Carbon\Carbon::now()->addDays(5)->format('Y-m-d')}}" name="delivery_date">
-                                            <input type="text" class="form-control delivery-date-show" value="{{\Carbon\Carbon::now()->addDays(3)->format('Y-m-d')}}" name="delivery_date">
+                                            <input type="hidden" class="form-control" value="{{ \Carbon\Carbon::now()->dayOfWeek  <= 2 ? \Carbon\Carbon::now()->addDays(5)->format('Y-m-d') : \Carbon\Carbon::now()->addDays(7)->format('Y-m-d')}}" name="delivery_date">
+                                            <input type="text" class="form-control delivery-date-show" value="{{\Carbon\Carbon::now()->addDays(5)->format('Y-m-d')}}" name="delivery_date">
                                         </div>
                                     </div>
 
@@ -239,6 +246,7 @@
                 <div class="modal-body">
                     <p class="info"><span>発注日</span>: <span>{{date('Y-m-d')}}</span></p>
                     <p class="info"><span>現場名</span>: <span class="owner-confirm"></span></p>
+                    <p class="info"><span>管理番号</span>: <span class="control_number-confirm"></span></p>
                     <p class="info"><span>現場住所</span>: <span class="name-confirm"></span></p>
                     <p class="info"><span>図面種類</span>: <span class="type-confirm"></span></p>
                     <p class="info"><span>納品日</span>: <span class="delivery_date-confirm"></span></p>
@@ -312,6 +320,7 @@
                                     <button class="btn delete-url btn-danger ml-1" type="button">削除</button>
                                 </div>`;
         $(function (){
+
             $("#form-create").submit(function (e){
                 e.preventDefault();
                 setTimeout(function (){
@@ -385,7 +394,7 @@
                     ordering:  true,
                     paging: true,
                     lengthChange: true,
-                    pageLength: 10,
+                    pageLength: 50,
                     info: false,
                     bInfo : false,
                     bDestroy: true
@@ -433,7 +442,7 @@
                                         ordering:  true,
                                         paging: true,
                                         lengthChange: true,
-                                        pageLength: 10,
+                                        pageLength: 50,
                                         info: false,
                                         bInfo : false,
                                         bDestroy: true
@@ -456,7 +465,7 @@
 
             })
 
-            let dateAdd = moment().day() <= 2 ?  moment().add(3, 'days') : moment().add(5, 'days');
+            let dateAdd = moment().day() <= 2 ?  moment().add(5, 'days') : moment().add(7, 'days');
             $('input[name=delivery_date]').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,

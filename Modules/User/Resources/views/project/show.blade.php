@@ -45,7 +45,7 @@
                         </p>
                     </div>
                     <div class="col-md-4">
-                        <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($project->created_at))}}</p>
+                        <p class="info"><span>図面種類</span>: {{config('project.type')[$project->type]}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -53,12 +53,16 @@
                         <p class="info"><span>現場名</span>: {{@$project->owner}}</p>
                     </div>
                     <div class="col-md-4">
-                        <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
+                        <p class="info">
+                            <span>納品日</span>: {{ !empty($project->importunate) ? '5日以内' : @$project->delivery_date}}</p>
+
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <p class="info"><span>図面種類</span>: {{config('project.type')[$project->type]}}</p>
+                        <p class="info">
+                            <span>管理番号</span>: {{$project->control_number}}
+                        </p>
                     </div>
                     <div class="col-md-4">
                         <p class="info"><span>ステータス</span>: {{config('project.status')[$project->order->status]}}</p>
@@ -67,8 +71,17 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>納品日</span>: {{ !empty($project->importunate) ? '3日以内' : @$project->delivery_date}}</p>
+                            <span>郵便番号</span>: {{ !empty($project->postal_code) ? substr($project->postal_code, 0, 3).'-'.substr($project->postal_code, 3, 6) : ''}}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($project->created_at))}}</p>
+                    </div>
 
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
                     </div>
                     <div class="col-md-4">
                         <p class="info"><span>納期相談希望</span>: {{!empty($project->importunate) ? 'はい' : 'いいえ'}}</p>
@@ -76,9 +89,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <p class="info">
-                            <span>郵便番号</span>: {{ !empty($project->postal_code) ? substr($project->postal_code, 0, 3).'-'.substr($project->postal_code, 3, 6) : ''}}
-                        </p>
+                        <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>プロジェクトコード</span>: {{@$project->number}}</p>
                     </div>
                 </div>
                 <p class="info pre-line"><span>備考</span>: {{@$project->note}}</p>
@@ -159,8 +173,14 @@
                             @if(!empty($messages))
                                 <div class="list-message">
                                     @foreach($messages as $message)
-                                        @php $seederName = $message->sender == 'order' ? $project->user->first_name.' '.$project->user->last_name :
+                                        @if(!empty($message->created_by))
+                                            @php $seederName = $message->sender == 'order' ? $data['users'][$message->created_by] ?? '' : $data['workers'][$message->created_by] ?? '';
+                                                     @endphp
+                                        @else
+                                            @php $seederName = $message->sender == 'order' ? $project->user->first_name.' '.$project->user->last_name :
                                                     $project->order->worker->first_name.' '.$project->order->worker->last_name @endphp
+                                            @endif
+
                                         <div class="item-message">
                                             <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
                                             <div class="message-content">
@@ -183,7 +203,7 @@
                             @endif
 
                         </div>
-                        @if(!in_array($project->order->status , [3,4,5]) && !(request()->has('from') && request()->get('from') == 'all') )
+                        @if(!in_array($project->order->status , [3,4,5])  )
                             @if(!empty($messages))
                                 <div class="line-row"></div>
                             @endif                        <div class="col-md-12">
@@ -208,7 +228,7 @@
                                     </div>
                                 </div>
                                 <div class="group-button mt-2 d-flex justify-content-end">
-                                    <button class="btn btn-success mr-2" type="submit">送信</button>
+                                    <button class="btn btn-success mr-2 btn-send-message" type="submit">送信</button>
                                     <a href="{{route('user.project.done', ['id' => $project->id])}}" class="btn btn-info">受領</a>
                                 </div>
                             </form>
@@ -270,7 +290,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">新しいフィードバック</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">案件アップデート</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -284,14 +304,15 @@
                                     <select class="form-control select2bs4" style="width: 100%;" name="type">
                                         <option selected="selected" disabled></option>
                                         @foreach(config('project.type') as $key => $value)
-                                            <option value="{{$key}}">{{$value}}</option>
+                                            <option @if($project->type == $key) selected @endif value="{{$key}}">{{$value}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="">納品日</label>
-                                    <input type="hidden" class="form-control" value="{{ \Carbon\Carbon::now()->dayOfWeek  <= 2 ? \Carbon\Carbon::now()->addDays(3)->format('Y-m-d') : \Carbon\Carbon::now()->addDays(5)->format('Y-m-d')}}" name="delivery_date">
-                                    <input type="text" class="form-control delivery-date-show" value="{{\Carbon\Carbon::now()->addDays(3)->format('Y-m-d')}}" name="delivery_date">                                </div>
+                                    <input type="hidden"  class="form-control" value="{{ \Carbon\Carbon::now()->dayOfWeek  <= 2 ? \Carbon\Carbon::now()->addDays(5)->format('Y-m-d') : \Carbon\Carbon::now()->addDays(7)->format('Y-m-d')}}" name="delivery_date">
+                                    <input type="text" class="form-control delivery-date-show" value="{{\Carbon\Carbon::now()->addDays(5)->format('Y-m-d')}}" name="delivery_date">
+                                </div>
                                 <div class="form-group">
                                     <div class="form-check">
                                         <input class="form-check-input" name="importunate" id="importunate"
@@ -301,19 +322,28 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">備考</label>
-                                    <textarea name="note" class="form-control" rows="4"></textarea>
+                                    <textarea name="note" class="form-control" rows="4">{{$project->note ?? ''}}</textarea>
                                 </div>
                                 <div class="">
                                     <div class="form-group">
                                         <label for="">Documents</label>
                                     </div>
                                     <div class="group-add-documents">
-                                        <input type="hidden"  class="listDocument" name="documents" value="">
+                                        <input type="hidden"  class="listDocument" id="listDocumentHistory" name="documents" value="{{!empty($project->documents) ? $project->documents : json_encode([])}}">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input upload-document-feedback" >
                                             <label class="custom-file-label" for="customFile">ファイルを選択</label>
                                         </div>
                                         <div class="list-documents">
+                                            @php $documents = json_decode($project->documents);  @endphp
+                                            @if(!empty($documents))
+                                                @foreach($documents as $document)
+                                            <div class="item-document mt-2">
+                                                <span><a target="_blank" href="{{asset($document->path)}}">{{$document->name}}</a></span>
+                                                <img class="remove-document-history" data-path="{{$document->path}}" src="{{asset('static/images/x.png')}}" alt="">
+                                            </div>
+                                                @endforeach
+                                                @endif
                                         </div>
                                     </div>
                                 </div>
@@ -322,7 +352,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
-                            <button type="submit" form="form-create-feedback" class="btn btn-primary">保存</button>
+                            <button type="submit" form="form-create-feedback" id="create-feedback" class="btn btn-primary">保存</button>
                         </div>
                     </div>
                 </div>
@@ -359,8 +389,17 @@
 @endsection
 @section('scripts')
     <script>
-
-        let dateAdd = moment().day() <= 2 ?  moment().add(3, 'days') : moment().add(5, 'days');
+        $("#create-feedback").click(function (){
+            $(this).prop('disabled', true);
+            Swal.showLoading();
+            $("#form-create-feedback").submit()
+        })
+        $(".btn-send-message").click(function (){
+            $(this).prop('disabled', true);
+            Swal.showLoading();
+            $("#form-chat").submit();
+        })
+        let dateAdd = moment().day() <= 2 ?  moment().add(5, 'days') : moment().add(7, 'days');
         $('input[name=delivery_date]').daterangepicker({
             singleDatePicker: true,
             showDropdowns: true,
@@ -457,6 +496,16 @@
                         return document.path != path;
                     })
                     $("#listDocument").val(JSON.stringify(documents));
+                    $(this).parent().remove();
+                });
+
+                $(".remove-document-history").click(function () {
+                    let path = $(this).data('path');
+                    let documents = JSON.parse($("#listDocumentHistory").val());
+                    documents = documents.filter(function (document) {
+                        return document.path != path;
+                    })
+                    $("#listDocumentHistory").val(JSON.stringify(documents));
                     $(this).parent().remove();
                 });
             }

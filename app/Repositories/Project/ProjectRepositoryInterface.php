@@ -21,4 +21,7 @@ interface ProjectRepositoryInterface
     public function update($id, $data);
 
     public function delete($id);
+
+    public function getLastProjectByCompany($users);
+
 }

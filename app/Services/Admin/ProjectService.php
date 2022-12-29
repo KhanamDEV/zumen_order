@@ -101,6 +101,7 @@ class ProjectService
             'type' => $data['type'] ?? '',
             'delivery_date' => $data['delivery_date'] ?? '',
             'importunate' => empty($data['importunate']) ? 0 : 1,
+            'control_number' => $data['control_number'],
             'note' => $data['note'] ?? '',
             'other_information' => json_encode($data['other_information'] ?? []),
             'url' => json_encode($data['url'] ?? []),

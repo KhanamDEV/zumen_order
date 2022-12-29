@@ -129,6 +129,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label">プロジェクトコード</label>
+                                <input type="text" name="number"  autocomplete="off" class="form-control" value="{{request()->has('number') ? request()->get('number') : ''}}">
+                            </div>
                             <div class="col-12 mt-2">
                                 <button type="submit" class="btn btn-primary">フィルター</button>
                                 <a href="{{route('worker.order.index')}}" class="btn btn-danger"><i class="fas fa-times"></i> キャンセル</a>
@@ -154,6 +158,7 @@
                                 <tr>
                                     <th data-orderable="false" class="no-sort" style="width: 10px">No</th>
                                     <th data-orderable="false" class="no-sort" >現場名</th>
+                                    <th data-orderable="false" class="no-sort">プロジェクトコード</th>
                                     <th data-orderable="false" class="no-sort" >図面種類</th>
                                     <th data-orderable="false" class="no-sort" >ステータス</th>
                                     <th>納品日</th>
@@ -167,16 +172,17 @@
                                 <tbody>
                                 @foreach($data['orders']['list'] as $key => $order)
                                     <tr class=" @if(!empty($order->project->importunate)) has-importunate @endif "  style="background-color: {{config('project.color_status')[$order->status]}}" >
-                                        <td class="index"><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{$key + 1}}</a></td>
+                                        <td class="index"><a href="#">{{$key + 1}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->project->owner}}</a></td>
-                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{!empty($order->project->type) ? config('project.type')[$order->project->type] : ''}}</a></td>
-                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{config('project.status')[$order->status]}}</a></td>
-                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->project->delivery_date}}</a></td>
-                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{ !empty($order->project->created_at) ? date('Y-m-d', strtotime($order->project->created_at)): ''}}</a></td>
-                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{date('Y-m-d', strtotime($order->created_at))}}</a></td>
-                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->finish_day}}</a></td>
-                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->project->user->first_name}} {{@$order->project->user->last_name}}</a></td>
-                                        <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->worker->first_name}} {{@$order->worker->last_name}}</a></td>
+                                        <td><a href="#">{{@$order->project->number}}</a></td>
+                                        <td><a href="#">{{!empty($order->project->type) ? config('project.type')[$order->project->type] : ''}}</a></td>
+                                        <td><a href="#">{{config('project.status')[$order->status]}}</a></td>
+                                        <td><a href="#">{{@$order->project->delivery_date}}</a></td>
+                                        <td><a href="#">{{ !empty($order->project->created_at) ? date('Y-m-d', strtotime($order->project->created_at)): ''}}</a></td>
+                                        <td><a href="#">{{date('Y-m-d', strtotime($order->created_at))}}</a></td>
+                                        <td><a href="#">{{@$order->finish_day}}</a></td>
+                                        <td><a href="#">{{@$order->project->user->first_name}} {{@$order->project->user->last_name}}</a></td>
+                                        <td><a href="#">{{@$order->worker->first_name}} {{@$order->worker->last_name}}</a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -213,7 +219,7 @@
                 ordering:  true,
                 paging: true,
                 lengthChange: true,
-                pageLength: 10,
+                pageLength: 50,
                 info: false
             });
             $('#table-project').on( 'order.dt', function () {

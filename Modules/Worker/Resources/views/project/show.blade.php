@@ -29,22 +29,61 @@
                 </div>
             </div>
             <div class="card-body">
-                <p class="info">
-                    <span>発注者</span>: {{@$project->user->first_name}} {{@$project->user->last_name}}
-                </p>
-                <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($project->created_at))}}</p>
-                <p class="info"><span>現場名</span>: {{@$project->owner}}</p>
-                <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
-                <p class="info"><span>図面種類</span>: {{config('project.type')[$project->type]}}</p>
-                <p class="info"><span>ステータス</span>: {{config('project.status')[$project->order->status]}}</p>
-                <p class="info">
-                    <span>納品日</span>: {{ !empty($project->importunate) ?  '3日以内' : @$project->delivery_date}}</p>
-                <p class="info"><span>納期相談希望</span>: {{!empty($project->importunate) ? 'はい' : 'いいえ'}}</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="info">
+                            <span>発注者</span>: {{$project->user->first_name}} {{$project->user->last_name}}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>図面種類</span>: {{config('project.type')[$project->type]}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="info"><span>現場名</span>: {{@$project->owner}}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info">
+                            <span>納品日</span>: {{ !empty($project->importunate) ? '5日以内' : @$project->delivery_date}}</p>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="info">
+                            <span>管理番号</span>: {{$project->control_number}}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>ステータス</span>: {{config('project.status')[$project->order->status]}}</p>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
                             <span>郵便番号</span>: {{ !empty($project->postal_code) ? substr($project->postal_code, 0, 3).'-'.substr($project->postal_code, 3, 6) : ''}}
                         </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>発注日</span>: {{date('Y-m-d', strtotime($project->created_at))}}</p>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>納期相談希望</span>: {{!empty($project->importunate) ? 'はい' : 'いいえ'}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>プロジェクトコード</span>: {{@$project->number}}</p>
                     </div>
                 </div>
                 <p class="info pre-line"><span>備考</span>: {{@$project->note}}</p>
@@ -120,8 +159,14 @@
                             @if(!empty($messages))
                                 <div class="list-message">
                                     @foreach($messages as $message)
-                                        @php $seederName = $message->sender == 'order' ? $project->user->first_name.' '.$project->user->last_name :
+                                        @if(!empty($message->created_by))
+                                            @php $seederName = $message->sender == 'order' ? $data['users'][$message->created_by] ?? '' : $data['workers'][$message->created_by] ?? '';
+                                            @endphp
+                                        @else
+                                            @php $seederName = $message->sender == 'order' ? $project->user->first_name.' '.$project->user->last_name :
                                                     $project->order->worker->first_name.' '.$project->order->worker->last_name @endphp
+                                        @endif
+
                                         <div class="item-message">
                                             <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
                                             <div class="message-content">
@@ -144,6 +189,39 @@
                             @endif
 
                         </div>
+                        @if(!in_array($project->order->status , [3,4,5]))
+                            @if(!empty($messages))
+                                <div class="line-row"></div>
+                            @endif
+
+                            <div class="col-md-12" >
+                                <form method="POST" action="{{route('worker.order.add_message', ['id' => $project->id])}}" id="form-chat">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label for="">内容</label>
+                                        <textarea class="form-control" rows="3" name="content"></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="" class="mb-0">Documents</label>
+                                    </div>
+                                    <div class="group-add-documents">
+                                        <input type="hidden"  class="listDocument" name="documents"
+                                               value="{{json_encode([])}}">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input upload-document" >
+                                            <label class="custom-file-label" for="customFile">ファイルを選択</label>
+                                        </div>
+                                        <div class="list-documents">
+                                        </div>
+                                    </div>
+                                    <div class="group-button mt-2 d-flex justify-content-end">
+                                        <button class="btn btn-success mr-2 btn-send-message" type="submit">送信</button>
+                                    </div>
+                                </form>
+                            </div>
+                        @endif
+
                     </div>
 
                 </div>
