@@ -130,7 +130,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">プロジェクトコード</label>
+                                <label class="form-label">案件番号</label>
                                 <input type="text" name="number"  autocomplete="off" class="form-control" value="{{request()->has('number') ? request()->get('number') : ''}}">
                             </div>
                             <div class="col-12 mt-2">
@@ -158,7 +158,7 @@
                                 <tr>
                                     <th data-orderable="false" class="no-sort" style="width: 10px">No</th>
                                     <th data-orderable="false" class="no-sort" >現場名</th>
-                                    <th data-orderable="false" class="no-sort">プロジェクトコード</th>
+                                    <th data-orderable="false" class="no-sort">案件番号</th>
                                     <th data-orderable="false" class="no-sort" >図面種類</th>
                                     <th data-orderable="false" class="no-sort" >ステータス</th>
                                     <th>納品日</th>

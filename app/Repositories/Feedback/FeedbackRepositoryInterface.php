@@ -17,4 +17,7 @@ interface FeedbackRepositoryInterface
     public function delete($id);
 
     public function findById($id);
+
+    public function getList($data);
+
 }

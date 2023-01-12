@@ -89,10 +89,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <p class="info"><span>現場住所</span>: {{@$project->name}}</p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="info"><span>プロジェクトコード</span>: {{@$project->number}}</p>
+                        <p class="info"><span>案件番号</span>: {{@$project->number}}</p>
                     </div>
                 </div>
                 <p class="info pre-line"><span>備考</span>: {{@$project->note}}</p>
@@ -287,7 +284,7 @@
             @endif
             <div class="modal fade" id="modal-create-feedback" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">案件アップデート</h5>
@@ -299,54 +296,100 @@
                             <form action="{{route('user.project.feedback.create', ['project_id' => $project->id])}}" method="POST" id="form-create-feedback">
                                 @csrf
                                 <input type="hidden" name="project_id" value="{{$project->id}}">
-                                <div class="form-group">
-                                    <label>図面種類</label>
-                                    <select class="form-control select2bs4" style="width: 100%;" name="type">
-                                        <option selected="selected" disabled></option>
-                                        @foreach(config('project.type') as $key => $value)
-                                            <option @if($project->type == $key) selected @endif value="{{$key}}">{{$value}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">納品日</label>
-                                    <input type="hidden"  class="form-control" value="{{ \Carbon\Carbon::now()->dayOfWeek  <= 2 ? \Carbon\Carbon::now()->addDays(5)->format('Y-m-d') : \Carbon\Carbon::now()->addDays(7)->format('Y-m-d')}}" name="delivery_date">
-                                    <input type="text" class="form-control delivery-date-show" value="{{\Carbon\Carbon::now()->addDays(5)->format('Y-m-d')}}" name="delivery_date">
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="importunate" id="importunate"
-                                               type="checkbox">
-                                        <label for="importunate" class="form-check-label">納期相談希望</label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">備考</label>
-                                    <textarea name="note" class="form-control" rows="4">{{$project->note ?? ''}}</textarea>
-                                </div>
-                                <div class="">
-                                    <div class="form-group">
-                                        <label for="">Documents</label>
-                                    </div>
-                                    <div class="group-add-documents">
-                                        <input type="hidden"  class="listDocument" id="listDocumentHistory" name="documents" value="{{!empty($project->documents) ? $project->documents : json_encode([])}}">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input upload-document-feedback" >
-                                            <label class="custom-file-label" for="customFile">ファイルを選択</label>
-                                        </div>
-                                        <div class="list-documents">
-                                            @php $documents = json_decode($project->documents);  @endphp
-                                            @if(!empty($documents))
-                                                @foreach($documents as $document)
-                                            <div class="item-document mt-2">
-                                                <span><a target="_blank" href="{{asset($document->path)}}">{{$document->name}}</a></span>
-                                                <img class="remove-document-history" data-path="{{$document->path}}" src="{{asset('static/images/x.png')}}" alt="">
+
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-row">
+                                            <div class="col-md-3 col-5">
+                                                <div class="form-group">
+                                                    <label for="">郵便番号</label>
+                                                    <input type="text" value="{{!empty($project->postal_code) ? substr($project->postal_code, 0, 3) : ''}}" name="postal_code_head" class="form-control text-center p-postal-code" size="3">
+                                                </div>
                                             </div>
+                                            <div style="width: 30px">
+                                                <div class="form-group">
+                                                    <label for="" style="opacity: 0">1</label>
+                                                    <div class="form-control" style="border: none; text-align: center">
+                                                        -
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-5">
+                                                <div class="form-group">
+                                                    <label for="" style="opacity: 0">郵便番号</label>
+                                                    <input type="text" value="{{!empty($project->postal_code) ? substr($project->postal_code, 3, 6) : ''}}" name="postal_code_end" class="form-control text-center p-postal-code" size="4">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">現場住所</label>
+                                            <input type="text" value="{{@$project->name}}" name="name" class="form-control p-region p-locality p-street-address p-extended-address">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>図面種類</label>
+                                            <select class="form-control select2bs4" style="width: 100%;" name="type">
+                                                <option selected="selected" disabled></option>
+                                                @foreach(config('project.type') as $key => $value)
+                                                    <option @if($project->type == $key) selected @endif value="{{$key}}">{{$value}}</option>
                                                 @endforeach
-                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">納品日</label>
+                                            <input type="hidden"  class="form-control" value="{{ \Carbon\Carbon::now()->dayOfWeek  <= 2 ? \Carbon\Carbon::now()->addDays(5)->format('Y-m-d') : \Carbon\Carbon::now()->addDays(7)->format('Y-m-d')}}" name="delivery_date">
+                                            <input type="text" class="form-control delivery-date-show" value="{{\Carbon\Carbon::now()->addDays(5)->format('Y-m-d')}}" name="delivery_date">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="importunate" id="importunate"
+                                                       type="checkbox">
+                                                <label for="importunate" class="form-check-label">納期相談希望</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">備考</label>
+                                            <textarea name="note" class="form-control" rows="4">{{$project->note ?? ''}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div>
+                                            <div class="form-group mb-0" >
+                                                <label for="">URL</label>
+                                            </div>
+                                            <div class="group-add-url">
+                                                <div class="item-url mb-3">
+                                                    <input type="text" name="url[]" class="form-control">
+                                                    <button class="btn add-url btn-success ml-1" type="button">追加</button>
+                                                    <button class="btn delete-url btn-danger ml-1" type="button">削除</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="form-group mb-0" >
+                                                <label for="">Documents</label>
+                                            </div>
+                                            <div class="group-add-documents">
+                                                <input type="hidden"  class="listDocument" id="listDocumentHistory" name="documents" value="{{!empty($project->documents) ? $project->documents : json_encode([])}}">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input upload-document-feedback" >
+                                                    <label class="custom-file-label" for="customFile">ファイルを選択</label>
+                                                </div>
+                                                <div class="list-documents">
+                                                    @php $documents = json_decode($project->documents);  @endphp
+                                                    @if(!empty($documents))
+                                                        @foreach($documents as $document)
+                                                            <div class="item-document mt-2">
+                                                                <span><a target="_blank" href="{{asset($document->path)}}">{{$document->name}}</a></span>
+                                                                <img class="remove-document-history" data-path="{{$document->path}}" src="{{asset('static/images/x.png')}}" alt="">
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
 
                             </form>
                         </div>

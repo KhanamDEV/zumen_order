@@ -34,6 +34,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
                    Route::post('{id}/show', 'FeedbackController@update');
                }) ;
             });
+            Route::get('analytics-by-year', 'ProjectController@analyticsByYear')->name('analytics_by_year');
+
         });
         Route::prefix('worker')->name('worker.')->group(function () {
             Route::get('', 'WorkerController@index')->name('index');

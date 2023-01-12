@@ -29,7 +29,7 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function getList($data)
     {
-        $query = $this->model->with(['order' => function($query){
+        $query = $this->model->with(['feedbacks','order' => function($query){
             return $query->with('worker');
         }, 'user' => function($query) use ($data){
             if (!empty($data['auth_type']) && $data['auth_type'] == 'user'){

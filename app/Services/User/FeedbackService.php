@@ -56,9 +56,12 @@ class FeedbackService
                 'messages' => $project->messages,
                 'documents_additional' => $project->documents_additional,
                 'importunate' => $project->importunate,
+                'control_number' => $project->control_number,
+                'number' => $project->number,
                 'project_created_at' => Carbon::parse($project->created_at)->format('Y-m-d H:i:s'),
                 'documents_of_worker' => $project->order->documents,
                 'other_information' => $project->other_information,
+                'order_created_at' => $project->order->created_at,
                 'created_at' => date('Y-m-d H:i:s')
             ];
             $dataUpdateProject = [
@@ -71,7 +74,11 @@ class FeedbackService
                 'note' => $data['note'],
                 'additional' => '',
                 'documents_additional' => null,
-                'url_additional' => null
+                'url_additional' => null,
+                'url' => json_encode($data['url'] ?? []),
+                'postal_code' => $data['postal_code_head'].$data['postal_code_end'],
+                'name' => $data['name'],
+
             ];
             $dataUpdateOrder = [
                 'status' => 1,

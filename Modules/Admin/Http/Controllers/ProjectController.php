@@ -2,12 +2,14 @@
 
 namespace Modules\Admin\Http\Controllers;
 
+use App\Helpers\ResponseHelpers;
 use App\Services\Admin\ProjectService;
 use App\Services\Admin\UserService;
 use App\Services\Admin\WorkerService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\MessageBag;
 use Modules\Admin\Http\Requests\UpdateProjectRequest;
 
@@ -31,12 +33,21 @@ class ProjectController extends Controller
             $data['projects'] = $this->projectService->getList($request->all());
             $data['users'] = $this->userService->getList();
             $data['workers'] = $this->workerService->getList();
+
             return view('admin::project.index', compact('data'));
         } catch (\Exception $e){
             abort(500);
         }
     }
 
+    public function analyticsByYear(Request $request){
+        try {
+            $data['projects'] = $this->projectService->getList($request->all());
+            return  ResponseHelpers::showResponse($data['projects']);
+        } catch (\Exception $e){
+            return response()->json([]);
+        }
+    }
 
     public function show($id)
     {

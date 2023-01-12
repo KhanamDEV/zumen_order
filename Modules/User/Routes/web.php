@@ -39,7 +39,8 @@ Route::prefix('')->name('user.')->group(function() {
                     Route::get('{id}/show', 'FeedbackController@show')->name('detail');
                 });
             });
-
+            Route::get('analytics-by-year', 'ProjectController@analyticsByYear')->name('analytics_by_year');
+            Route::get('analytics-by-year-all', 'ProjectController@analyticsByYearAll')->name('analytics_by_year_all');
         });
     });
     Route::post('upload-file', 'UserController@uploadFile')->name('upload_file');

@@ -21,12 +21,17 @@
                 </div>
                 <div class="col-sm-4 amount-project-by-type">
                     <div class="">
-{{--                        <p class="date-amount-project mb-0">全て</p>--}}
+                        <div class="form-group mb-0">
+                            <select name="" id="analytics-project" class="form-control">
+                                <option value="2022">2022</option>
+                                <option selected value="2023">2023</option>
+                            </select>
+                        </div>
                         <div class="list-type">
-                            <div class="all" style="background-color: #8e44ad">{{$data['projects']['amount']['all']}}</div>
+                            <div class="all" id="status-all" style="background-color: #8e44ad">0</div>
                         @foreach(config('project.status') as $key => $status)
                                 @if(!empty(config('project.color_status')[$key]))
-                                <div class="{{$key}}" style="background-color: {{config('project.color_status')[$key]}}">{{$data['projects']['amount'][$key]}}</div>
+                                <div id="status-{{$key}}" class="{{$key}}" style="background-color: {{config('project.color_status')[$key]}}">0</div>
                                 @endif
                             @endforeach
                         </div>
@@ -148,7 +153,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">プロジェクトコード</label>
+                                <label class="form-label">案件番号</label>
                                 <input type="text" name="number"  autocomplete="off" class="form-control" value="{{request()->has('number') ? request()->get('number') : ''}}">
                             </div>
                             <div class="col-12 mt-2">
@@ -176,7 +181,7 @@
                                 <tr>
                                     <th data-orderable="false" class="no-sort" style="width: 10px">No</th>
                                     <th data-orderable="false" class="no-sort">現場名</th>
-                                    <th data-orderable="false" class="no-sort">プロジェクトコード</th>
+                                    <th data-orderable="false" class="no-sort">案件番号</th>
                                     <th data-orderable="false" class="no-sort">図面種類</th>
                                     <th data-orderable="false" class="no-sort">ステータス</th>
                                     <th>納品日</th>
@@ -190,13 +195,13 @@
                                 <tbody>
                                 @foreach($data['projects']['list'] as $key => $project)
                                     <tr  class=" @if(!empty($project->importunate)) has-importunate @endif "
-                                        style="background-color: {{config('project.color_status')[$project->order->status]}}"
+                                        style="background-color: {{ empty($project->project_id) ? config('project.color_status')[$project->order->status] : config('project.color_status')[3]}}"
                                     >
                                         <td class="index"><a href="#">{{$key + 1}}</a></td>
-                                        <td><a href="{{route('user.project.show', ['id' => $project->id])}}">{{@$project->owner}}</a></td>
+                                        <td><a href="{{!empty($project->project_id) ? route('user.project.feedback.detail', ['id' => $project->id, 'project_id' => $project->project_id]) : route('user.project.show', ['id' => $project->id])}}">{{@$project->owner}}</a></td>
                                         <td><a href="#">{{@$project->number}}</a></td>
                                         <td><a href="#">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
-                                        <td><a href="#">{{config('project.status')[$project->order->status]}}</a></td>
+                                        <td><a href="#">{{empty($project->project_id) ? config('project.status')[$project->order->status] : config('project.status')[3]}}</a></td>
                                         <td><a href="#">{{  @$project->delivery_date}}</a></td>
                                         <td><a href="#">{{date('Y-m-d', strtotime($project->created_at))}}</a></td>
                                         <td><a href="#">{{ !empty($project->order->worker_id) ? date('Y-m-d', strtotime($project->order->created_at)) : ''}}</a></td>
@@ -219,6 +224,32 @@
     <script src="{{asset('static/js/jquery-ui.min.js')}}"></script>
     <script>
         $(document).ready( function () {
+            $("#analytics-project").change(function (){
+                Swal.showLoading();
+                let year = $(this).val();
+                $.ajax({
+                    url: '{{route('user.project.analytics_by_year')}}?year=' + year,
+                    method: 'GET',
+                    success: function (res){
+                        res = res.response;
+                        Object.keys(res.amount).forEach(function (item){
+                            $(`#status-${item}`).text(res.amount[item]);
+                        })
+                        Swal.close();
+                    }
+                });
+            })
+            $.ajax({
+                url: '{{route('user.project.analytics_by_year')}}?year=' + '{{date('Y')}}',
+                method: 'GET',
+                success: function (res){
+                    res = res.response;
+                    Object.keys(res.amount).forEach(function (item){
+                        $(`#status-${item}`).text(res.amount[item]);
+                    })
+                    Swal.close();
+                }
+            });
             @if(session()->has('message'))
             Swal.fire({
                 position: 'center',

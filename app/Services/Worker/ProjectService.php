@@ -11,6 +11,7 @@ namespace App\Services\Worker;
 
 
 use App\Jobs\SendMailOrder;
+use App\Repositories\Feedback\FeedbackRepositoryInterface;
 use App\Repositories\Order\OrderRepositoryInterface;
 use App\Repositories\Project\ProjectRepositoryInterface;
 use App\Services\System\MailService;
@@ -18,16 +19,18 @@ use App\Services\System\MailService;
 class ProjectService
 {
     private $projectRepository;
-
+    private $feedbackRepository;
     private $orderRepository;
 
     private $mailService;
 
-    public function __construct(ProjectRepositoryInterface  $projectRepository, OrderRepositoryInterface $orderRepository, MailService $mailService)
+    public function __construct(ProjectRepositoryInterface  $projectRepository, OrderRepositoryInterface $orderRepository,
+                                MailService $mailService, FeedbackRepositoryInterface $feedbackRepository)
     {
         $this->projectRepository = $projectRepository;
         $this->orderRepository = $orderRepository;
         $this->mailService = $mailService;
+        $this->feedbackRepository = $feedbackRepository;
     }
 
     public function getList($data){
@@ -47,6 +50,12 @@ class ProjectService
             $data['order_created_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['order_created_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
+        if (!empty($data['year'])){
+            if ($data['year'] != 'all'){
+                $data['order_created_start'] = $data['year'].'-01-01';
+                $data['order_created_end'] = $data['year'].'-12-31';
+            }
+        }
         if (!empty($data['finish_day'])){
             $explodeDate = explode("-", $data['finish_day']);
             $data['finish_day_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
@@ -54,12 +63,19 @@ class ProjectService
         }
 //        $data['unexpired'] = true;
         $projects = $this->projectRepository->getList($data);
+        $feedbacks = $this->feedbackRepository->getList($data);
+        $projects = $projects->merge($feedbacks)->sortBy('created_at');
+
         $amountProject = ['all' => count($projects)];
         foreach (config('project.status') as $key => $status){
             if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
         }
         foreach ($projects as $project){
-            $amountProject[$project->order->status]++;
+            if (empty($project['project_id'])){
+                $amountProject[$project->order->status]++;
+            } else {
+                $amountProject[3]++;
+            }
         }
         return [
             'list' => $projects,

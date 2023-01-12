@@ -2,6 +2,7 @@
 
 namespace Modules\Worker\Http\Controllers;
 
+use App\Helpers\ResponseHelpers;
 use App\Services\Worker\CompanyService;
 use App\Services\Worker\ProjectService;
 use App\Services\Worker\UserService;
@@ -41,6 +42,14 @@ class ProjectController extends Controller
         }
     }
 
+    public function analyticsByYear(Request $request){
+        try {
+            $data['projects'] = $this->projectService->getList($request->all());
+            return  ResponseHelpers::showResponse($data['projects']);
+        } catch (\Exception $e){
+            return response()->json([]);
+        }
+    }
 
     public function show($id)
     {

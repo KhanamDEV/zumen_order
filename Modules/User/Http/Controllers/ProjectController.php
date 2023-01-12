@@ -2,6 +2,7 @@
 
 namespace Modules\User\Http\Controllers;
 
+use App\Helpers\ResponseHelpers;
 use App\Services\User\ProjectService;
 use App\Services\User\UserService;
 use App\Services\User\WorkerService;
@@ -39,6 +40,15 @@ class ProjectController extends Controller
         }
     }
 
+    public function analyticsByYear(Request $request){
+        try {
+            $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['user_id' => auth('users')->id()]));
+            return  ResponseHelpers::showResponse($data['projects']);
+        } catch (\Exception $e){
+            return response()->json([]);
+        }
+    }
+
     public function all(Request $request)
     {
         try {
@@ -51,6 +61,14 @@ class ProjectController extends Controller
         }
     }
 
+    public function analyticsByYearAll(Request $request){
+        try {
+            $data['projects'] = $this->projectService->getList($request->all());
+            return  ResponseHelpers::showResponse($data['projects']);
+        } catch (\Exception $e){
+            return response()->json([]);
+        }
+    }
 
     public function create()
     {

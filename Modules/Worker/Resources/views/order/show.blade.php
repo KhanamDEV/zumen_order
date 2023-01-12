@@ -84,7 +84,7 @@
                         <p class="info"><span>現場住所</span>: {{@$order->project->name}}</p>
                     </div>
                     <div class="col-md-4">
-                        <p class="info"><span>プロジェクトコード</span>: {{@$order->project->number}}</p>
+                        <p class="info"><span>案件番号</span>: {{@$order->project->number}}</p>
                     </div>
                 </div>
                 <p class="info pre-line"><span>備考</span>: {{@$order->project->note}}</p>

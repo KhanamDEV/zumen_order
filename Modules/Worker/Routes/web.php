@@ -29,6 +29,7 @@ Route::prefix('worker')->name('worker.')->group(function () {
                   Route::get('{id}/show', 'FeedbackController@show')->name('detail');
                });
             });
+            Route::get('analytics-by-year', 'ProjectController@analyticsByYear')->name('analytics_by_year');
         });
         Route::prefix('order')->name('order.')->group(function () {
             Route::get('', 'OrderController@index')->name('index');

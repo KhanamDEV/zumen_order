@@ -11,6 +11,7 @@ namespace App\Services\User;
 
 
 use App\Jobs\SendMailCreateProject;
+use App\Repositories\Feedback\FeedbackRepositoryInterface;
 use App\Repositories\Order\OrderRepositoryInterface;
 use App\Repositories\Project\ProjectRepository;
 use App\Repositories\Project\ProjectRepositoryInterface;
@@ -24,14 +25,16 @@ class ProjectService
     private $orderRepository;
     private $mailService;
     private $userRepository;
+    private $feedbackRepository;
 
     public function __construct(ProjectRepositoryInterface $projectRepository, OrderRepositoryInterface $orderRepository, MailService $mailService,
-                                UserRepositoryInterface $userRepository)
+                                UserRepositoryInterface $userRepository, FeedbackRepositoryInterface $feedbackRepository)
     {
         $this->projectRepository = $projectRepository;
         $this->orderRepository = $orderRepository;
         $this->mailService = $mailService;
         $this->userRepository = $userRepository;
+        $this->feedbackRepository = $feedbackRepository;
     }
 
     public function store($data){
@@ -39,9 +42,24 @@ class ProjectService
         try {
             $usersByCompany = $this->userRepository->getList(['company_id' => auth('users')->user()->company_id]);
             $lastProject = $this->projectRepository->getLastProjectByCompany(collect($usersByCompany)->pluck('id', 'id')->toArray());
-            $number = 1;
-            if (!empty($lastProject)) $number = (string) ((int) $lastProject->number + 1);
             $user = $this->userRepository->findById(auth('users')->user()->id);
+            $number = 1;
+            if (!empty($lastProject)){
+                $numberLastProject = $lastProject->number;
+                $arr = [];
+                for ($i = 1; $i < 5; $i++){
+                    $numZero = "";
+                    for ($j = 1; $j <= $i; $j++){
+                        $numZero .= 0;
+                    }
+                    $arr[] = $user->company->short_name.'-'.$numZero;
+                }
+                $arr = array_reverse($arr);
+                foreach ($arr as $prefix){
+                    $numberLastProject  = str_replace($prefix, '', $numberLastProject);
+                }
+                $number = (string) ((int) $numberLastProject + 1);
+            }
             $numberString = $user->company->short_name.'-';
             for ($i = 0; $i < (5 - strlen($number)); $i++){
                 $numberString .= '0';
@@ -88,6 +106,7 @@ class ProjectService
             return  $projectId;
         } catch (\Exception $e){
             DB::rollBack();
+            dd($e);
             return false;
         }
     }
@@ -129,6 +148,12 @@ class ProjectService
             $data['order_created_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['order_created_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
+        if (!empty($data['year'])){
+            if ($data['year'] != 'all'){
+                $data['order_created_start'] = $data['year'].'-01-01';
+                $data['order_created_end'] = $data['year'].'-12-31';
+            }
+        }
         if (!empty($data['finish_day'])){
             $explodeDate = explode("-", $data['finish_day']);
             $data['finish_day_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
@@ -139,15 +164,21 @@ class ProjectService
         $projects = array_filter($projects, function ($item){
            return !empty($item['user']);
         });
+        $feedbacks = $this->feedbackRepository->getList($data)->toArray();
+        $projects = collect(array_merge($projects, $feedbacks))->sortBy('created_at')->toArray();
         $amountProject = ['all' => count($projects)];
         foreach (config('project.status') as $key => $status){
             if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
         }
         foreach ($projects as $key =>  $project){
             $projects[$key] = (object) $project;
-            $projects[$key]->order = (object) $project['order'];
-            $projects[$key]->user = (object) $project['user'];
-            $amountProject[$project['order']['status']]++;
+            $projects[$key]->order = empty($project['project_id']) ? (object) $project['order']  : null;
+            $projects[$key]->user = empty($project['project_id']) ?  (object) $project['user'] : (object) (!empty($project['project']['user']) ? $project['project']['user'] : null);
+            if (empty($project['project_id'])){
+                $amountProject[$project['order']['status']]++;
+            } else{
+                $amountProject[3]++;
+            }
         }
         return [
             'list' => $projects,
