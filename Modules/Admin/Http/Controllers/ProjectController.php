@@ -36,6 +36,7 @@ class ProjectController extends Controller
 
             return view('admin::project.index', compact('data'));
         } catch (\Exception $e){
+            dd($e);
             abort(500);
         }
     }

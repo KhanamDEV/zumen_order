@@ -16,7 +16,6 @@ class CreateFeedbackRequest extends FormRequest
         return [
             'type' => 'required',
             'delivery_date' => 'required',
-            'note'=> 'required'
         ];
     }
 

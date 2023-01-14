@@ -64,15 +64,17 @@ class ProjectService
 //        $data['unexpired'] = true;
         $projects = $this->projectRepository->getList($data);
         $feedbacks = $this->feedbackRepository->getList($data);
-        $projects = $projects->merge($feedbacks)->sortBy('created_at');
-
+        $projects = $projects->merge($feedbacks)->sortBy('created_at')->toArray();
+        usort($projects, function ($a, $b){
+            return strtotime($a['created_at']) < strtotime($b['created_at']);
+        });
         $amountProject = ['all' => count($projects)];
         foreach (config('project.status') as $key => $status){
             if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
         }
         foreach ($projects as $project){
             if (empty($project['project_id'])){
-                $amountProject[$project->order->status]++;
+                $amountProject[$project['order']['status']]++;
             } else {
                 $amountProject[3]++;
             }

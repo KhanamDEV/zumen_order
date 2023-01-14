@@ -108,7 +108,7 @@
                     <p class="info"><span>URL</span>:
                     <ul>
                         @foreach($urls as $url)
-                            <li><a href="{{$url}}">{{$url}}</a></li>
+                            <li><a target="_blank" href="{{$url}}">{{$url}}</a></li>
                         @endforeach
                     </ul>
                     </p>

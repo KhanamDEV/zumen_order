@@ -165,7 +165,10 @@ class ProjectService
            return !empty($item['user']);
         });
         $feedbacks = $this->feedbackRepository->getList($data)->toArray();
-        $projects = collect(array_merge($projects, $feedbacks))->sortBy('created_at')->toArray();
+        $projects = collect(array_merge($projects, $feedbacks))->toArray();
+        usort($projects, function ($a, $b){
+            return strtotime($a['created_at']) < strtotime($b['created_at']);
+        });
         $amountProject = ['all' => count($projects)];
         foreach (config('project.status') as $key => $status){
             if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
