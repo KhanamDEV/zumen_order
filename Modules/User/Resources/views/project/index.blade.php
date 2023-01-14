@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-sm-4 amount-project-by-type">
                     <div class="">
-                        <div class="form-group mb-0">
+                        <div class="form-group mb-0" style="width: 80px">
                             <select name="" id="analytics-project" class="form-control">
                                 <option value="2022">2022</option>
                                 <option selected value="2023">2023</option>
