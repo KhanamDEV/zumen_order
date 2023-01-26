@@ -226,7 +226,9 @@
                                 </div>
                                 <div class="group-button mt-2 d-flex justify-content-end">
                                     <button class="btn btn-success mr-2 btn-send-message" type="submit">送信</button>
+                                    @if($project->user_id == auth('users')->id())
                                     <a href="{{route('user.project.done', ['id' => $project->id])}}" class="btn btn-info">受領</a>
+                                        @endif
                                 </div>
                             </form>
                         </div>
@@ -442,7 +444,7 @@
             Swal.showLoading();
             $("#form-chat").submit();
         })
-        let dateAdd = moment().day() <= 2 ?  moment().add(5, 'days') : moment().add(7, 'days');
+        let dateAdd = moment().add(7, 'days');
         $('input[name=delivery_date]').daterangepicker({
             singleDatePicker: true,
             showDropdowns: true,

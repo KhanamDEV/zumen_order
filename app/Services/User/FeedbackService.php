@@ -62,7 +62,7 @@ class FeedbackService
                 'documents_of_worker' => $project->order->documents,
                 'other_information' => $project->other_information,
                 'order_created_at' => $project->order->created_at,
-                'created_at' => date('Y-m-d H:i:s')
+                'created_at' => $project->created_at
             ];
             $dataUpdateProject = [
                 'type' => $data['type'],
@@ -99,7 +99,11 @@ class FeedbackService
                 return false;
             }
             $order = $this->orderRepository->find(['id' => $project->order->id]);
-            $this->mailService->sendMailCreateProject($order, true);
+            if (env('APP_ENVIRONMENT') != 'local-nam' ){
+                $this->mailService->sendMailCreateProject($order, true);
+//            $job = new SendMailCompleteProject($order);
+//            dispatch($job)->delay(now()->addSeconds(2));
+            }
             DB::commit();
             return true;
         } catch (\Exception $e){

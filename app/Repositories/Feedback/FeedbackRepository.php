@@ -37,7 +37,7 @@ class FeedbackRepository implements FeedbackRepositoryInterface
 
     public function getList($data)
     {
-        $query = $this->model->with(['project', 'project.order', 'project.user' => function($query) use ($data){
+        $query = $this->model->with(['project', 'project.order', 'worker', 'project.user' => function($query) use ($data){
             if (!empty($data['auth_type']) && $data['auth_type'] == 'user'){
                 $user = auth('users')->user();
                 return $query->where('company_id', $user->company_id);

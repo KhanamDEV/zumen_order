@@ -206,8 +206,8 @@
                                         <td><a href="#">{{empty($project['project_id']) ? config('project.status')[$project['order']['status']] : config('project.status')[3]}}</a></td>
                                         <td><a href="#">{{  @$project['delivery_date']}}</a></td>
                                         <td><a href="#">{{date('Y-m-d', strtotime($project['created_at']))}}</a></td>
-                                        <td><a href="#">{{@$project['user']['first_name']}} {{@$project['user']['last_name']}}</a></td>
-                                        <td><a href="#">{{@$project['order']['worker']['first_name']}} {{@$project['order']['worker']['last_name']}}</a></td>
+                                        <td><a href="#">{{@$project['user']['first_name'] ?? @$project['project']['user']['first_name']}} {{@$project['user']['last_name'] ?? @$project['project']['user']['last_name']}}</a></td>
+                                        <td><a href="#">{{@$project['order']['worker']['first_name'] ?? @$project['worker']['first_name']}} {{@$project['order']['worker']['last_name'] ?? @$project['worker']['last_name'] }}</a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>

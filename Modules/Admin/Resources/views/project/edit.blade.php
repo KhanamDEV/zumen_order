@@ -398,7 +398,7 @@
                 }
 
             })
-            let dateAdd = moment().day() <= 2 ?  moment().add(5, 'days') : moment().add(7, 'days');
+            let dateAdd =  moment().add(7, 'days');
             $('input[name=delivery_date]').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,
