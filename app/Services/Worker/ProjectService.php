@@ -66,7 +66,7 @@ class ProjectService
         $feedbacks = $this->feedbackRepository->getList($data);
         $projects = $projects->merge($feedbacks)->sortBy('created_at')->toArray();
         usort($projects, function ($a, $b){
-            return strtotime($a['created_at']) < strtotime($b['created_at']);
+            return strtotime($a['created_at']) < strtotime($b['created_at']) ? 1 : 0;
         });
         $amountProject = ['all' => count($projects)];
         foreach (config('project.status') as $key => $status){
