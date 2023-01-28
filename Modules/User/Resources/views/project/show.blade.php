@@ -444,7 +444,17 @@
             Swal.showLoading();
             $("#form-chat").submit();
         })
-        let dateAdd = moment().add(7, 'days');
+        let dateAdd = null;
+        let dayOfWeek = moment().day();
+        if (dayOfWeek <=2){
+            dateAdd  = moment().add(3, 'days');
+        } else if(dayOfWeek == 6){
+            dateAdd  = moment().add(4, 'days');
+        } else if(dayOfWeek == 7){
+            dateAdd = moment().add(3, 'days');
+        } else {
+            dateAdd = moment().add(5, 'days')
+        }
         $('input[name=delivery_date]').daterangepicker({
             singleDatePicker: true,
             showDropdowns: true,

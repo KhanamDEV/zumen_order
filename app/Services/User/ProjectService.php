@@ -164,7 +164,9 @@ class ProjectService
         $projects = array_filter($projects, function ($item){
            return !empty($item['user']);
         });
-        $feedbacks = $this->feedbackRepository->getList($data)->toArray();
+        $feedbacks = $this->feedbackRepository->getList($data);
+        if (!empty($feedbacks)) $feedbacks = $feedbacks->toArray();
+
         $projects = collect(array_merge($projects, $feedbacks))->toArray();
         usort($projects, function ($a, $b){
             return strtotime($a['created_at']) < strtotime($b['created_at']) ? 1 : 0;

@@ -134,8 +134,8 @@
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label class="form-label">納品日</label>
-                                            <input type="hidden" class="form-control" value="{{ \Carbon\Carbon::now()->dayOfWeek  <= 2 ? \Carbon\Carbon::now()->addDays(5)->format('Y-m-d') : \Carbon\Carbon::now()->addDays(7)->format('Y-m-d')}}" name="delivery_date">
-                                            <input type="text" class="form-control delivery-date-show" value="{{\Carbon\Carbon::now()->addDays(5)->format('Y-m-d')}}" name="delivery_date">
+                                            <input type="hidden" class="form-control" value="{{  \Carbon\Carbon::now()->addDays(7)->format('Y-m-d')}}" name="delivery_date">
+                                            <input type="text" class="form-control delivery-date-show" value="{{\Carbon\Carbon::now()->addDays(7)->format('Y-m-d')}}" name="delivery_date">
                                         </div>
                                     </div>
 
@@ -464,7 +464,17 @@
                 }
 
             })
-            let dateAdd = moment().add(7, 'days')
+            let dateAdd = null;
+            let dayOfWeek = moment().day();
+            if (dayOfWeek <=2){
+                dateAdd  = moment().add(3, 'days');
+            } else if(dayOfWeek == 6){
+                dateAdd  = moment().add(4, 'days');
+            } else if(dayOfWeek == 7){
+                dateAdd = moment().add(3, 'days');
+            } else {
+                dateAdd = moment().add(5, 'days')
+            }
             $('input[name=delivery_date]').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,
