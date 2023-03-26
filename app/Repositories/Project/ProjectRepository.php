@@ -86,11 +86,18 @@ class ProjectRepository implements ProjectRepositoryInterface
                 $query->whereNotNull('worker_id')->whereDate('finish_day', '<=', $data['finish_day_end']);
             });
         }
+        if (!empty($data['auth_type']) && $data['auth_type'] == 'user'){
+
+            $query->whereHas('user', function ($subQ){
+                $user = auth('users')->user();
+                $subQ->where('company_id', $user->company_id);
+            });
+        }
         $query = $query->orderBy('created_at', 'DESC');
         if (!empty($data['per_page'])) {
-            return $query->paginate($data['per_page']);
+            return $query->has('user')->paginate($data['per_page']);
         }
-        return $query->get();
+        return $query->has('user')->get();
     }
 
     public function findById($id, $data = [])

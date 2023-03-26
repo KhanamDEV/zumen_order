@@ -2,6 +2,9 @@
     .card-body{overflow-y: scroll}
     .card-body table{min-width: 400%}
 }
+@media (max-width: 800px) and (min-width: 576px) {
+    #table-project tbody  tr td:nth-child(2){width: 15%}
+}
 
 @media (max-width: 575px) {
     .amount-project-by-type{justify-content: center; margin-bottom: 15px}

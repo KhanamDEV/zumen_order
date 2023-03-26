@@ -33,6 +33,7 @@ class WorkerRepository implements WorkerRepositoryInterface
         $query = DB::table('workers');
         if (!empty($data['email'])) $query->where('email', $data['email']);
         if (!empty($data['last_name'])) $query->where('last_name', 'like', '%'.$data['last_name'].'%');
+        if (!empty($data['is_active'])) $query->where('is_active', $data['is_active']);
         $query->orderBy('created_at', 'DESC');
         if (!empty($data['per_page'])) return $query->paginate($data['per_page']);
         return $query->get();

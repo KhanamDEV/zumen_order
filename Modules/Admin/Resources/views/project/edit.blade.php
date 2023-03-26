@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="">管理番号</label>
+                                        <label for="">顧客番号</label>
                                         <input type="text" class="form-control" name="control_number" value="{{@$project->control_number}}">
                                     </div>
                                 </div>

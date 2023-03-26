@@ -34,6 +34,7 @@ class UserRepository implements UserRepositoryInterface
         if (!empty($data['email'])) $query->where('email', $data['email']);
         if (!empty($data['last_name'])) $query->where('last_name', 'like', '%'.$data['last_name'].'%');
         if (!empty($data['company_id'])) $query->where('company_id', $data['company_id']);
+        if (!empty($data['status'])) $query->where('status', $data['status']);
         $query->orderBy('created_at', 'DESC');
         if (!empty($data['per_page'])) return $query->paginate($data['per_page']);
         return $query->get();

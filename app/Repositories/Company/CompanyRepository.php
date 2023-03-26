@@ -32,7 +32,7 @@ class CompanyRepository implements CompanyRepositoryInterface
     public function findByData($data)
     {
         $query = $this->model;
-
+        if (!empty($data['id'])) $query = $query->where('id', $data['id']);
         return $query->first();
     }
 

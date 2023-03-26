@@ -23,7 +23,7 @@ class WorkerService
     }
 
     public function pluckNameById(){
-        $workerList = $this->workerRepository->getList([]);
+        $workerList = $this->workerRepository->getList(['is_active' => 1]);
         $workers = [];
         foreach ($workerList as $worker){
             $workers[$worker->id] = $worker->first_name.' '.$worker->last_name;

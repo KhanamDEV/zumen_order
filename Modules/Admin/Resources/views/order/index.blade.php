@@ -18,7 +18,7 @@
                     <div class="card-body">
                         <form action="" class="row g-3" method="get" autocomplete="off">
                             <div class="col-md-6">
-                                <label class="form-label">現場情報</label>
+                                <label class="form-label">現場名</label>
                                 <input type="text" name="name"  autocomplete="off" class="form-control" value="{{request()->has('name') ? request()->get('name') : ''}}">
                             </div>
                             <div class="col-md-6">

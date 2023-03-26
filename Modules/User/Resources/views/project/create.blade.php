@@ -81,7 +81,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="">管理番号</label>
+                                        <label for="">顧客番号</label>
                                         <input type="text" name="control_number" class="form-control">
                                     </div>
                                 </div>
@@ -246,7 +246,7 @@
                 <div class="modal-body">
                     <p class="info"><span>発注日</span>: <span>{{date('Y-m-d')}}</span></p>
                     <p class="info"><span>現場名</span>: <span class="owner-confirm"></span></p>
-                    <p class="info"><span>管理番号</span>: <span class="control_number-confirm"></span></p>
+                    <p class="info"><span>顧客番号</span>: <span class="control_number-confirm"></span></p>
                     <p class="info"><span>現場住所</span>: <span class="name-confirm"></span></p>
                     <p class="info"><span>図面種類</span>: <span class="type-confirm"></span></p>
                     <p class="info"><span>納品日</span>: <span class="delivery_date-confirm"></span></p>

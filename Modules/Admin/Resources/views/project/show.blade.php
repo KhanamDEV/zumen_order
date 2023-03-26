@@ -55,7 +55,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>管理番号</span>: {{$project->control_number}}
+                            <span>顧客番号</span>: {{$project->control_number}}
                         </p>
                     </div>
                     <div class="col-md-4">

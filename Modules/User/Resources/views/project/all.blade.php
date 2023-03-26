@@ -44,7 +44,7 @@
                     <div class="card-body" style="display: none">
                         <form action="" class="row g-3" method="get" autocomplete="off">
                             <div class="col-md-4">
-                                <label class="form-label">現場情報</label>
+                                <label class="form-label">現場名</label>
                                 <input type="text" name="name"  autocomplete="off" class="form-control" value="{{request()->has('name') ? request()->get('name') : ''}}">
                             </div>
                             <div class="col-md-4">
@@ -204,7 +204,11 @@
                                     <td><a href="#">{{ !empty($project->order->worker_id) ? date('Y-m-d', strtotime($project->order->created_at)) : @$project->order_created_at}}</a></td>
                                     <td><a href="#">{{@$project->order->finish_day ?? (@$project->finish_day )}}</a></td>
                                     <td><a href="#">{{@$project->user->first_name}} {{@$project->user->last_name}}</a></td>
+                                    @if(auth('users')->user()->company_id == 1)
                                     <td><a href="#">{{@$project->order->worker['first_name'] ?? @$project->worker['first_name']}} {{@$project->order->worker['last_name'] ?? @$project->worker['last_name']}}</a></td>
+                                        @else
+                                        <td>作業者01</td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>

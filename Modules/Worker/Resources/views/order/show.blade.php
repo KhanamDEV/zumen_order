@@ -53,7 +53,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>管理番号</span>: {{$order->project->control_number}}
+                            <span>顧客番号</span>: {{$order->project->control_number}}
                         </p>
                     </div>
                     <div class="col-md-4">
@@ -80,9 +80,6 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
-                        <p class="info"><span>現場住所</span>: {{@$order->project->name}}</p>
-                    </div>
                     <div class="col-md-4">
                         <p class="info"><span>案件番号</span>: {{@$order->project->number}}</p>
                     </div>

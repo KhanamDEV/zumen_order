@@ -32,7 +32,7 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         try {
-            $data['users'] = DB::table('users')->get();
+            $data['users'] = DB::table('users')->where('status', 1)->get();
             $data['projects'] = $this->projectService->getList($request->all());
             $data['workers'] = $this->workerService->getList();
             $data['companies'] = $this->companyService->pluck();

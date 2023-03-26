@@ -41,7 +41,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>発注者</span>: {{$project->user->first_name}} {{$project->user->last_name}}
+                            <span>発注者</span>: {{$project->user->first_name ?? ''}} {{$project->user->last_name ?? ''}}
                         </p>
                     </div>
                     <div class="col-md-4">
@@ -61,7 +61,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>管理番号</span>: {{$project->control_number}}
+                            <span>顧客番号</span>: {{$project->control_number}}
                         </p>
                     </div>
                     <div class="col-md-4">
@@ -274,7 +274,11 @@
                                     <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{@$feedback->finish_day}}</a></td>
                                     <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a></td>
                                     <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a></td>
+                                   @if(\auth('users')->user()->company_id == 1)
                                     <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->worker->first_name ?? ''}} {{$feedback->worker->last_name ?? ''}}</a></td>
+                                       @else
+                                       <td>作業者01</td>
+                                    @endif
                                 </tr>
                             @endforeach
                         @endif

@@ -22,7 +22,7 @@ class UserService
     }
 
     public function pluckNameById(){
-        $userList = $this->userRepository->getList([]);
+        $userList = $this->userRepository->getList(['status' => 1]);
         $users = [];
         foreach ($userList as $user){
             $users[$user->id] = $user->first_name.' '.$user->last_name;

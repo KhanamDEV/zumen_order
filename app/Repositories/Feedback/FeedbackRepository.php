@@ -71,10 +71,12 @@ class FeedbackRepository implements FeedbackRepositoryInterface
         if (!empty($data['order_created_end'])) $query = $query->whereDate('order_created_at', '<=', $data['order_created_end']);
         if (!empty($data['finish_day_start'])) $query = $query->whereDate('finish_day', '<=', $data['finish_day_start']);
         if (!empty($data['finish_day_end'])) $query = $query->whereDate('finish_day', '<=', $data['finish_day_end']);
-        $query = $query->orderBy('created_at', 'DESC');
+        $query = $query->orderBy('created_at', 'DESC')->whereHas('project.user', function ($subQ) use ($data){
+            if (!empty($data['auth_type']) && $data['auth_type'] == 'user') $subQ->where('company_id', auth('users')->user()->id);
+        });
         if (!empty($data['per_page'])) {
-            return $query->paginate($data['per_page']);
+            return $query->has('project.user')->paginate($data['per_page']);
         }
-        return $query->get();
+        return $query->has('project.user')->get();
     }
 }

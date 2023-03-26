@@ -27,7 +27,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         try {
-            $data['users'] = DB::table('users')->get();
+            $data['users'] = DB::table('users')->where('status', 1)->get();
             $data['orders'] = $this->orderService->getList($request->all());
             return view('worker::order.index', compact('data'));
         } catch (\Exception $e){

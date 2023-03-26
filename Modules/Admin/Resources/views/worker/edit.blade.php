@@ -69,6 +69,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="" class="col-sm-2 control-label">ステータス</label>
+                                <div class="col-sm-10">
+                                    <select name="is_active" id="" class="form-control">
+                                        @foreach(\App\Helpers\Helpers::getStatusUser() as $key =>  $status)
+                                            <option @if($data['worker']->is_active == $key) selected @endif value="{{$key}}">{{$status}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="" class="col-sm-2 control-label">電話番号</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="" placeholder="" name="phone_number" value="{{@$data['worker']->phone_number}}">

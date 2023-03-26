@@ -31,12 +31,11 @@ class ProjectController extends Controller
     {
         try {
             $data['projects'] = $this->projectService->getList($request->all());
-            $data['users'] = $this->userService->getList();
+            $data['users'] = $this->userService->getList(['status' => 1]);
             $data['workers'] = $this->workerService->getList();
 
             return view('admin::project.index', compact('data'));
         } catch (\Exception $e){
-            dd($e);
             abort(500);
         }
     }

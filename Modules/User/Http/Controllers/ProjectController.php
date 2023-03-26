@@ -31,9 +31,9 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         try {
-            $data['workers'] = DB::table('workers')->get();
+            $data['workers'] = DB::table('workers')->where('is_active', 1)->get();
             $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['user_id' => auth('users')->id()]));
-            $data['users'] = DB::table('users')->get();
+            $data['users'] = DB::table('users')->where('status', 1)->get();
             return view('user::project.index', compact('data'));
         } catch (\Exception $e){
             abort(500);
@@ -52,9 +52,9 @@ class ProjectController extends Controller
     public function all(Request $request)
     {
         try {
-            $data['workers'] = DB::table('workers')->get();
+            $data['workers'] = DB::table('workers')->where('is_active', 1)->get();
             $data['projects'] = $this->projectService->getList($request->all());
-            $data['users'] = DB::table('users')->get();
+            $data['users'] = DB::table('users')->where('status', 1)->get();
             return view('user::project.all', compact('data'));
         } catch (\Exception $e){
             abort(500);
