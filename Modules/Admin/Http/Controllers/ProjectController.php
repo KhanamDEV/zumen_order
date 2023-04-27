@@ -40,6 +40,32 @@ class ProjectController extends Controller
         }
     }
 
+    public function indexNoMerge(Request $request)
+    {
+        try {
+            $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['project_type' => 'merge']));
+            $data['users'] = $this->userService->getList(['status' => 1]);
+            $data['workers'] = $this->workerService->getList();
+
+            return view('admin::project.index', compact('data'));
+        } catch (\Exception $e){
+            abort(500);
+        }
+    }
+
+    public function indexMark(Request $request)
+    {
+        try {
+            $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['type' => 1]));
+            $data['users'] = $this->userService->getList(['status' => 1]);
+            $data['workers'] = $this->workerService->getList();
+
+            return view('admin::project.index', compact('data'));
+        } catch (\Exception $e){
+            abort(500);
+        }
+    }
+
     public function analyticsByYear(Request $request){
         try {
             $data['projects'] = $this->projectService->getList($request->all());

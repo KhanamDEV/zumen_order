@@ -66,6 +66,7 @@
                                 </div>
 
                             </div>
+                            @if(!\Request::routeIs('user.project.index_mark'))
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>図面種類</label>
@@ -77,6 +78,7 @@
                                     </select>
                                 </div>
                             </div>
+                                 @endif
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>ステータス</label>

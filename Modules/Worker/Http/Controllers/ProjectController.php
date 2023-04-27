@@ -33,7 +33,33 @@ class ProjectController extends Controller
     {
         try {
             $data['users'] = DB::table('users')->where('status', 1)->get();
+            $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['project_type' => 'merge']));
+            $data['workers'] = $this->workerService->getList();
+            $data['companies'] = $this->companyService->pluck();
+            return view('worker::project.index', compact('data'));
+        } catch (\Exception $e){
+            abort(500);
+        }
+    }
+
+    public function indexNoMerge(Request $request)
+    {
+        try {
+            $data['users'] = DB::table('users')->where('status', 1)->get();
             $data['projects'] = $this->projectService->getList($request->all());
+            $data['workers'] = $this->workerService->getList();
+            $data['companies'] = $this->companyService->pluck();
+            return view('worker::project.index', compact('data'));
+        } catch (\Exception $e){
+            abort(500);
+        }
+    }
+
+    public function indexMark(Request $request)
+    {
+        try {
+            $data['users'] = DB::table('users')->where('status', 1)->get();
+            $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['project_type' => 'merge', 'type' => 1]));
             $data['workers'] = $this->workerService->getList();
             $data['companies'] = $this->companyService->pluck();
             return view('worker::project.index', compact('data'));

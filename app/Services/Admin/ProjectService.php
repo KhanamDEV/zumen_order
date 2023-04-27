@@ -62,7 +62,12 @@ class ProjectService
             $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
         $projects = $this->projectRepository->getList($data);
-        $feedbacks = $this->feedbackRepository->getList($data);
+        if (!empty($data['project_type']) && $data['project_type'] == 'merge'){
+            $feedbacks = $this->feedbackRepository->getList($data);
+
+        } else {
+            $feedbacks = collect([]);
+        }
         $projects = $projects->merge($feedbacks)->sortBy('created_at')->toArray();
         usort($projects, function ($a, $b){
             return strtotime($a['created_at']) < strtotime($b['created_at']) ? 1 : 0;

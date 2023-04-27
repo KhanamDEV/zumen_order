@@ -45,20 +45,8 @@ class ProjectService
             $user = $this->userRepository->findById(auth('users')->user()->id);
             $number = 1;
             if (!empty($lastProject)){
-                $numberLastProject = $lastProject->number;
-                $arr = [];
-                for ($i = 1; $i < 5; $i++){
-                    $numZero = "";
-                    for ($j = 1; $j <= $i; $j++){
-                        $numZero .= 0;
-                    }
-                    $arr[] = $user->company->short_name.'-'.$numZero;
-                }
-                $arr = array_reverse($arr);
-                foreach ($arr as $prefix){
-                    $numberLastProject  = str_replace($prefix, '', $numberLastProject);
-                }
-                $number = (string) ((int) $numberLastProject + 1);
+                $numberLastProject = str_replace($user->company->short_name, '', $lastProject->number);
+                $number = (string) (abs($numberLastProject) + 1 );
             }
             $numberString = $user->company->short_name.'-';
             for ($i = 0; $i < (5 - strlen($number)); $i++){
@@ -164,8 +152,12 @@ class ProjectService
         $projects = array_filter($projects, function ($item){
            return !empty($item['user']);
         });
-        $feedbacks = $this->feedbackRepository->getList($data);
-        if (!empty($feedbacks)) $feedbacks = $feedbacks->toArray();
+        if (!empty($data['project_type']) && $data['project_type'] == 'merge'){
+            $feedbacks = [];
+        }  else {
+            $feedbacks = $this->feedbackRepository->getList($data);
+            if (!empty($feedbacks)) $feedbacks = $feedbacks->toArray();
+        }
 
         $projects = collect(array_merge($projects, $feedbacks))->toArray();
         usort($projects, function ($a, $b){
