@@ -27,7 +27,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="info">
-                            <span>発注者</span>: {{$feedback->project->user->first_name}} {{$feedback->project->user->last_name}}
+                            <span>発注者</span>: {{$feedback->user->first_name}} {{$feedback->user->last_name}}
                         </p>
                     </div>
                     <div class="col-md-4">
@@ -129,8 +129,8 @@
                         @if(!empty($messages))
                             <div class="list-message">
                                 @foreach($messages as $message)
-                                    @php $seederName = $message->sender == 'order' ? $feedback->project->user->first_name.' '.$feedback->project->user->last_name :
-                                                    $feedback->worker->first_name.' '.$feedback->worker->last_name @endphp
+                                    @php $seederName = $message->sender == 'order' ? $feedback->user->first_name.' '.$feedback->user->last_name :
+                                                    $feedback->order->worker->first_name.' '.$feedback->order->worker->last_name @endphp
                                     <div class="item-message">
                                         <span class="sender"><strong>{{$seederName}}</strong> ({{date('Y-m-d H:i', strtotime($message->created_at))}})</span>
                                         <div class="message-content">

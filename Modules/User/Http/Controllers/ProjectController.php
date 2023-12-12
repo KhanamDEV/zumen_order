@@ -58,6 +58,7 @@ class ProjectController extends Controller
             $data['users'] = DB::table('users')->where('status', 1)->get();
             return view('user::project.index', compact('data'));
         } catch (\Exception $e){
+            dd($e);
             abort(500);
         }
     }
@@ -156,6 +157,7 @@ class ProjectController extends Controller
             $data['project'] = $this->projectService->findById($id);
             $data['users'] = $this->userService->pluckNameById();
             $data['workers'] = $this->workerService->pluckNameById();
+            $data['childProjects'] = $this->projectService->getChildProject($id);
             if (empty($data['project'])) abort(404);
             return view('user::project.show', compact('data'));
         } catch (\Exception $e){

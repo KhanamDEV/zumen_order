@@ -152,14 +152,14 @@ class ProjectService
         $projects = array_filter($projects, function ($item){
            return !empty($item['user']);
         });
-        if (!empty($data['project_type']) && $data['project_type'] == 'merge'){
-            $feedbacks = [];
-        }  else {
-            $feedbacks = $this->feedbackRepository->getList($data);
-            if (!empty($feedbacks)) $feedbacks = $feedbacks->toArray();
-        }
+//        if (!empty($data['project_type']) && $data['project_type'] == 'merge'){
+//            $feedbacks = [];
+//        }  else {
+//            $feedbacks = $this->feedbackRepository->getList($data);
+//            if (!empty($feedbacks)) $feedbacks = $feedbacks->toArray();
+//        }
 
-        $projects = collect(array_merge($projects, $feedbacks))->toArray();
+//        $projects = collect(array_merge($projects, $feedbacks))->toArray();
         usort($projects, function ($a, $b){
             return strtotime($a['created_at']) < strtotime($b['created_at']) ? 1 : 0;
         });
@@ -185,6 +185,10 @@ class ProjectService
 
     public function findById($id){
         return $this->projectRepository->findById($id);
+    }
+
+    public function getChildProject($parentId){
+        return $this->projectRepository->getChildProject($parentId);
     }
 
     public function delete($id){

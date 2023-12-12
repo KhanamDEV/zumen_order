@@ -62,9 +62,7 @@ class ProjectService
             $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
 //        $data['unexpired'] = true;
-        $projects = $this->projectRepository->getList($data);
-        $feedbacks = $this->feedbackRepository->getList($data);
-        $projects = $projects->merge($feedbacks)->sortBy('created_at')->toArray();
+        $projects = $this->projectRepository->getList($data)->toArray();
         usort($projects, function ($a, $b){
             return strtotime($a['created_at']) < strtotime($b['created_at']) ? 1 : 0;
         });
@@ -73,11 +71,7 @@ class ProjectService
             if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
         }
         foreach ($projects as $project){
-            if (empty($project['project_id'])){
                 $amountProject[$project['order']['status']]++;
-            } else {
-                $amountProject[3]++;
-            }
         }
         return [
             'list' => $projects,
@@ -87,6 +81,10 @@ class ProjectService
 
     public function findById($id){
         return $this->projectRepository->findById($id, []);
+    }
+
+    public function getChildProject($parentId){
+        return $this->projectRepository->getChildProject($parentId);
     }
 
     public function doProject($id){

@@ -170,9 +170,10 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                @php $index = 1; @endphp
                                 @foreach($data['orders']['list'] as $key => $order)
                                     <tr class=" @if(!empty($order->project->importunate)) has-importunate @endif "  style="background-color: {{config('project.color_status')[$order->status]}}" >
-                                        <td class="index"><a href="#">{{$key + 1}}</a></td>
+                                        <td class="index"><a href="#">{{$index++}}</a></td>
                                         <td><a href="{{route('worker.order.show', ['id' => $order->id])}}">{{@$order->project->owner}}</a></td>
                                         <td><a href="#">{{@$order->project->number}}</a></td>
                                         <td><a href="#">{{!empty($order->project->type) ? config('project.type')[$order->project->type] : ''}}</a></td>

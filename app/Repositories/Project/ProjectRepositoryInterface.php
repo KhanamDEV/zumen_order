@@ -24,4 +24,6 @@ interface ProjectRepositoryInterface
 
     public function getLastProjectByCompany($users);
 
+    public function getChildProject($parentProjectId);
+
 }

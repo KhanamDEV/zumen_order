@@ -11,6 +11,7 @@ namespace App\Repositories\Project;
 
 
 use App\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class ProjectRepository implements ProjectRepositoryInterface
 {
@@ -29,7 +30,7 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function getList($data)
     {
-        $query = $this->model->with(['feedbacks','order' => function($query){
+        $query = $this->model->with(['order' => function($query){
             return $query->with('worker');
         }, 'user' => function($query) use ($data){
             if (!empty($data['auth_type']) && $data['auth_type'] == 'user'){
@@ -40,6 +41,7 @@ class ProjectRepository implements ProjectRepositoryInterface
         if(!empty($data['company_id'])) $query = $query->whereHas('user', function ($subQuery) use($data){
             return $subQuery->where('company_id', $data['company_id']);
         });
+        if (!empty($data['project_type']) && $data['project_type'] == 'merge') $query = $query->whereNull('parent_project_id');
         if (!empty($data['number'])) $query = $query->where('number', $data['number']);
         if (!empty($data['user_id'])) $query = $query->where('user_id', $data['user_id']);
         if (!empty($data['name'])){
@@ -102,13 +104,15 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function findById($id, $data = [])
     {
-        $query = $this->model->with(['order','order.worker', 'user','user.company', 'feedbacks' => function($query){
-            return $query->orderBy('id', 'DESC');
-        }, 'feedbacks.worker']);
+        $query = $this->model->with(['order','order.worker', 'user','user.company']);
         if (!empty($data['status'])) $query = $query->whereHas('order', function ($query) use ($data) {
             $query->where('status', $data['status']);
         });
         return $query->where('id', $id)->first();
+    }
+
+    public function getChildProject($parentId){
+        return $this->model->with(['order', 'order.worker'])->where('parent_project_id', $parentId)->orderBy('id', 'DESC')->get();
     }
 
     public function update($id, $data)
@@ -123,6 +127,6 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function getLastProjectByCompany($users)
     {
-        return $this->model->whereIn('user_id', $users)->whereNotNull('number')->orderBy('created_at', 'DESC')->first();
+        return $this->model->whereIn('user_id', $users)->whereNull('parent_project_id')->whereNotNull('number')->orderBy('number', 'DESC')->first();
     }
 }

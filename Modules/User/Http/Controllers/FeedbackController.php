@@ -3,6 +3,7 @@
 namespace Modules\User\Http\Controllers;
 
 use App\Services\User\FeedbackService;
+use App\Services\User\ProjectService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -13,9 +14,12 @@ class FeedbackController extends Controller
 
     private $feedbackService;
 
-    public function __construct(FeedbackService $feedbackService)
+    private $projectService;
+
+    public function __construct(FeedbackService $feedbackService, ProjectService $projectService)
     {
         $this->feedbackService = $feedbackService;
+        $this->projectService = $projectService;
     }
 
     public function index()
@@ -39,7 +43,7 @@ class FeedbackController extends Controller
     public function show(Request $request)
     {
         try{
-            $data['feedback'] = $this->feedbackService->findById($request->id);
+            $data['feedback'] = $this->projectService->findById($request->route('id'));
             return view('user::project.feedback.detail', compact('data'));
         } catch (\Exception $e){
             return response()->json([]);

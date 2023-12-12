@@ -39,31 +39,38 @@ class FeedbackService
         try {
             $project = $this->projectRepository->findById($data['project_id']);
             if (empty($project)) return false;
-            $dataFeedback = [
-                'project_id' => $project->id,
+            $dataInsertProject = [
+                'user_id' => $project->user_id,
                 'name' => $project->name,
                 'owner' => $project->owner,
-                'type' => $project->type,
-                'worker_id' => $project->order->worker_id,
+                'type'  => $project->type,
                 'delivery_date' => $project->delivery_date,
-                'finish_day' => $project->order->finish_day,
-                'url' => $project->url,
+                'importunate' => $project->importunate,
                 'note' => $project->note,
+                'other_information' => $project->other_information,
+                'url' => $project->url,
                 'documents' => $project->documents,
+                'created_at' => $project->created_at,
+                'updated_at' => null,
                 'postal_code' => $project->postal_code,
                 'additional' => $project->additional,
                 'url_additional' => $project->url_additional,
-                'messages' => $project->messages,
                 'documents_additional' => $project->documents_additional,
-                'importunate' => $project->importunate,
+                'messages' => $project->messages,
                 'control_number' => $project->control_number,
-                'number' => $project->number,
-                'project_created_at' => Carbon::parse($project->created_at)->format('Y-m-d H:i:s'),
-                'documents_of_worker' => $project->order->documents,
-                'other_information' => $project->other_information,
-                'order_created_at' => $project->order->created_at,
-                'created_at' => $project->created_at
+                'number' => $project->project_number,
+                'parent_project_id' => $project->id,
             ];
+            $newProjectId = $this->projectRepository->store($dataInsertProject);
+            $dataOrder = [
+                'project_id' => $newProjectId,
+                'worker_id' => $project->order->worker_id,
+                'status' => 3,
+                'finish_day' => $project->order->finish_day,
+                'documents' => $project->order->documents,
+                'created_at' => $project->order->created_at
+            ];
+            $this->orderRepository->store($dataOrder);
             $dataUpdateProject = [
                 'type' => $data['type'],
                 'delivery_date' => $data['delivery_date'],
@@ -87,9 +94,7 @@ class FeedbackService
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ];
-            if (!$this->feedbackRepository->store($dataFeedback)){
-                return false;
-            }
+
             if (!$this->projectRepository->update($project->id, $dataUpdateProject)){
                 DB::rollBack();
                 return false;

@@ -196,10 +196,11 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                @php $index = 1; @endphp
                                 @foreach($data['projects']['list'] as $key => $project)
                                     <tr class=" @if(!empty($project['importunate'])) has-importunate @endif "
                                         style="background-color: {{ empty($project['project_id']) ? config('project.color_status')[$project['order']['status']] : config('project.color_status')[3]}}" >
-                                        <td class="index"><a href="#">{{$key + 1}}</a></td>
+                                        <td class="index"><a href="#">{{$index++}}</a></td>
                                         <td><a href="{{!empty($project['project_id']) ? route('worker.project.feedback.detail', ['id' => $project['id'], 'project_id' => $project['project_id']]) : route('worker.project.show', ['id' => $project['id']])}}">{{@$project['owner']}}</a></td>
                                         <td><a href="#">{{@$project['number']}}</a></td>
                                         <td><a href="#">{{!empty($project['type']) ? config('project.type')[$project['type']] : ''}}</a></td>
@@ -244,7 +245,7 @@
             })
 
             $.ajax({
-                url: '{{route('worker.project.analytics_by_year')}}?year=' + '{{date('Y')}}',
+                url: '{{route('worker.project.analytics_by_year')}}?year=' + '{{date('Y')}}&project_type=merge',
                 method: 'GET',
                 success: function (res){
                     res = res.response;

@@ -9,6 +9,7 @@
 @extends('user::layouts.master')
 @php
     $project = $data['project'];
+    $childProjects = $data['childProjects'];
 @endphp
 @section('content')
 
@@ -238,8 +239,9 @@
 
             </div>
         @endif
-            @if(!empty($project->feedbacks))
-            <div class="card card-warning">
+            @if(!empty($childProjects) && empty($project->parent_project_id))
+
+                <div class="card card-warning">
                 <div class="card-header">
                     <h3 class="card-title">案件アップデート</h3>
                     <div class="card-tools">
@@ -266,16 +268,16 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @if(!empty($project->feedbacks))
-                            @foreach($project->feedbacks as $key => $feedback)
+                        @if(!empty($childProjects))
+                            @foreach($childProjects as $key => $feedback)
                                 <tr>
                                     <td>{{$key+1}}</td>
-                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{config('project.type')[$feedback->type]}}</a></td>
-                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{@$feedback->finish_day}}</a></td>
-                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a></td>
-                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{config('project.type')[$feedback->type]}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{@$feedback->order->finish_day}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a></td>
                                    @if(\auth('users')->user()->company_id == 1)
-                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->worker->first_name ?? ''}} {{$feedback->worker->last_name ?? ''}}</a></td>
+                                    <td><a href="{{route('user.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{$feedback->order->worker->first_name ?? ''}} {{$feedback->order->worker->last_name ?? ''}}</a></td>
                                        @else
                                        <td>作業者01</td>
                                     @endif
@@ -503,6 +505,7 @@
             showConfirmButton: false,
             timer: 2000
         })
+
         @endif
         @if(session()->has('message'))
         Swal.fire({
@@ -522,6 +525,11 @@
             timer: 2000
         })
         @endif
+        @php
+            session()->forget('send_message_success');
+            session()->forget('update_project');
+            session()->forget('message');
+        @endphp
         let templateUrl = `<div class="item-url mb-3">
                                     <input type="text" name="url[]" class="form-control">
                                     <button class="btn add-url btn-success ml-1" type="button">追加</button>

@@ -16,7 +16,7 @@ class Project extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function feedbacks(){
-        return $this->hasMany(Feedback::class);
-    }
+//    public function feedbacks(){
+//        return $this->hasMany(Feedback::class);
+//    }
 }

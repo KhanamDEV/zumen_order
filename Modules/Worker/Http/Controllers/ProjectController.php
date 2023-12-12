@@ -83,6 +83,7 @@ class ProjectController extends Controller
             $data['project'] = $this->projectService->findById($id);
             $data['users'] = $this->userService->pluckNameById();
             $data['workers'] = $this->workerService->pluckNameById();
+            $data['childProjects'] = $this->projectService->getChildProject($id);
             return view('worker::project.show', compact('data'));
         } catch (\Exception $e){
             abort(500);
