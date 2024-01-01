@@ -119,7 +119,18 @@
                                 </div>
                             </div>
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>建物</label>
+                                            <select class="form-control select2bs4" style="width: 100%;" name="building">
+                                                <option selected="selected" disabled></option>
+                                                @foreach(config('project.building') as $key => $value)
+                                                    <option value="{{$key}}">{{$value}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>図面種類</label>
                                             <select class="form-control select2bs4" style="width: 100%;" name="type">
@@ -130,7 +141,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label class="form-label">納品日</label>
@@ -247,11 +258,12 @@
                     <p class="info"><span>発注日</span>: <span>{{date('Y-m-d')}}</span></p>
                     <p class="info"><span>現場名</span>: <span class="owner-confirm"></span></p>
                     <p class="info"><span>顧客番号</span>: <span class="control_number-confirm"></span></p>
+                    <p class="info"><span>郵便番号</span>: <span class="postal_code_head-confirm"></span>-<span class="postal_code_end-confirm"></span></p>
                     <p class="info"><span>現場住所</span>: <span class="name-confirm"></span></p>
+                    <p class="info"><span>建物</span>: <span class="building-confirm"></span></p>
                     <p class="info"><span>図面種類</span>: <span class="type-confirm"></span></p>
                     <p class="info"><span>納品日</span>: <span class="delivery_date-confirm"></span></p>
                     <p class="info"><span>納期相談希望</span>: <span class="importunate-confirm">いいえ</span> </p>
-                    <p class="info"><span>郵便番号</span>: <span class="postal_code_head-confirm"></span>-<span class="postal_code_end-confirm"></span></p>
                     <p class="info"><span>備考</span>: <span class="note-confirm"></span></p>
                     <p class="info"><span>図面情報</span>: <span class="other_information-confirm"></span></p>
                     <p class="info"><span>URL</span>: </p>
@@ -314,6 +326,7 @@
     <script>
         const projectInformation = JSON.parse('{!!  json_encode(config('project.other_information'))!!}');
         const projectType = JSON.parse('{!!  json_encode(config('project.type'))!!}')
+        const projectBuilding = JSON.parse('{!!  json_encode(config('project.building'))!!}')
         let templateUrl = `<div class="item-url mb-3">
                                     <input type="text" name="url[]" class="form-control">
                                     <button class="btn add-url btn-success ml-1" type="button">追加</button>
@@ -342,6 +355,7 @@
                             } else{
                                 if (input.name == 'importunate') input.value = input.value == 'on' ? 'はい' : 'いいえ'
                                 if (input.name == 'type') input.value = projectType[input.value];
+                                if (input.name == 'building') input.value = projectBuilding[input.value];
                                 $(`.${input.name}-confirm`).text(input.value);
                             }
 

@@ -92,6 +92,9 @@
                     <div class="col-md-4">
                         <p class="info"><span>案件番号</span>: {{@$project->number}}</p>
                     </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>建物</span>: @if(!empty($project->building)) {{config('project.building')[$project->building]}} @endif</p>
+                    </div>
                 </div>
                 <p class="info pre-line"><span>備考</span>: {{@$project->note}}</p>
                 @php $information = json_decode($project->other_information) @endphp
@@ -201,10 +204,11 @@
                             @endif
 
                         </div>
-                        @if(!in_array($project->order->status , [3,4,5])  )
+                    @if(!in_array($project->order->status , [3,4,5])  )
                             @if(!empty($messages))
                                 <div class="line-row"></div>
-                            @endif                        <div class="col-md-12">
+                            @endif
+                                <div class="col-md-12">
                             <form method="POST" action="{{route('user.project.add_message', ['id' => $project->id])}}" id="form-chat">
                                 @csrf
                                 <div class="form-group">
@@ -227,9 +231,7 @@
                                 </div>
                                 <div class="group-button mt-2 d-flex justify-content-end">
                                     <button class="btn btn-success mr-2 btn-send-message" type="submit">送信</button>
-                                    @if($project->user_id == auth('users')->id())
-                                    <a href="{{route('user.project.done', ['id' => $project->id])}}" class="btn btn-info">受領</a>
-                                        @endif
+
                                 </div>
                             </form>
                         </div>
@@ -239,6 +241,12 @@
 
             </div>
         @endif
+            @if(!empty($project->order->worker_id) && $project->user_id == auth('users')->id() && !in_array($project->order->status , [3,4,5]))
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a style="min-width: 200px; margin-bottom: 20px"  class="btn confirm-done btn-info">受領</a>
+                    </div>
+            @endif
+
             @if(!empty($childProjects) && empty($project->parent_project_id))
 
                 <div class="card card-warning">
@@ -333,15 +341,32 @@
                                             <label for="">現場住所</label>
                                             <input type="text" value="{{@$project->name}}" name="name" class="form-control p-region p-locality p-street-address p-extended-address">
                                         </div>
-                                        <div class="form-group">
-                                            <label>図面種類</label>
-                                            <select class="form-control select2bs4" style="width: 100%;" name="type">
-                                                <option selected="selected" disabled></option>
-                                                @foreach(config('project.type') as $key => $value)
-                                                    <option @if($project->type == $key) selected @endif value="{{$key}}">{{$value}}</option>
-                                                @endforeach
-                                            </select>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>建物</label>
+                                                    <select class="form-control select2bs4" style="width: 100%;" name="type">
+                                                        <option selected="selected" disabled></option>
+                                                        @foreach(config('project.building') as $key => $value)
+                                                            <option @if($project->building == $key) selected @endif value="{{$key}}">{{$value}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>図面種類</label>
+                                                    <select class="form-control select2bs4" style="width: 100%;" name="type">
+                                                        <option selected="selected" disabled></option>
+                                                        @foreach(config('project.type') as $key => $value)
+                                                            <option @if($project->type == $key) selected @endif value="{{$key}}">{{$value}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
                                         </div>
+
                                         <div class="form-group">
                                             <label for="">納品日</label>
                                             <input type="hidden"  class="form-control" value="{{ \Carbon\Carbon::now()->dayOfWeek  <= 2 ? \Carbon\Carbon::now()->addDays(5)->format('Y-m-d') : \Carbon\Carbon::now()->addDays(7)->format('Y-m-d')}}" name="delivery_date">
@@ -440,6 +465,21 @@
 @endsection
 @section('scripts')
     <script>
+        $(".confirm-done").click(function (){
+            Swal.fire({
+                title: '受領しますか？',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'はい',
+                cancelButtonText: 'いいえ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.replace('{{route('user.project.done', ['id' => $project->id])}}');
+                }
+            });
+        });
         $("#create-feedback").click(function (){
             $(this).prop('disabled', true);
             Swal.showLoading();
@@ -505,7 +545,7 @@
             showConfirmButton: false,
             timer: 2000
         })
-
+        @php session()->forget('send_message_success'); @endphp
         @endif
         @if(session()->has('message'))
         Swal.fire({
@@ -515,6 +555,8 @@
             showConfirmButton: false,
             timer: 2000
         })
+        @php session()->forget('message'); @endphp
+
         @endif
         @if(session()->has('update_project'))
         Swal.fire({
@@ -524,6 +566,7 @@
             showConfirmButton: false,
             timer: 2000
         })
+        @php session()->forget('update_project'); @endphp
         @endif
         @php
             session()->forget('send_message_success');

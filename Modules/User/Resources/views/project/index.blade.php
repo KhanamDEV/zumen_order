@@ -230,11 +230,12 @@
     <script src="{{asset('static/js/jquery-ui.min.js')}}"></script>
     <script>
         $(document).ready( function () {
+            @if(\Route::current()->getName() == 'user.project.index')
             $("#analytics-project").change(function (){
                 Swal.showLoading();
                 let year = $(this).val();
                 $.ajax({
-                    url: '{{route('user.project.analytics_by_year')}}?year=' + year,
+                    url: '{{route('user.project.analytics_by_year')}}?project_type=merge&year=' + year,
                     method: 'GET',
                     success: function (res){
                         res = res.response;
@@ -246,7 +247,7 @@
                 });
             })
             $.ajax({
-                url: '{{route('user.project.analytics_by_year')}}?year=' + '{{date('Y')}}',
+                url: '{{route('user.project.analytics_by_year')}}?project_type=merge&year=' + '{{date('Y')}}',
                 method: 'GET',
                 success: function (res){
                     res = res.response;
@@ -256,6 +257,61 @@
                     Swal.close();
                 }
             });
+            @elseif(\Route::current()->getName() == 'user.project.index_no_merge')
+            $("#analytics-project").change(function (){
+                Swal.showLoading();
+                let year = $(this).val();
+                $.ajax({
+                    url: '{{route('user.project.analytics_by_year')}}?project_type=all&year=' + year,
+                    method: 'GET',
+                    success: function (res){
+                        res = res.response;
+                        Object.keys(res.amount).forEach(function (item){
+                            $(`#status-${item}`).text(res.amount[item]);
+                        })
+                        Swal.close();
+                    }
+                });
+            })
+            $.ajax({
+                url: '{{route('user.project.analytics_by_year')}}?project_type=all&year=' + '{{date('Y')}}',
+                method: 'GET',
+                success: function (res){
+                    res = res.response;
+                    Object.keys(res.amount).forEach(function (item){
+                        $(`#status-${item}`).text(res.amount[item]);
+                    })
+                    Swal.close();
+                }
+            });
+                @else
+                $("#analytics-project").change(function (){
+                    Swal.showLoading();
+                    let year = $(this).val();
+                    $.ajax({
+                        url: '{{route('user.project.analytics_by_year')}}?project_type=merge&type=1&year=' + year,
+                        method: 'GET',
+                        success: function (res){
+                            res = res.response;
+                            Object.keys(res.amount).forEach(function (item){
+                                $(`#status-${item}`).text(res.amount[item]);
+                            })
+                            Swal.close();
+                        }
+                    });
+                })
+            $.ajax({
+                url: '{{route('user.project.analytics_by_year')}}?project_type=merge&type=1&year=' + '{{date('Y')}}',
+                method: 'GET',
+                success: function (res){
+                    res = res.response;
+                    Object.keys(res.amount).forEach(function (item){
+                        $(`#status-${item}`).text(res.amount[item]);
+                    })
+                    Swal.close();
+                }
+            });
+                @endif
             @if(session()->has('message'))
             Swal.fire({
                 position: 'center',

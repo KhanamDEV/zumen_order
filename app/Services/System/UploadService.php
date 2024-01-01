@@ -26,7 +26,7 @@ class UploadService
                 if ($file->getSize() > $maxUpload) return ResponseHelpers::serverErrorResponse([], '', __('message.response.max_size'));
                 $explodeOriginalNam = explode(".", $file->getClientOriginalName());
                 $name = $file->getClientOriginalName();
-                $path = str_replace(' ', '-',$explodeOriginalNam[0]).'_'.date('Y_m_d_H_i_s').'.'.$file->getClientOriginalExtension();
+                $path = str_replace(' ', '-',$explodeOriginalNam[0]).'_'.date('His').'.'.$file->getClientOriginalExtension();
                 if (!Storage::disk('public')->put($path, $file->getContent())){
                     return ResponseHelpers::serverErrorResponse([], '', __('message.response.internal_server_error'));
                 }

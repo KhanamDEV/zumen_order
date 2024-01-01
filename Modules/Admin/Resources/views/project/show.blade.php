@@ -85,6 +85,9 @@
                     <div class="col-md-4">
                         <p class="info"><span>案件番号</span>: {{@$project->number}}</p>
                     </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>建物</span>: @if(!empty($project->building)) {{config('project.building')[$project->building]}} @endif</p>
+                    </div>
                 </div>
                 <p class="info pre-line"><span>備考</span>: {{@$project->note}}</p>
                 @php $information = json_decode($project->other_information) @endphp

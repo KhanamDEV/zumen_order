@@ -16,6 +16,7 @@ class CreateProjectRequest extends FormRequest
         return [
             'owner' => 'required',
             'type' => 'required',
+            'building' => 'required',
             'delivery_date' => 'required',
             'postal_code_head' => 'nullable|digits:3|numeric',
             'postal_code_end' => 'nullable|digits:4|numeric',

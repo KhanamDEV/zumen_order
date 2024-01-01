@@ -78,7 +78,6 @@ class ProjectService
         }
         foreach ($projects as $project){
             if (empty($project['project_id'])){
-
                 $amountProject[$project['order']['status']]++;
             } else {
                 $amountProject[3]++;

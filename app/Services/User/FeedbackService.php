@@ -51,6 +51,7 @@ class FeedbackService
                 'url' => $project->url,
                 'documents' => $project->documents,
                 'created_at' => $project->created_at,
+                'building' => $project->building,
                 'updated_at' => null,
                 'postal_code' => $project->postal_code,
                 'additional' => $project->additional,

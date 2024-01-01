@@ -70,22 +70,22 @@ class ProjectRepository implements ProjectRepositoryInterface
         if (!empty($data['created_at_end'])) $query = $query->whereDate('created_at', '<=', $data['created_at_end']);
         if (!empty($data['order_created_start'])) {
             $query = $query->whereHas('order', function ($query) use ($data){
-               $query->whereNotNull('worker_id')->whereDate('created_at', '>=', $data['order_created_start']);
+               $query->whereDate('created_at', '>=', $data['order_created_start']);
             });
         }
         if (!empty($data['order_created_end'])) {
             $query = $query->whereHas('order', function ($query) use ($data){
-                $query->whereNotNull('worker_id')->whereDate('created_at', '<=', $data['order_created_end']);
+                $query->whereDate('created_at', '<=', $data['order_created_end']);
             });
         }
         if (!empty($data['finish_day_start'])) {
             $query = $query->whereHas('order', function ($query) use ($data){
-                $query->whereNotNull('worker_id')->whereDate('finish_day', '>=', $data['finish_day_start']);
+                $query->whereDate('finish_day', '>=', $data['finish_day_start']);
             });
         }
         if (!empty($data['finish_day_end'])) {
             $query = $query->whereHas('order', function ($query) use ($data){
-                $query->whereNotNull('worker_id')->whereDate('finish_day', '<=', $data['finish_day_end']);
+                $query->whereDate('finish_day', '<=', $data['finish_day_end']);
             });
         }
         if (!empty($data['auth_type']) && $data['auth_type'] == 'user'){

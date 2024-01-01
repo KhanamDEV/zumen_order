@@ -70,7 +70,7 @@ class ProjectController extends Controller
 
     public function analyticsByYear(Request $request){
         try {
-            $data['projects'] = $this->projectService->getList($request->all());
+            $data['projects'] = $this->projectService->getList(array_merge(\request()->all(), []));
             return  ResponseHelpers::showResponse($data['projects']);
         } catch (\Exception $e){
             return response()->json([]);
@@ -93,7 +93,7 @@ class ProjectController extends Controller
     public function doProject($id){
         try {
             if ($this->projectService->doProject($id)){
-                return redirect()->route('worker.project.index');
+                return redirect()->route('worker.project.show', ['id' => $id]);
             }
             return  redirect()->back();
         } catch (\Exception $e){

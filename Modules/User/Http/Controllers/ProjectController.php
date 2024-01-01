@@ -10,6 +10,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\MessageBag;
 use Modules\User\Http\Requests\CreateProjectRequest;
 use Modules\User\Http\Requests\UpdateAdditionalProjectRequest;
@@ -33,7 +34,7 @@ class ProjectController extends Controller
         try {
             $data['workers'] = DB::table('workers')->where('is_active', 1)->get();
             $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['user_id' => auth('users')->id(), 'project_type' => 'merge']));
-            $data['users'] = DB::table('users')->where('status', 1)->get();
+            $data['users'] = DB::table('users')->where('status', 1)->where('company_id', auth()->guard('users')->user()->company_id)->get();
             return view('user::project.index', compact('data'));
         } catch (\Exception $e){
             abort(500);
@@ -44,7 +45,7 @@ class ProjectController extends Controller
         try {
             $data['workers'] = DB::table('workers')->where('is_active', 1)->get();
             $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['user_id' => auth('users')->id(), 'project_type' => 'all']));
-            $data['users'] = DB::table('users')->where('status', 1)->get();
+            $data['users'] = DB::table('users')->where('status', 1)->where('company_id', auth()->guard('users')->user()->company_id)->get();
             return view('user::project.index', compact('data'));
         } catch (\Exception $e){
             abort(500);
@@ -55,10 +56,9 @@ class ProjectController extends Controller
         try {
             $data['workers'] = DB::table('workers')->where('is_active', 1)->get();
             $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['user_id' => auth('users')->id(), 'project_type' => 'merge', 'type' => 1]));
-            $data['users'] = DB::table('users')->where('status', 1)->get();
+            $data['users'] = DB::table('users')->where('status', 1)->where('company_id', auth()->guard('users')->user()->company_id)->get();
             return view('user::project.index', compact('data'));
         } catch (\Exception $e){
-            dd($e);
             abort(500);
         }
     }
@@ -212,7 +212,7 @@ class ProjectController extends Controller
     public function done($id){
         try {
             $this->projectService->done($id);
-            return redirect()->route('user.project.index');
+            return redirect()->route('user.project.show', ['id' => $id]);
         } catch (\Exception $e){
             abort(500);
         }

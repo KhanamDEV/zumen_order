@@ -62,7 +62,13 @@
                         </p>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="col-md-4">
+                            <p class="info"><span>建物</span>: @if(!empty($feedback->building)) {{config('project.building')[$feedback->building]}} @endif</p>
+                        </div>
+                    </div>
+                </div>
                 <p class="info pre-line"><span>備考</span>: {{@$feedback->note}}</p>
                 @php $information = json_decode($feedback->other_information) @endphp
                 @if(!empty($information))
@@ -96,7 +102,7 @@
                     </p>
                 @endif
 
-                @php $documents = json_decode($feedback->documents_of_worker) @endphp
+                @php $documents = json_decode($feedback->order->documents) @endphp
                 @if(!empty($documents))
                     <p class="info"><span>Documents of Worker</span>:
                     <ul>

@@ -83,6 +83,9 @@
                     <div class="col-md-4">
                         <p class="info"><span>案件番号</span>: {{@$order->project->number}}</p>
                     </div>
+                    <div class="col-md-4">
+                        <p class="info"><span>建物</span>: @if(!empty($order->project->building)) {{config('project.building')[$order->project->building]}} @endif</p>
+                    </div>
                 </div>
                 <p class="info pre-line"><span>備考</span>: {{@$order->project->note}}</p>
                 @php $information = json_decode($order->project->other_information) @endphp
@@ -387,7 +390,7 @@
                 e.preventDefault();
                 let url = $(this).attr('href');
                 Swal.fire({
-                    title: '中止しますか？',
+                    title: '作業者変更しますか？',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

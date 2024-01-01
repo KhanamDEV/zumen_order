@@ -71,6 +71,7 @@ class ProjectService
             if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
         }
         foreach ($projects as $project){
+//            if ($project['id'] == 591) dd(1234);
                 $amountProject[$project['order']['status']]++;
         }
         return [

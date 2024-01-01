@@ -85,37 +85,44 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                <li class="nav-item @if(\Request::routeIs('admin.project.index*')) menu-is-opening menu-open @endif">
-                    <a href="#" class="nav-link">
+{{--                <li class="nav-item @if(\Request::routeIs('admin.project.index*')) menu-is-opening menu-open @endif">--}}
+{{--                    <a href="#" class="nav-link">--}}
+{{--                        <i class="nav-icon fas fa-th"></i>--}}
+{{--                        <p>--}}
+{{--                            マイ図面--}}
+{{--                            <!-- <span class="right badge badge-danger">New</span>-->--}}
+{{--                            <i class="right fas fa-angle-left"></i>--}}
+{{--                        </p>--}}
+{{--                    </a>--}}
+{{--                    <ul class="nav nav-treeview" style="display: @if(\Request::routeIs('admin.project.index*')) block @else none  @endif ;">--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{route('admin.project.index')}}" class="nav-link @if(\Request::routeIs('admin.project.index')) active @endif">--}}
+{{--                                <i class="far fa-circle nav-icon"></i>--}}
+{{--                                <p>図面毎</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{route('admin.project.index_no_merge')}}" class="nav-link @if(\Request::routeIs('admin.project.index_no_merge')) active @endif">--}}
+{{--                                <i class="far fa-circle nav-icon"></i>--}}
+{{--                                <p>全図面</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{route('admin.project.index_mark')}}" class="nav-link @if(\Request::routeIs('admin.project.index_mark')) active @endif">--}}
+{{--                                <i class="far fa-circle nav-icon"></i>--}}
+{{--                                <p>トレース</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </li>--}}
+                <li class="nav-item">
+                    <a href="{{route('admin.project.index')}}" class="nav-link @if(\Request::routeIs('admin.project.index')) active @endif">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             マイ図面
-                            <!-- <span class="right badge badge-danger">New</span>-->
-                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview" style="display: @if(\Request::routeIs('admin.project.index*')) block @else none  @endif ;">
-                        <li class="nav-item">
-                            <a href="{{route('admin.project.index')}}" class="nav-link @if(\Request::routeIs('admin.project.index')) active @endif">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>図面毎</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{route('admin.project.index_no_merge')}}" class="nav-link @if(\Request::routeIs('admin.project.index_no_merge')) active @endif">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>全図面</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{route('admin.project.index_mark')}}" class="nav-link @if(\Request::routeIs('admin.project.index_mark')) active @endif">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>トレース</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{route('admin.worker.index')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
