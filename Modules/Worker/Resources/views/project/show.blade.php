@@ -204,13 +204,12 @@
                                         <label for="">内容</label>
                                         <textarea class="form-control" rows="3" name="content"></textarea>
                                     </div>
-                                    @if(auth('workers')->user()->id == $project->order->worker_id)
+{{--                                    @if(auth('workers')->user()->id == $project->order->worker_id)--}}
                                     <div class="form-group">
                                         <label for="" class="mb-0">Documents</label>
                                     </div>
                                     <div class="group-add-documents">
-                                        <input type="hidden"  class="listDocument" name="documents"
-                                               value="{{json_encode([])}}">
+                                        <input type="hidden"  class="listDocument" name="documents" value="{{json_encode([])}}">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input upload-document" >
                                             <label class="custom-file-label" for="customFile">ファイルを選択</label>
@@ -218,7 +217,7 @@
                                         <div class="list-documents">
                                         </div>
                                     </div>
-                                    @endif
+{{--                                    @endif--}}
                                     <div class="group-button mt-2 d-flex justify-content-end">
                                         <button class="btn btn-success mr-2 btn-send-message" type="submit">送信</button>
                                     </div>
@@ -296,6 +295,57 @@
             timer: 3000
         })
         @endif
+
+        function removeDocument() {
+            $(".remove-document").click(function () {
+                let path = $(this).data('path');
+                let inputListDocument = $(this).parent().parent().parent().find('.listDocument').first();
+                let documents = JSON.parse($(inputListDocument).val());
+                documents = documents.filter(function (document) {
+                    return document.path != path;
+                })
+                $(inputListDocument).val(JSON.stringify(documents));
+                $(this).parent().remove();
+            });
+        }
+
+        removeDocument();
+        $('.upload-document').change(function () {
+            Swal.showLoading();
+            let formData = new FormData();
+            formData.append('file', $(this)[0].files[0]);
+            formData.append('_token', '{{csrf_token()}}');
+            let that = $(this);
+            let listDocuments = $(this).parent().parent().find('.listDocument').first();
+            console.log(listDocuments);
+            $.ajax({
+                url: '{{route('user.upload_file')}}',
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: formData,
+                success: function (res) {
+                    console.log(res);
+                    Swal.close();
+                    if (res.meta.status == 200) {
+                        let documents = JSON.parse($(listDocuments).val());
+                        documents.push({name: res.response.name, path: res.response.path});
+                        $(listDocuments).val(JSON.stringify(documents));
+                        $(that).parent().parent().parent().find('.list-documents').append(`<div class="item-document mt-2">
+                                        <span><a target="_blank" href=${res.response.preview}>${res.response.name}</a></span>
+                                        <img class="remove-document" data-path="${res.response.path}" src="{{asset('static/images/x.png')}}" alt="">
+                                    </div>`)
+                        removeDocument();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: res.meta.message,
+                        })
+                    }
+                }
+            })
+        })
     </script>
     @endsection
 

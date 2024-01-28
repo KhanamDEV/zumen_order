@@ -22,7 +22,7 @@ Route::prefix('worker')->name('worker.')->group(function () {
         Route::post('change-password', 'WorkerController@updatePassword');
         Route::prefix('project')->name('project.')->group(function () {
             Route::get('', 'ProjectController@index')->name('index');
-            Route::get('no-merge', 'ProjectController@indexNoMerge')->name('index_no_merge');
+            Route::get('zumen', 'ProjectController@indexNoMerge')->name('index_no_merge');
             Route::get('mark', 'ProjectController@indexMark')->name('index_mark');
             Route::get('{id}/detail', 'ProjectController@show')->name('show');
             Route::get('{id}/do-project', 'ProjectController@doProject')->name('do_project');
