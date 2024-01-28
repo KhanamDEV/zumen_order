@@ -18,6 +18,7 @@
                             <select name="" id="analytics-project" class="form-control">
                                 <option value="2022">2022</option>
                                 <option selected value="2023">2023</option>
+                                <option selected value="2024">2024</option>
                             </select>
                         </div>
                         <div class="list-type">
@@ -162,7 +163,7 @@
                             </div>
                             <div class="col-12 mt-2">
                                 <button type="submit" class="btn btn-primary">フィルター</button>
-                                <a href="{{route('admin.project.index')}}" class="btn btn-danger"><i class="fas fa-times"></i> キャンセル</a>
+                                <a href="{{route('worker.project.index')}}" class="btn btn-danger"><i class="fas fa-times"></i> キャンセル</a>
                             </div>
                         </form>
                     </div>

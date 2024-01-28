@@ -171,7 +171,7 @@ class ProjectController extends Controller
             if (empty($project) || !empty($project->order->worker_id)) abort(404);
             if ($this->projectService->delete($id)){
                 session()->flash('message', '削除しました。');
-                return redirect()->route('user.project.index');
+                return redirect()->route('user.project.index_no_merge');
             }
             return  redirect()->route('user.project.show', ['id' => $id]);
         } catch (\Exception $e){

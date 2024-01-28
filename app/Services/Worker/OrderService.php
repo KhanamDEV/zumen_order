@@ -146,7 +146,7 @@ class OrderService
         $message = (object)[];
         $message->sender = 'worker';
         $message->content = $data['content'];
-        $message->documents = $data['documents'];
+        if (!empty($data['documents'])) $message->documents = $data['documents'];
         $message->created_by =  auth('workers')->id();
         $message->created_at = date('Y-m-d H:i:s');
         array_push($messages, $message);

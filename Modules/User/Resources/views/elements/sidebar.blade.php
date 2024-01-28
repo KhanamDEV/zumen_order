@@ -63,7 +63,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #283d60">
     <!-- Brand Logo -->
-    <a href="{{route('user.project.index')}}" class="brand-link">
+    <a href="{{route('user.project.index_no_merge')}}" class="brand-link">
         <img src="{{asset('static/images/logo.jpeg')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">発注図面</span>
     </a>
@@ -94,16 +94,16 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview" style="display: @if(\Request::routeIs('user.project.index*')) block @else none  @endif ;">
-                        <li class="nav-item">
-                            <a href="{{route('user.project.index')}}" class="nav-link @if(\Request::routeIs('user.project.index')) active @endif">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>図面毎</p>
-                            </a>
-                        </li>
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{route('user.project.index')}}" class="nav-link @if(\Request::routeIs('user.project.index')) active @endif">--}}
+{{--                                <i class="far fa-circle nav-icon"></i>--}}
+{{--                                <p>図面毎</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
                         <li class="nav-item">
                             <a href="{{route('user.project.index_no_merge')}}" class="nav-link @if(\Request::routeIs('user.project.index_no_merge')) active @endif">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>全図面</p>
+                                <p>ALL</p>
                             </a>
                         </li>
                         <li class="nav-item">

@@ -71,6 +71,7 @@ class CompanyController extends Controller
             $this->companyService->update($id,$request->all());
             return redirect()->back();
         } catch (\Exception $e){
+            dd($e);
             abort(500);
         }
     }

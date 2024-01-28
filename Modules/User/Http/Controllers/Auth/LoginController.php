@@ -6,6 +6,8 @@ use App\Services\User\Auth\LoginService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\MessageBag;
 use Modules\User\Http\Requests\UserLoginRequest;
 
@@ -21,7 +23,7 @@ class LoginController extends Controller
     public function getLogin()
     {
         try {
-            if (auth()->guard('users')->check()) return redirect()->route('user.project.index');
+            if (auth()->guard('users')->check()) return redirect()->route('user.project.index_no_merge');
             return view('user::auth.login');
         } catch (\Exception $e) {
             abort(500);
@@ -37,7 +39,13 @@ class LoginController extends Controller
                     $errors = new MessageBag(['authenticate' => __('あなたのアカウントは非アクティブです')]);
                     return back()->withInput($request->all())->withErrors($errors);
                 }
-                return redirect()->route('user.project.index');
+                $company = DB::table('companies')->where('id', auth()->user()->company_id)->first();
+                if (!empty($company) && !$company->status){
+                    auth('users')->logout();
+                    $errors = new MessageBag(['authenticate' => __('会社は無効になりました')]);
+                    return back()->withInput($request->all())->withErrors($errors);
+                }
+                return redirect()->route('user.project.index_no_merge');
             }
             $errors = new MessageBag(['authenticate' => __('auth.failed')]);
             return back()->withInput($request->all())->withErrors($errors);

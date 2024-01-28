@@ -240,7 +240,7 @@
 
             </div>
             <div class="group-button-end " >
-                <a class="btn button-width btn-secondary" href="{{ route('user.project.index')}}">戻る</a>
+                <a class="btn button-width btn-secondary" href="{{ route('user.project.index_no_merge')}}">戻る</a>
                 <button class="btn-success btn button-width" style="margin-bottom: 20px">保存</button>
             </div>
         </form>

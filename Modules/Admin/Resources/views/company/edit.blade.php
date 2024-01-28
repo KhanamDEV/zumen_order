@@ -59,6 +59,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="" class="col-sm-2 control-label">ステータス</label>
+                                <div class="col-sm-10">
+                                    <select name="status" id="" class="form-control">
+                                        @foreach(\App\Helpers\Helpers::getStatusUser() as $key =>  $status)
+                                            <option @if($data['company']->status == $key) selected @endif value="{{$key}}">{{$status}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> 保存</button>
                                 </div>

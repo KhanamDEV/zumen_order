@@ -47,6 +47,7 @@ class CompanyService
             'address' => $data['address'],
             'short_name' => $data['short_name'],
             'phone_number' => $data['phone_number'],
+            'status' => $data['status'],
             'updated_at' => date('Y-m-d H:i:s')
         ];
         return $this->companyRepository->update($id, $dataUpdate);

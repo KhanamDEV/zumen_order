@@ -18,6 +18,7 @@
                             <select name="" id="analytics-project" class="form-control">
                                 <option value="2022">2022</option>
                                 <option selected value="2023">2023</option>
+                                <option selected value="2024">2024</option>
                             </select>
                         </div>
                         <div class="list-type">

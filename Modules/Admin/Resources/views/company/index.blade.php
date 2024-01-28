@@ -64,6 +64,7 @@
                                 <th>略名</th>
                                 <th>住所</th>
                                 <th>電話番号</th>
+                                <th>ステータス</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -74,6 +75,7 @@
                                     <td><a href="{{route('admin.company.edit', ['id' => $company->id])}}">{{@$company->short_name}}</a></td>
                                     <td><a href="{{route('admin.company.edit', ['id' => $company->id])}}">{{@$company->address}}</a></td>
                                     <td><a href="{{route('admin.company.edit', ['id' => $company->id])}}">{{@$company->phone_number}}</a></td>
+                                    <td><a href="{{route('admin.company.edit', ['id' => $company->id])}}">{{\App\Helpers\Helpers::getStatusUser($company->status)}}</a></td>
                                 </tr>
                             @endforeach
                             </tbody>

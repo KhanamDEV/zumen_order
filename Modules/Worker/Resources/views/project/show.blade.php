@@ -142,7 +142,7 @@
                 </div>
             </div>
         </div>
-        @if(!empty($project->order->worker_id) && false)
+        @if(!empty($project->order->worker_id))
             <div class="card card-info">
                 <div class="card-header">
                     <h3 class="card-title">チャット</h3>
@@ -204,7 +204,7 @@
                                         <label for="">内容</label>
                                         <textarea class="form-control" rows="3" name="content"></textarea>
                                     </div>
-
+                                    @if(auth('workers')->user()->id == $project->order->worker_id)
                                     <div class="form-group">
                                         <label for="" class="mb-0">Documents</label>
                                     </div>
@@ -218,6 +218,7 @@
                                         <div class="list-documents">
                                         </div>
                                     </div>
+                                    @endif
                                     <div class="group-button mt-2 d-flex justify-content-end">
                                         <button class="btn btn-success mr-2 btn-send-message" type="submit">送信</button>
                                     </div>
@@ -283,4 +284,18 @@
         }
     </style>
 @endsection
+@section('scripts')
+    <script>
+
+        @if(session()->has('send_message_success'))
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '{{session()->get('send_message_success')}}',
+            showConfirmButton: false,
+            timer: 3000
+        })
+        @endif
+    </script>
+    @endsection
 
