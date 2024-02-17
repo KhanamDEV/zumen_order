@@ -205,6 +205,8 @@
                                         <textarea class="form-control" rows="3" name="content"></textarea>
                                     </div>
 {{--                                    @if(auth('workers')->user()->id == $project->order->worker_id)--}}
+
+                                    {{--                                    @if(auth('workers')->user()->id == $project->order->worker_id)--}}
                                     <div class="form-group">
                                         <label for="" class="mb-0">Documents</label>
                                     </div>
@@ -217,6 +219,7 @@
                                         <div class="list-documents">
                                         </div>
                                     </div>
+{{--                                    @endif--}}
 {{--                                    @endif--}}
                                     <div class="group-button mt-2 d-flex justify-content-end">
                                         <button class="btn btn-success mr-2 btn-send-message" type="submit">送信</button>

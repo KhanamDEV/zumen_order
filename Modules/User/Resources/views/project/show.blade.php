@@ -300,7 +300,7 @@
             @endif
             <div class="modal fade" id="modal-create-feedback" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">案件アップデート</h5>
@@ -314,7 +314,7 @@
                                 <input type="hidden" name="project_id" value="{{$project->id}}">
 
                                 <div class="row">
-                                    <div class="col-md-12 col-12">
+                                    <div class="col-md-6 col-12">
                                         <div class="form-row">
                                             <div class="col-md-3 col-5">
                                                 <div class="form-group">
@@ -391,37 +391,28 @@
                                                 <label for="importunate" class="form-check-label">納期相談希望</label>
                                             </div>
                                         </div>
-{{--                                        <div class="form-group">--}}
-{{--                                            <label for="">備考</label>--}}
-{{--                                            <textarea name="note" class="form-control" rows="4">{{$project->note ?? ''}}</textarea>--}}
-{{--                                        </div>--}}
+                                        <div class="form-group">
+                                            <label for="">備考</label>
+                                            <textarea name="note" class="form-control" rows="4"></textarea>
+                                        </div>
                                     </div>
-{{--                                    <div class="col-md-6 col-12">--}}
+                                    <div class="col-md-6 col-12">
 
-{{--                                        <div class="">--}}
-{{--                                            <div class="form-group mb-0" >--}}
-{{--                                                <label for="">Documents</label>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="group-add-documents">--}}
-{{--                                                <input type="hidden"  class="listDocument" id="listDocumentHistory" name="documents" value="{{!empty($project->documents) ? $project->documents : json_encode([])}}">--}}
-{{--                                                <div class="custom-file">--}}
-{{--                                                    <input type="file" class="custom-file-input upload-document-feedback" >--}}
-{{--                                                    <label class="custom-file-label" for="customFile">ファイルを選択</label>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="list-documents">--}}
-{{--                                                    @php $documents = json_decode($project->documents);  @endphp--}}
-{{--                                                    @if(!empty($documents))--}}
-{{--                                                        @foreach($documents as $document)--}}
-{{--                                                            <div class="item-document mt-2">--}}
-{{--                                                                <span><a target="_blank" href="{{asset($document->path)}}">{{$document->name}}</a></span>--}}
-{{--                                                                <img class="remove-document-history" data-path="{{$document->path}}" src="{{asset('static/images/x.png')}}" alt="">--}}
-{{--                                                            </div>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    @endif--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                        <div class="">
+                                            <div class="form-group mb-0" >
+                                                <label for="">Documents</label>
+                                            </div>
+                                            <div class="group-add-documents">
+                                                <input type="hidden"  class="listDocument" id="listDocumentHistory" name="documents" value="{{!empty($project->documents) ? $project->documents : json_encode([])}}">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input upload-document-feedback" >
+                                                    <label class="custom-file-label" for="customFile">ファイルを選択</label>
+                                                </div>
+                                                <div class="list-documents">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
 

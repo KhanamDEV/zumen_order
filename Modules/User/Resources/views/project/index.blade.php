@@ -202,7 +202,7 @@
                                     >
                                         <td class="index"><a href="#">{{$key + 1}}</a></td>
                                         <td><a href="{{!empty($project->project_id) ? route('user.project.feedback.detail', ['id' => $project->id, 'project_id' => $project->project_id]) : route('user.project.show', ['id' => $project->id])}}">{{@$project->owner}}</a></td>
-                                        <td><a href="#">{{@$project->number}}</a></td>
+                                        <td><a href="#">{{@$project->number ?? @$project->project->number}}</a></td>
                                         <td><a href="#">{{!empty($project->type) ? config('project.type')[$project->type] : ''}}</a></td>
                                         <td><a href="#">{{empty($project->project_id) ? config('project.status')[$project->order->status] : config('project.status')[3]}}</a></td>
                                         <td><a href="#">{{  @$project->delivery_date}}</a></td>

@@ -59,7 +59,7 @@ class FeedbackService
                 'documents_additional' => $project->documents_additional,
                 'messages' => $project->messages,
                 'control_number' => $project->control_number,
-                'number' => $project->project_number,
+                'number' => $project->number,
                 'parent_project_id' => $project->id,
             ];
             $newProjectId = $this->projectRepository->store($dataInsertProject);
