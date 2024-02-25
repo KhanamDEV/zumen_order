@@ -61,14 +61,8 @@ class ProjectService
             $data['finish_day_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['finish_day_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
-        $projects = $this->projectRepository->getList($data);
-        if (!empty($data['project_type']) && $data['project_type'] == 'merge'){
-            $feedbacks = $this->feedbackRepository->getList($data);
-
-        } else {
-            $feedbacks = collect([]);
-        }
-        $projects = $projects->merge($feedbacks)->sortBy('created_at')->toArray();
+//        $data['unexpired'] = true;
+        $projects = $this->projectRepository->getList($data)->toArray();
         usort($projects, function ($a, $b){
             return strtotime($a['created_at']) < strtotime($b['created_at']) ? 1 : 0;
         });
@@ -77,21 +71,21 @@ class ProjectService
             if (!empty(config('project.color_status')[$key])) $amountProject[$key] = 0;
         }
         foreach ($projects as $project){
-            if (empty($project['project_id'])){
-                $amountProject[$project['order']['status']]++;
-            } else {
-                $amountProject[3]++;
-            }
+//            if ($project['id'] == 591) dd(1234);
+            $amountProject[$project['order']['status']]++;
         }
         return [
             'list' => $projects,
-            'amount' => $amountProject,
-            'data' => $data
+            'amount' => $amountProject
         ];
     }
 
     public function findById($id){
         return $this->projectRepository->findById($id);
+    }
+
+    public function getChildProject($parentId){
+        return $this->projectRepository->getChildProject($parentId);
     }
 
     public function delete($id){

@@ -10,6 +10,7 @@
 @php
     $order = $data['order'];
     $isWorkerOfProject = auth('workers')->id() == $order->worker_id;
+    $childProjects = $data['childProjects'];
 @endphp
 @section('content')
     <section class="content-header">
@@ -271,55 +272,49 @@
                 </div>
             </div>
         </div>
-        <div class="card card-warning">
-            <div class="card-header">
-                <h3 class="card-title">案件アップデート</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
+        @if(!empty($childProjects))
+            <div class="card card-warning">
+                <div class="card-header">
+                    <h3 class="card-title">案件アップデート</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered" id="table-feedback">
-                    <thead>
-                    <tr>
-                        <th data-orderable="false" class="no-sort" style="width: 10px">No</th>
-                        <th>図面種類</th>
-                        <th>納品日</th>
-                        <th>発注日</th>
-                        <th>納期相談希望</th>
-                        <th>作業者</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if(!empty($order->project->feedbacks))
-                        @foreach($order->project->feedbacks as $key => $feedback)
-                            <tr>
-                                <td>{{$key+1}}</td>
-                                <td>
-                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{config('project.type')[$feedback->type]}}</a>
-                                </td>
-                                <td>
-                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{@$feedback->finish_day}}</a>
-                                </td>
-                                <td>
-                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a>
-                                </td>
-                                <td>
-                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a>
-                                </td>
-                                <td>
-                                    <a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->worker->first_name ?? ''}} {{$feedback->worker->last_name ?? ''}}</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                    </tbody>
-                </table>
+                <div class="card-body">
+                    <table class="table table-bordered" id="table-feedback">
+                        <thead>
+                        <tr>
+                            <th data-orderable="false" class="no-sort" style="width: 10px">No</th>
+                            <th>図面種類</th>
+                            <th>納品日</th>
+                            <th>発注日</th>
+                            <th>納期相談希望</th>
+                            <th>作業者</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(!empty($childProjects))
+                            @foreach($childProjects as $key => $feedback)
+
+                                <tr>
+                                    <td>{{$key+1}}</td>
+                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{config('project.type')[$feedback->type]}}</a></td>
+                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{@$feedback->order->finish_day}}</a></td>
+                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a></td>
+                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a></td>
+                                    <td><a href="{{route('worker.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{$feedback->order->worker->first_name ?? ''}} {{$feedback->order->worker->last_name ?? ''}}</a></td>
+                                </tr>
+                            @endforeach
+                        @endif
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
-        </div>
+        @endif
 
         @if($isWorkerOfProject)
             <div class="group-button-end ">

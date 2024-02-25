@@ -41,6 +41,8 @@ Route::prefix('worker')->name('worker.')->group(function () {
             Route::get('{id}/done-project', 'OrderController@doneProject')->name('done_project');
             Route::get('{id}/request-confirmation', 'OrderController@requestConfirmation')->name('request_confirmation_project');
             Route::post('{id}/add-message', 'OrderController@addMessage')->name('add_message');
+            Route::get('analytics-by-year', 'OrderController@analyticsByYear')->name('analytics_by_year');
+
         });
     });
 });

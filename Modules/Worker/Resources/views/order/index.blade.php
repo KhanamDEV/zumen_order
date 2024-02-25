@@ -14,12 +14,18 @@
                 <div class="col-sm-8"></div>
                 <div class="col-sm-4 amount-project-by-type">
                     <div class="">
-                        {{--                        <p class="date-amount-project mb-0">全て</p>--}}
+                        <div class="form-group mb-0" style="width: 80px">
+                            <select name="" id="analytics-project" class="form-control">
+                                <option value="2022">2022</option>
+                                <option selected value="2023">2023</option>
+                                <option selected value="2024">2024</option>
+                            </select>
+                        </div>
                         <div class="list-type">
-                            <div class="all" style="background-color: #8e44ad">{{$data['orders']['amount']['all']}}</div>
+                            <div class="all"  id="status-all" style="background-color: #8e44ad">0</div>
                             @foreach(config('project.status') as $key => $status)
                                 @if(!empty(config('project.color_status')[$key]))
-                                    <div class="{{$key}}" style="background-color: {{config('project.color_status')[$key]}}">{{$data['orders']['amount'][$key]}}</div>
+                                    <div id="status-{{$key}}" class="{{$key}}" style="background-color: {{config('project.color_status')[$key]}}">0</div>
                                 @endif
                             @endforeach
                         </div>
@@ -199,6 +205,33 @@
 @section('scripts')
     <script>
         $(document).ready( function () {
+            $("#analytics-project").change(function (){
+                Swal.showLoading();
+                let year = $(this).val();
+                $.ajax({
+                    url: '{{route('worker.order.analytics_by_year')}}?year=' + year,
+                    method: 'GET',
+                    success: function (res){
+                        res = res.response;
+                        Object.keys(res.amount).forEach(function (item){
+                            $(`#status-${item}`).text(res.amount[item]);
+                        })
+                        Swal.close();
+                    }
+                });
+            })
+
+            $.ajax({
+                url: '{{route('worker.order.analytics_by_year')}}?year=' + '{{date('Y')}}&project_type=merge',
+                method: 'GET',
+                success: function (res){
+                    res = res.response;
+                    Object.keys(res.amount).forEach(function (item){
+                        $(`#status-${item}`).text(res.amount[item]);
+                    })
+                    Swal.close();
+                }
+            });
             @if(session()->has('message'))
             Swal.fire({
                 position: 'center',

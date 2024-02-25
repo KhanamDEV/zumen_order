@@ -40,6 +40,12 @@ class OrderService
             $data['project_created_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));
             $data['project_created_end'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[1]));
         }
+        if (!empty($data['year'])){
+            if ($data['year'] != 'all'){
+                $data['order_created_start'] = $data['year'].'-01-01';
+                $data['order_created_end'] = $data['year'].'-12-31';
+            }
+        }
         if (!empty($data['order_created'])){
             $explodeDate = explode("-", $data['order_created']);
             $data['order_created_start'] = str_replace("/", '-', str_replace(" ", "", $explodeDate[0]));

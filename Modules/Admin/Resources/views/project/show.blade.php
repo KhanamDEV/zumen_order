@@ -9,6 +9,8 @@
 @extends('admin::layouts.master')
 @php
     $project = $data['project'];
+    $childProjects = $data['childProjects'];
+
 @endphp
 @section('content')
 
@@ -201,7 +203,7 @@
                 </div>
 
             @endif
-            @if(!empty($project->feedbacks))
+            @if(!empty($childProjects))
                 <div class="card card-warning">
                     <div class="card-header">
                         <h3 class="card-title">案件アップデート</h3>
@@ -224,15 +226,15 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if(!empty($project->feedbacks))
-                                @foreach($project->feedbacks as $key => $feedback)
+                            @if(!empty($childProjects))
+                                @foreach($childProjects as $key => $feedback)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{config('project.type')[$feedback->type]}}</a></td>
-                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{@$feedback->finish_day}}</a></td>
-                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a></td>
-                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a></td>
-                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->project_id])}}">{{$feedback->worker->first_name ?? ''}} {{$feedback->worker->last_name ?? ''}}</a></td>
+                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{config('project.type')[$feedback->type]}}</a></td>
+                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{@$feedback->finish_day}}</a></td>
+                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{date('Y-m-d', strtotime($feedback->delivery_date))}}</a></td>
+                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{$feedback->importunate ? 'はい' : 'いいえ'}}</a></td>
+                                        <td><a href="{{route('admin.project.feedback.detail', ['id' => $feedback->id, 'project_id' => $feedback->parent_project_id])}}">{{$feedback->worker->first_name ?? ''}} {{$feedback->worker->last_name ?? ''}}</a></td>
                                     </tr>
                                 @endforeach
                             @endif

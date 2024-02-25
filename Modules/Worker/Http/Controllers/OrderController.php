@@ -2,7 +2,9 @@
 
 namespace Modules\Worker\Http\Controllers;
 
+use App\Helpers\ResponseHelpers;
 use App\Services\Worker\OrderService;
+use App\Services\Worker\ProjectService;
 use App\Services\Worker\UserService;
 use App\Services\Worker\WorkerService;
 use Illuminate\Contracts\Support\Renderable;
@@ -16,12 +18,14 @@ class OrderController extends Controller
     private $orderService;
     private $userService;
     private $workerService;
+    private $projectService;
 
-    public function __construct(OrderService $orderService, UserService $userService, WorkerService $workerService)
+    public function __construct(OrderService $orderService, UserService $userService, WorkerService $workerService, ProjectService $projectService)
     {
         $this->orderService = $orderService;
         $this->userService = $userService;
         $this->workerService = $workerService;
+        $this->projectService = $projectService;
     }
 
     public function index(Request $request)
@@ -42,6 +46,7 @@ class OrderController extends Controller
             $data['order'] = $this->orderService->findById($id);
             $data['users'] = $this->userService->pluckNameById();
             $data['workers'] = $this->workerService->pluckNameById();
+            $data['childProjects'] = $this->projectService->getChildProject($data['order']->project_id);
             return view('worker::order.show', compact('data'));
         } catch (\Exception $e){
             abort(500);
@@ -99,6 +104,15 @@ class OrderController extends Controller
             return redirect()->back();
         } catch (\Exception $e){
             abort(500);
+        }
+    }
+
+    public function analyticsByYear(Request $request){
+        try {
+            $data['orders'] = $this->orderService->getList($request->all());
+            return  ResponseHelpers::showResponse($data['orders']);
+        } catch (\Exception $e){
+            return response()->json([]);
         }
     }
 

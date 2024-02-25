@@ -88,7 +88,7 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
-                            マイ図面
+                            <span class="menu-click">マイ図面</span>
                             <!-- <span class="right badge badge-danger">New</span>-->
                             <i class="right fas fa-angle-left"></i>
                         </p>

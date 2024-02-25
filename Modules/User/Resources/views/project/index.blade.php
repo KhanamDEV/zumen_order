@@ -231,7 +231,7 @@
     <script src="{{asset('static/js/jquery-ui.min.js')}}"></script>
     <script>
         $(document).ready( function () {
-            @if(\Route::current()->getName() == 'user.project.index')
+            @if(false)
             $("#analytics-project").change(function (){
                 Swal.showLoading();
                 let year = $(this).val();
@@ -258,7 +258,7 @@
                     Swal.close();
                 }
             });
-            @elseif(\Route::current()->getName() == 'user.project.index_no_merge')
+            @elseif(\Route::current()->getName() == 'user.project.index_no_merge' || \Route::current()->getName() == 'user.project.index')
             $("#analytics-project").change(function (){
                 Swal.showLoading();
                 let year = $(this).val();

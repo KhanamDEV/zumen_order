@@ -30,10 +30,9 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         try {
-            $data['projects'] = $this->projectService->getList($request->all());
+            $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['project_type' => 'merge']));
             $data['users'] = $this->userService->getList(['status' => 1]);
             $data['workers'] = $this->workerService->getList();
-
             return view('admin::project.index', compact('data'));
         } catch (\Exception $e){
             abort(500);
@@ -68,7 +67,7 @@ class ProjectController extends Controller
 
     public function analyticsByYear(Request $request){
         try {
-            $data['projects'] = $this->projectService->getList($request->all());
+            $data['projects'] = $this->projectService->getList(array_merge($request->all(), ['project_type' => 'merge']));
             return  ResponseHelpers::showResponse($data['projects']);
         } catch (\Exception $e){
             return response()->json([]);
@@ -79,6 +78,7 @@ class ProjectController extends Controller
     {
         try {
             $data['project'] = $this->projectService->findById($id);
+            $data['childProjects'] = $this->projectService->getChildProject($id);
             if (empty($data['project'])) abort(500);
             return view('admin::project.show', compact('data'));
         } catch (\Exception $e){
