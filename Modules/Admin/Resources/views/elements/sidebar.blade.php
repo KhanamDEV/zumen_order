@@ -119,7 +119,7 @@
                     <a href="{{route('admin.project.index')}}" class="nav-link @if(\Request::routeIs('admin.project.index')) active @endif">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
-                            マイ図面
+                            図面管理
                         </p>
                     </a>
                 </li>
