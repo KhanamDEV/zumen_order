@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+        return redirect()->route('user.login');
     $data = DB::table('projects')->where('user_id', 7)
         ->whereNotNull('parent_project_id')->get();
-    dd($data);
-//    return redirect()->route('user.login');
+
     $feedbacks = DB::table('feedbacks')
         ->select('feedbacks.*', 'projects.user_id', 'projects.number as project_number')
         ->leftJoin('projects', 'projects.id', '=', 'feedbacks.project_id')
