@@ -135,10 +135,9 @@ class ProjectController extends Controller
     }
 
 
-    public function update(UpdateProjectRequest $request, $id)
+    public function update(Request $request, $id)
     {
         try {
-
             if (!$this->projectService->update($id, $request->all())){
                 $errors = new MessageBag(['update_false' => __('message.alert.has_error')]);
                 return redirect()->back()->withInput($request->all())->withErrors($errors);

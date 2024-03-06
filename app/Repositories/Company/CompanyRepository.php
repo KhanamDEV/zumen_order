@@ -48,6 +48,6 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function pluck()
     {
-        return $this->model->pluck('name', 'id');
+        return $this->model->where('status', 1)->pluck('name', 'id');
     }
 }

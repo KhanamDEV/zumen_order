@@ -122,7 +122,18 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>建物</label>
+                                        <select class="form-control select2bs4" style="width: 100%;" name="building">
+                                            <option selected="selected" disabled></option>
+                                            @foreach(config('project.building') as $key => $value)
+                                                <option @if($key == $project->type) selected @endif value="{{$key}}">{{$value}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label>図面種類</label>
                                         <select class="form-control select2bs4" style="width: 100%;" name="type">
