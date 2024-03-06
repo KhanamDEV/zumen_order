@@ -126,8 +126,7 @@ class ProjectController extends Controller
         try {
             $project = $this->projectService->findById($id);
             if (empty($project) || !empty($project->order->worker_id)) abort(404);
-            $data['project'] = $this->projectService->findById($id);
-            if (empty($data['project'])) abort(404);
+            $data['project'] = $project;
             return view('user::project.edit', compact('data'));
         } catch (\Exception $e){
             abort(500);
